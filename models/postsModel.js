@@ -16,6 +16,7 @@ const PostSchema = new Schema({
   team: {
     type : Array,
     required: true,
+    default:[]
   },
   topic: {
     type: String,
@@ -38,19 +39,25 @@ const PostSchema = new Schema({
     }
 }); 
 
-
+//how do I grab just one value from another schema? in this case I want 
+//createdBy to automatically populate with the signed in user's username
   
+//serialization is only if i want to protect certain data correct?
 
-
-UserSchema.methods.serialize = function() {
+/*
+PostSchema.methods.serialize = function() {
   return {
-    username: this.username || '',
-    firstName: this.firstName || '',
-    lastName: this.lastName || ''
+    'post-type': this.post-type || '',
+    'priority': this.priority || '',
+    'team': this.team || [],
+    'topic': this.topic || '',
+    'content': this.content || '',
+    'createdBy': this.createdBy || '',
+    'created': this.created
   };
 };
 
-
+*/
 
 const Post = mongoose.model('Post', PostSchema);
 

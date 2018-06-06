@@ -27,6 +27,8 @@ const UserSchema = new Schema({
   lastName: {type: String, default: ''},
 });
 
+
+
 UserSchema.methods.serialize = function() {
   return {
     username: this.username || '',
