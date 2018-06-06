@@ -2,7 +2,7 @@
   "name": "bandaide",
   "version": "1.0.0",
   "description": "Created for quick communication and coordination of church tech teams",
-  "main": "app.js",
+  "main": "server.js",
   "dependencies": {
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",

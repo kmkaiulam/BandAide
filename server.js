@@ -1,17 +1,20 @@
 'use strict';
+//require('dotenv').config();
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const passport = require('passport');
 mongoose.Promise = global.Promise;
 
 app.use(express.json());
 app.use(express.static('public'));
 
-/*
+
 const { router: usersRouter } = require('./users');
-const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
-*/
+const { router: postsRouter } = require('./posts');
+//const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+
 
 const { PORT, DATABASE_URL } = require('./config');
 
@@ -29,6 +32,27 @@ app.use(function (req, res, next) {
   }
   next();
 });
+/*
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+*/
+app.use('/api/users/', usersRouter);
+app.use('/api/auth/', authRouter);
+
+//const jwtAuth = passport.authenticate('jwt', { session: false });
+
+// A protected endpoint which needs a valid JWT to access it
+/* Don't quite understand this one yet.... CHECK IT OUT
+app.get('/api/protected', jwtAuth, (req, res) => {
+  return res.json({
+    data: 'rosebud'
+  });
+});
+*/
+app.use('*', (req, res) => {
+  return res.status(404).json({ message: 'Not Found' });
+});
+
 
 let server;
 
