@@ -11,12 +11,11 @@ app.use(express.json());
 app.use(express.static('public'));
 
 
-const { router: usersRouter } = require('./users');
-const { router: postsRouter } = require('./posts');
+const { router: usersController, postsController } = require('./controllers');
 //const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 
-const { PORT, DATABASE_URL } = require('./config');
+const { PORT, DATABASE_URL } = require('./config/constants');
 
 
 // Logging
@@ -36,7 +35,8 @@ app.use(function (req, res, next) {
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 */
-app.use('/api/users/', usersRouter);
+app.use('/api/users/', usersController);
+app.use('/api/posts/', postsController);
 app.use('/api/auth/', authRouter);
 
 //const jwtAuth = passport.authenticate('jwt', { session: false });
