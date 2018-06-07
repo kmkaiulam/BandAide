@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 
-const { router: usersController, postsController } = require('./controllers');
+const { router: usersRouter, postsRouter, authRouter } = require('./routes');
 //const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 
