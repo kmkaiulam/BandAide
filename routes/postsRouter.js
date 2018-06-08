@@ -39,7 +39,7 @@ router.get('/:id', (req,res) => {
 
 //POST
 router.post('/', (req, res) => {
-    const requiredFields = ['post-type', 'priority', 'team', 'topic', 'content'];
+    const requiredFields = ['posttype', 'priority', 'team', 'topic', 'content'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
         if(!(field in req.body)) {
@@ -51,7 +51,7 @@ router.post('/', (req, res) => {
     }
     Post
         .create({
-            'post-type': req.body.post-type,
+            'posttype': req.body.posttype,
             priority: req.body.priority,
             team: req.body.team,
             topic: req.body.topic,
