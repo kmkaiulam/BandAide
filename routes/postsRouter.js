@@ -39,7 +39,7 @@ router.get('/:id', (req,res) => {
 
 //POST
 router.post('/', (req, res) => {
-    const requiredFields = ['posttype', 'priority', 'team', 'topic', 'content'];
+    const requiredFields = ['type', 'priority', 'team', 'topic', 'content'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
         if(!(field in req.body)) {
@@ -51,7 +51,7 @@ router.post('/', (req, res) => {
     }
     Post
         .create({
-            'posttype': req.body.posttype,
+            type: req.body.type,
             priority: req.body.priority,
             team: req.body.team,
             topic: req.body.topic,
@@ -68,8 +68,44 @@ router.post('/', (req, res) => {
 }); 
               
    
+//PUT
+router.put('/:id', (req, res) => {
+    const requiredFields = ['id','type', 'priority', 'team', 'topic', 'content'];
+    for (let i=0; i<requiredFields.length; i++) {
+        const field =requiredFields[i];
+        if(!(field in req.body)) {
+            const message = `Missing \`${field}\` in request body`
+            console.error(message);
+            return res.status(400).send(message);
+        }
+    }
+    if (req.params.id !== req.body.id){
+        const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
+        console.error(message);
+        return res.status(400).send(message);
+    }
+console.log(`Updating blog post entry \`${req.params.id}\``);
 
-
+  const toUpdate = {};
+  const updateableFields = ['type', 'priority', 'team', 'topic', 'content']; 
+  
+  updateableFields.forEach(field => {
+      if (field in req.body) {
+          toUpdate[field] = req.body[field];
+      }
+  })
+  
+  Post
+      .findByIdAndUpdate(req.params.id, {$set: toUpdate}, { new: true })
+        .then(post => {
+            console.log(post)
+            res.status(201).send(post)
+        })
+          .catch(err => {
+              console.error(err);
+              res.status(500).json({ message: 'Internal server error' }); 
+          });
+});
 
 
 module.exports = {router};

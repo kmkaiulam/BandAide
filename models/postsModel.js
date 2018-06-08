@@ -5,7 +5,7 @@ mongoose.Promise = global.Promise;
 const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
-  'posttype': {
+  type: {
     type: String,
     required: true
   },
