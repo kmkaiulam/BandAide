@@ -4,12 +4,14 @@
   "description": "Created for quick communication and coordination of church tech teams",
   "main": "server.js",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
     "express": "^4.16.3",
     "mongo": "^0.1.0",
     "mongoose": "^5.1.4",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0"
   },
   "devDependencies": {
     "mocha": "^5.2.0"

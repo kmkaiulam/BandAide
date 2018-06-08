@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 
-const { router: usersRouter, postsRouter, authRouter } = require('./routes');
+const { usersRouter, postsRouter, authRouter } = require('./routes');
 //const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 
@@ -35,9 +35,9 @@ app.use(function (req, res, next) {
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 */
-app.use('/api/users/', usersController);
-app.use('/api/posts/', postsController);
-app.use('/api/auth/', authRouter);
+app.use('/users/', usersRouter);
+app.use('/api/posts/', postsRouter);
+//app.use('/api/auth/', authRouter);
 
 //const jwtAuth = passport.authenticate('jwt', { session: false });
 
