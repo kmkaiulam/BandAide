@@ -1,4 +1,4 @@
-
+'use strict'
 const chai = require('chai');
 const expect = require('chai').expect;
 const chaiHttp = require('chai-http');
@@ -7,10 +7,16 @@ const mongoose = require('mongoose');
 chai.use(chaiHttp);
 
 const {app, runServer, closeServer} = require ('../server')
-const {TEST_DATABASE_URL} = require('../config/constants');
+const {TEST_DATABASE_URL} = require('../config');
 
 
+
+
+
+// --'Posts' Tests --
 describe('GET endpoint', function(){
+
+
 
     it('should return status 200', function(){
         let res;
