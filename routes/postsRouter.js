@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
     Post
         .find()
         .then(posts => {
-            res.json(posts.serialize());
+            res.json(posts);
         })
         .catch(err => {
             console.error(err);

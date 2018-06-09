@@ -3,15 +3,17 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const Schema = mongoose.Schema;
+const {User} = require('./');
+const ObjectId = Schema.Types.ObjectId
 
 const CommentSchema = new Schema({
-  comments:{
     topic: {type: String},
     comment: {type: String},
-    createdBy: Schema.Types.ObjectId, ref:'User', // how to grab schema from other file? do i need to use require('./usersModel')?
+    createdBy: {type: ObjectId, ref:'User'}, // how to grab schema from other file? do i need to use require('./usersModel')?
     created: {type: Date, default: Date.now}
-  }
 });
+
+const Comment = mongoose.model('Comment', CommentSchema);
 // going to write comment section in postsRouter to make sure the values are strings
 
 const PostSchema = new Schema({
@@ -23,11 +25,10 @@ const PostSchema = new Schema({
     type: String,
     required: true
   },
-  team: {
-    type : Array,
+  team: [{
+    type : String,
     required: true,
-    default:[]
-  },
+  }],
   topic: {
     type: String,
     required: true
@@ -36,21 +37,18 @@ const PostSchema = new Schema({
     type: String,
     required: true
   },
-  comments: {
-   // CommentSchema // how do I put the comment schema inside the post schema? - going to be an array of objects
-
-    default: []
-  }, 
+  comments: [{type: ObjectId, ref:'Comment'}], 
   createdBy: {
-      type: Schema.Types.ObjectId, ref:'User'
+      type: {ObjectId, ref:'User'}
   },
   created: {
       type: Date, 
       default: Date.now
-    }
+  }
 }); 
 
-Post.methods.serialize = function(){
+
+PostSchema.methods.serialize = function(){
   return {
     id: this._id,
     type: this.type,
@@ -79,4 +77,4 @@ Post.methods.serialize = function(){
 
 const Post = mongoose.model('Post', PostSchema);
 
-module.exports = {Post};
+module.exports = {Post, Comment};

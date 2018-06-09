@@ -3,7 +3,7 @@ const chai = require('chai');
 const expect = require('chai').expect;
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
-const {Post} = require('../models')
+const {User, Post, Comment} = require('../models')
 
 chai.use(chaiHttp);
 
@@ -11,29 +11,45 @@ const {app, runServer, closeServer} = require ('../server')
 const {TEST_DATABASE_URL} = require('../config/constants');
 
 
-//testData
-const testPost = {
-        type: 'Event Eval',
-        priority: 'High',
-        team: 'All',
-        topic: 'SWS 20180610',
-        content: 'Let\'s discuss any tech issues or improvements that we can make.', 
-        comments: {
-                topic: 'Wireless',
-                comment: 'Had some issues with the channels we used, DPA sounded like he was inside a bathroom',
-                createdBy: 'Kenny',
-                created: 20180611
-        }
-};
-   
-
-
+//testData   
 function seedTestData(){
-    const seedData =[]
-        seedData.push(testPost);
-    console.info('seed post data');
-    return Post.insertMany(seedData);
-}
+    console.log('Seeding Data');
+    return User.create({
+                username: 'klam',
+                password: 'klam1',
+                email: 'klam@gmail.com'
+            })
+            .then(user => {
+                console.log(`user: ${user}`)
+                return Comment.create({
+                            topic: 'Wireless',
+                            comment: 'Had some issues with the channels we used, DPA sounded like he was inside a bathroom',
+                            createdBy: user,
+                            created: 20180611
+                    })
+                    .then(comment => {
+                            console.log(`comment: ${comment}`);
+                            return Post.create({
+                                        type: 'Event Eval',
+                                        priority: 'High',
+                                        team: ['All'],
+                                        topic: 'SWS 20180610',
+                                        content: 'Let\'s discuss any tech issues or improvements that we can make.', 
+                                        comments: [comment]
+                                    })
+                                    .then(testPost => {
+                                        const seedData = testPost;;
+                                        console.log(`testPost: ${testPost}`)
+                                        console.info('seed post data');
+                                        Post.insertMany(seedData);
+                                    })
+                                    .catch(err => {
+                                        console.log(`err: ${err}`);
+                                    });
+                    });
+            });
+        };
+
 
 function dropDatabase(){
     console.warn('Deleting Database');
@@ -44,7 +60,10 @@ function dropDatabase(){
 describe('BandAide Posts', function() {
 
     before(function(){
-        return runServer(TEST_DATABASE_URL);
+        return runServer(TEST_DATABASE_URL)
+        .then (a => {
+            return seedTestData;
+        })
     });
 
     beforeEach(function(){
@@ -56,12 +75,15 @@ describe('BandAide Posts', function() {
     });
 
     after(function(){
-        return closeServer();
+        return closeServer()
+        .then( a => {
+            return seedTestData;
+        });
     });
 
     // --'Posts' Tests --
     describe('GET endpoint', function(){
-
+        this.timeout(10000);
         it('should return all blogposts', function(){
         
             let res;
@@ -70,7 +92,7 @@ describe('BandAide Posts', function() {
                 .then(_res => {
                 res = _res;
                 expect(res).to.have.status(200);
-
+                console.log(res.body);
                 expect(res.body).to.have.lengthOf.at.least(1);
                 return Post.count();
                 })
@@ -94,7 +116,7 @@ describe('BandAide Posts', function() {
                     expect(post.comment).to.include.keys('id','topic','comment', 'createdBy', 'created');
                 });
                 resPost = res.body[0];
-                return BlogPost.findById(resPost.id);
+                return Post.findById(resPost.id);
                 })
                 .then(post => {
                     expect(resPost.type).to.equal(post.type);
