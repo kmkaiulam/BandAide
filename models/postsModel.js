@@ -4,6 +4,10 @@ mongoose.Promise = global.Promise;
 const {User} = require('./');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
+
+
+
+
 const PostSchema = new Schema({
   type: {
     type: String,
