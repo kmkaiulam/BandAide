@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const Schema = mongoose.Schema;
-
+const ObjectId = Schema.Types.ObjectId;
 const PostSchema = new Schema({
   type: {
     type: String,
@@ -31,7 +31,7 @@ const PostSchema = new Schema({
     default: []
   }, 
   createdBy: {
-      type: Schema.Types.ObjectId, ref:'User'
+      type: ObjectId, ref:'User'
   },
   created: {
       type: Date, 
