@@ -9,9 +9,9 @@ const AnnouncementSchema = new Schema({
     text: {type: String, 
          required: true },
     createdBy: {type: ObjectId, ref: 'User'},
-    created: {type: Date, default: Date.now} 
+    created: {type: Date} 
 });
 
-const Announcement = mongoose.model('Announcement', AnnoucementSchema);
+const Announcement = mongoose.model('Announcement', AnnouncementSchema);
 
-module.exports = {Annoucement};
+module.exports = {Announcement};
