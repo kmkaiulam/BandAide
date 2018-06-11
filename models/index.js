@@ -1,5 +1,5 @@
 'use strict';
 const {User} = require('./usersModel');
 const {Post} = require('./postsModel')
-
-module.exports = {User, Post};
+const {Comment} = require ('./commentsModel');
+module.exports = {User, Post, Comment};

@@ -1,7 +1,7 @@
 'use strict';
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-
+const {User} = require('./');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 const PostSchema = new Schema({
@@ -26,10 +26,6 @@ const PostSchema = new Schema({
     type: String,
     required: true
   },
-  comments: {
-    type: Array,
-    default: []
-  }, 
   createdBy: {
       type: ObjectId, ref:'User'
   },
