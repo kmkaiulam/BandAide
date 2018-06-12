@@ -85,11 +85,13 @@ const explicityTrimmedFields = ['username', 'password'];
     });
   }
 
-  let {username, password, firstName = '', lastName = ''} = req.body;
+  let {username, password, email, firstName = '', lastName = ''} = req.body;
   // Username and password come in pre-trimmed, otherwise we throw an error
   // before this
   firstName = firstName.trim();
   lastName = lastName.trim();
+
+     
 
   return User.find({username})
     .count()
@@ -101,15 +103,29 @@ const explicityTrimmedFields = ['username', 'password'];
           reason: 'ValidationError',
           message: 'Username already taken',
           location: 'username'
-        });
+        })
       }
-      // If there is no existing user, hash the password
+      return User.find({email}).count();
+  })
+      .then(count => {  
+        if(count > 0){
+          return Promise.reject({
+            code: 422,
+            reason: 'ValidationError',
+            message:'Email already in use',
+            location: 'email'
+          })
+      }
+      /* DO I NEED A CATCH(ERR) here?*/
+      // If there is no existing user and the email is unique, hash the password
       return User.hashPassword(password);
-    })
+     })
     .then(hash => {
+      console.log('Got to here');
       return User.create({
         username,
         password: hash,
+        email,
         firstName,
         lastName
       });
@@ -120,6 +136,7 @@ const explicityTrimmedFields = ['username', 'password'];
     .catch(err => {
       // Forward validation errors on to the client, otherwise give a 500
       // error because something unexpected has happened
+      console.log(err);
       if (err.reason === 'ValidationError') {
         return res.status(err.code).json(err);
       }

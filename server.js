@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 
-const { usersRouter, postsRouter, authRouter } = require('./routes');
+const { usersRouter, postsRouter, announcementsRouter, authRouter } = require('./routes');
 //const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 
@@ -37,7 +37,7 @@ passport.use(jwtStrategy);
 */
 app.use('/api/users/', usersRouter);
 app.use('/api/posts/', postsRouter);
-app.use('api/announcements/', annoucementRouter);
+app.use('/api/announcements/', announcementsRouter);
 
 
 //app.use('/api/auth/', authRouter);

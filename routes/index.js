@@ -4,8 +4,9 @@ const router = express.Router();
 
 const {router : usersRouter } = require('./usersRouter');
 const {router : postsRouter} = require('./postsRouter');
-const {router : authRouter} = require('./authRouter');
 const {router : announcementsRouter} = require('./announcementsRouter');
+const {router : authRouter} = require('./authRouter');
+
 
 //Resources
 
@@ -21,4 +22,4 @@ const {router : announcementsRouter} = require('./announcementsRouter');
 
 
 
-module.exports = {usersRouter, postsRouter, authRouter};
+module.exports = {usersRouter, postsRouter, announcementsRouter, authRouter};

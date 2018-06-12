@@ -4,6 +4,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const {Announcement} = require('../models');
+const {User} = require('../models');
 
 const jsonParser = bodyParser.json();
 mongoose.Promise = global.Promise;
@@ -11,7 +12,8 @@ mongoose.Promise = global.Promise;
 
 //GET request
 router.get('/', (req, res) => {
-    Annoucement.find()
+    Announcement.find()
+        .select("")
         .populate('createdBy', 'username')
         .exec(announcement => {
             console.log(announcement);
@@ -45,3 +47,10 @@ router.post('/', (req, res) => {
               })
 });
              
+
+
+
+module.exports = {router};
+
+
+
