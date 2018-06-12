@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
         Announcement
             .create({
                 text: req.body.text,
-                createdBy: User.findOne({username:req.body.username}),
+                createdBy: req.body.createdBy,
                 created: req.body.created 
               })
               .then(post => {
