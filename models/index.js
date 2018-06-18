@@ -1,7 +1,9 @@
 'use strict';
-const {User} = require('./usersModel');
-const {Post} = require('./postsModel')
-const {Comment} = require ('./commentsModel');
 const {Announcement} = require ('./announcementsModel');
-//console.log(`index.js: ${Announcement}`);
-module.exports = {User, Post, Comment, Announcement};
+const {Eventeval} = require ('./eventevalsModel')
+const {Feedback} = require('./feedbacksModel')
+const {Training} = require ('./trainingsModel');
+const {User} = require('./usersModel');
+
+
+module.exports = {Announcement, Eventeval, Feedback, Training, User};

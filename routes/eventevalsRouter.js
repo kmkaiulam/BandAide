@@ -3,17 +3,19 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const {Post} = require('../models');
+const {Eventeval} = require('../models');
+const {User} = require('../models');
 
 const jsonParser = bodyParser.json();
 mongoose.Promise = global.Promise;
 
+
 //CRUD
 
 //CREATE
-//GET all posts
+//GET all feedback
 router.get('/', (req, res) => {
-    Post
+    Eventeval
         .find()
         .then(posts => {
             res.json(posts);
@@ -24,12 +26,12 @@ router.get('/', (req, res) => {
         }); 
 });
 
-//Get post by ID
+//GET feedback by ID
 router.get('/:id', (req,res) => {
-    Post
+    Eventeval
         .findById(req.params.id)
-        .then(posts =>{
-            res.json(posts)
+        .then(post =>{
+            res.json(post)
         })
         .catch(err => {
             console.error(err);
@@ -37,9 +39,11 @@ router.get('/:id', (req,res) => {
         }); 
 });
 
+
+
 //POST
 router.post('/', (req, res) => {
-    const requiredFields = ['type', 'priority', 'team', 'topic', 'content'];
+    const requiredFields = ['eventName', 'eventDate', 'description'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
         if(!(field in req.body)) {
@@ -49,13 +53,12 @@ router.post('/', (req, res) => {
         }
 
     }
-    Post
+    Eventeval
         .create({
-            type: req.body.type,
-            priority: req.body.priority,
-            team: req.body.team,
-            topic: req.body.topic,
-            content: req.body.content
+           eventName: req.body.eventName,
+            eventDate: req.body.eventDate,
+            description: req.body.description,
+            replies: req.body.replies
           })
           .then(post => {
               res.status(201).json(post)
@@ -70,7 +73,7 @@ router.post('/', (req, res) => {
    
 //PUT
 router.put('/:id', (req, res) => {
-    const requiredFields = ['id','type', 'priority', 'team', 'topic', 'content'];
+    const requiredFields = ['id', 'eventName', 'eventDate', 'topic'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
         if(!(field in req.body)) {
@@ -87,7 +90,7 @@ router.put('/:id', (req, res) => {
 console.log(`Updating blog post entry \`${req.params.id}\``);
 
   const toUpdate = {};
-  const updateableFields = ['type', 'priority', 'team', 'topic', 'content']; 
+  const updateableFields = ['eventName', 'eventDate', 'topic']; 
   
   updateableFields.forEach(field => {
       if (field in req.body) {
@@ -95,7 +98,8 @@ console.log(`Updating blog post entry \`${req.params.id}\``);
       }
   })
   
-  Post
+//add middleware to validate that the user owns this post, otherwise throw error
+ Eventeval
       .findByIdAndUpdate(req.params.id, {$set: toUpdate}, { new: true })
         .then(post => {
             console.log(post)
@@ -106,6 +110,12 @@ console.log(`Updating blog post entry \`${req.params.id}\``);
               res.status(500).json({ message: 'Internal server error' }); 
           });
 });
+
+//DELETE need to add middleware to validate that user owns this or throw error
+//router.delete('/:id', (req, res))
+
+
+
 
 
 module.exports = {router};

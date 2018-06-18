@@ -1,27 +1,42 @@
 'use strict';
 //require('dotenv').config();
+
+// --- MODULES ---
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+      mongoose.Promise = global.Promise;
 const passport = require('passport');
-mongoose.Promise = global.Promise;
 
+// --- MIDDLEWARE ---
 app.use(express.json());
 app.use(express.static('public'));
 
 
-const { usersRouter, postsRouter, announcementsRouter, authRouter } = require('./routes');
-//const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
-
-
-const { PORT, DATABASE_URL } = require('./config/constants');
-
-
-// Logging
+// --- LOGGING ---
 app.use(morgan('common'));
 
-// CORS
+
+// --- IMPORTS ---
+const {announcementsRouter, eventevalsRouter, feedbacksRouter, trainingsRouter, usersRouter} = require('./routes');
+const {authRouter, localStrategy, jwtStrategy } = require('./auth');
+
+// --- CONFIG ---
+const { PORT, DATABASE_URL } = require('./config/constants');
+
+// --- ENDPOINTS ---
+app.use('/api/announcements/', announcementsRouter);
+app.use('/api/eventevals/', eventevalsRouter);
+app.use('/api/feedback/', feedbacksRouter);
+app.use('/api/training/', trainingsRouter);
+app.use('/api/users/', usersRouter);
+
+
+//app.use('/api/auth/', authRouter);
+
+
+// --- CORS ---
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
@@ -35,12 +50,9 @@ app.use(function (req, res, next) {
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 */
-app.use('/api/users/', usersRouter);
-app.use('/api/posts/', postsRouter);
-app.use('/api/announcements/', announcementsRouter);
 
 
-//app.use('/api/auth/', authRouter);
+
 
 //const jwtAuth = passport.authenticate('jwt', { session: false });
 

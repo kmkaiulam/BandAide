@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
         Announcement
             .create({
                 text: req.body.text,
-                createdBy: req.body.createdBy,
+                createdBy: req.body.createdBy, //how do I get the populate function to work here?
                 created: req.body.created 
               })
               .then(post => {
@@ -43,7 +43,6 @@ router.post('/', (req, res) => {
               .catch(err => {
                 console.error(err);
                 res.status(500).json({ message: 'Internal server error'})
-
               })
 });
              

@@ -6,22 +6,25 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
 
+const CommentSchema = new Schema({ 
+  comment:{type: String, required: true },
+  createdby: {type: ObjectId, ref: 'User'},
+  created: {type: Date, default: Date.now} 
+});
+
+const ReplySchema = new Schema({  
+  topic: {type: String, required: true},
+  reply: {type: String, required: true },
+  comments: [CommentSchema],
+  createdBy: {type: ObjectId, ref: 'User'},
+  created: {type: Date, default: Date.now} 
+});
 
 
-const PostSchema = new Schema({
-  type: {
-    type: String,
-    required: true
-  },
-  priority: {
-    type: String,
-    required: true
-  },
-  team: {
-    type : Array,
-    required: true,
-    default:[]
-  },
+
+
+
+const TrainingSchema = new Schema({
   topic: {
     type: String,
     required: true
@@ -30,6 +33,7 @@ const PostSchema = new Schema({
     type: String,
     required: true
   },
+  replies: [ReplySchema],
   createdBy: {
       type: ObjectId, ref:'User'
   },
@@ -45,6 +49,6 @@ const PostSchema = new Schema({
 
 
 
-const Post = mongoose.model('Post', PostSchema);
+const Training = mongoose.model('Training', TrainingSchema);
 
-module.exports = {Post};
+module.exports = {Training};

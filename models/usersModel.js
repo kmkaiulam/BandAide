@@ -2,7 +2,7 @@
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const ObjectId = Schema.Types.ObjectId;
 mongoose.Promise = global.Promise;
 
 const UserSchema = new Schema({
@@ -21,7 +21,7 @@ const UserSchema = new Schema({
     unique: true
   },
   myPosts: {
-    type: Schema.Types.ObjectId, ref: 'Post'
+    type: ObjectId, ref: 'Post'
   },
   firstName: {type: String, default: ''},
   lastName: {type: String, default: ''},
