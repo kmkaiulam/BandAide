@@ -1,9 +1,6 @@
 'use strict';
 const {Announcement} = require ('./announcementsModel');
-const {Eventeval} = require ('./eventevalsModel')
-const {Feedback} = require('./feedbacksModel')
-const {Training} = require ('./trainingsModel');
+const {Bandpost} = require('./bandpostsModel')
 const {User} = require('./usersModel');
 
-
-module.exports = {Announcement, Eventeval, Feedback, Training, User};
+module.exports = {Announcement, Bandpost, User};

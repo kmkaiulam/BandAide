@@ -6,7 +6,7 @@ const jsonParser = bodyParser.json();
 
 // --- IMPORTS ---
 const {User} = require('../models');
-
+const {jwtAuth} = require('../auth')
 const router = express.Router();
 
 
@@ -118,12 +118,9 @@ const explicityTrimmedFields = ['username', 'password'];
             location: 'email'
           })
       }
-      /* DO I NEED A CATCH(ERR) here?*/
-      // If there is no existing user and the email is unique, hash the password
       return User.hashPassword(password);
      })
     .then(hash => {
-      console.log('Got to here');
       return User.create({
         username,
         password: hash,
@@ -150,9 +147,12 @@ const explicityTrimmedFields = ['username', 'password'];
 // we're just doing this so we have a quick way to see
 // if we're creating users. keep in mind, you can also
 // verify this in the Mongo shell.
-router.get('/', (req, res) => {
-  return User.find()
-    .then(users => res.json(users.map(user => user.serialize())))
+
+//GET Personal Profile information
+router.get('/profile', jwtAuth, (req, res) => {
+  console.log(req.user.id);
+  return User.findById(req.user.id)
+    .then(user => res.json(user.serialize()))
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
