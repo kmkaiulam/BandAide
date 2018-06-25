@@ -10,7 +10,7 @@ mongoose.Promise = global.Promise;
 //GET request
 router.get('/', (req, res) => {
     console.log(req.route.path);  
-    console.log(req.originalUrl.split('/')); 
+    console.log(req.originalUrl); 
     /*
     MiddleWare function that check for required fields
         conditionals (if)
@@ -125,9 +125,7 @@ console.log(`Updating bandpost entry \`${req.params.id}\``);
 });
 
 
-//DELETE Request
-//Make sure the user has the rights to Delete
-  //DELETE
+// --- DELETE ---
 router.delete('/:id', jwtAuth, checkValidUser, (req,res) => {
     const requiredFields = ['announcementId', 'createdById'];
     for (let i=0; i<requiredFields.length; i++) {
