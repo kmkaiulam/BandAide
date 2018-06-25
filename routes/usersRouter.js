@@ -148,13 +148,30 @@ const explicityTrimmedFields = ['username', 'password'];
 // if we're creating users. keep in mind, you can also
 // verify this in the Mongo shell.
 
+//Get all users
+router.get('/', (req, res) => {
+  return User.find()
+    .then(users => res.json(users))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+  })
+});
+
+
+
+
 //GET Personal Profile information
 router.get('/profile', jwtAuth, (req, res) => {
   console.log(req.user.id);
   return User.findById(req.user.id)
     .then(user => res.json(user.serialize()))
-    .catch(err => res.status(500).json({message: 'Internal server error'}));
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+  });
 });
+
 
 module.exports = {router};
 

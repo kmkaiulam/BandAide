@@ -69,9 +69,10 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 
 
 const checkValidUser = function(req,res,next) { 
-  console.log(res.body);
-  if(!(res.body.createdBy.id === req.user.id)) {
-    const message = `You don't have the rights to modify/delete this post`
+  console.log(`this is req.body.createdById ${req.body.createdById}`);
+  console.log(`this is req.user.id ${req.user.id}`);
+  if(!(req.body.createdById === req.user.id)) {
+    const message = `You don't have the rights to modify/delete this entry`
     console.error(message);
     return res.status(400).send(message);
   }

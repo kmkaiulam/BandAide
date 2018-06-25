@@ -6,8 +6,9 @@ const ObjectId = Schema.Types.ObjectId;
 
 const AnnouncementSchema = new Schema({  
     text: {type: String, required: true },
-    createdBy: {type: ObjectId, ref: 'User'},
-    created: {type: Date, default: Date.now()} 
+    modified: {type: Date},
+    created: {type: Date, default: Date.now()},
+    createdBy: {type: ObjectId, ref: 'User'}
     //want to add an expiration date to these that can be set. not sure where i will do that to hide or archive old announcements
 });
 

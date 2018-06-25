@@ -12,16 +12,16 @@ const ReplySchema = new Schema({
     type: String, 
     required: true 
   },
-  createdBy:{
-    type: ObjectId, 
-    ref: 'User'
-  },
   created: {
     type: Date,
     default: Date.now
   }, 
   modified:{
     type: Date
+  },
+  createdBy:{
+    type: ObjectId, 
+    ref: 'User'
   }
 });
 
@@ -40,17 +40,17 @@ const BandpostSchema = new Schema({
     type: String,
     required: true
   },
+  created: {
+    type: Date, 
+    default: Date.now
+  },
+  modified:{
+    type: Date
+  },
   createdBy: {
       type: ObjectId, 
       ref:'User'
   },
-  created: {
-      type: Date, 
-      default: Date.now
-    },
-  modified:{
-      type: Date
-    },
   replies: [ReplySchema]
 }); 
 
