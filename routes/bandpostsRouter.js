@@ -6,21 +6,19 @@ const {jwtAuth, checkValidUser} = require('../auth')
 const {Bandpost} = require('../models');
 mongoose.Promise = global.Promise;
 
-//CRUD
-
-//CREATE
+// --- Bandposts ---
 // --- GET ---
-//GET all Bandpost
+
 router.get('/', (req, res) => {
     Bandpost
         .find()
         .populate({
             path: 'createdBy', 
-            select: 'username id' //can name any field and populate
+            select: 'username id' 
         })
         .populate({
             path: 'replies.createdBy', 
-            select: 'username id' //can name any field and populate
+            select: 'username id' 
         })
         .then(bandposts => {
             res.json(bandposts);
@@ -48,27 +46,7 @@ router.get('/:id', (req,res) => {
         }); 
 });
 
-//GET all Replies for a Bandpost 
-router.get('/reply/:id', (req,res) => {
-    Bandpost
-        .findById(req.params.id)
-        .populate({
-            path: 'replies.createdBy', 
-            select: 'username id' //can name any field and populate
-        })
-        .then(bandpost => {
-            res.json(bandpost.serialize());
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error' });
-        }); 
-});
-
-
-// --- Bandposts ---
-//POST 
-
+// --- POST ---
 //Create New Bandpost
 router.post('/', jwtAuth, (req, res) => {
     //let {posttype, topic, description, replies} = req.body;
@@ -101,8 +79,7 @@ router.post('/', jwtAuth, (req, res) => {
     });
 });
 
-//PUT
-
+// --- PUT ---
 //Update a Bandpost
 //Check for required fields
 router.put('/:id', jwtAuth, checkValidUser, (req, res) => {
@@ -146,13 +123,57 @@ console.log(`Updating bandpost entry \`${req.params.id}\``);
           });
 });
 
+// --- DELETE ---
+//DELETE a Bandpost
+router.delete('/:id', jwtAuth, checkValidUser, (req,res) => {
+    const requiredFields = ['bandpostId', 'createdById'];
+    for (let i=0; i<requiredFields.length; i++) {
+        const field =requiredFields[i];
+        if(!(field in req.body)) {
+            const message = `Missing \`${field}\` in request body`
+            console.error(message);
+            return res.status(400).send(message);
+        }
+    }
+    if (req.params.id !== req.body.bandpostId){
+        const message = `Request path id (${req.params.id}) and request body id (${req.body.bandpostId}) must match`;
+        console.error(message);
+        return res.status(400).send(message);
+    }
+console.log(`Deleting bandpost entry \`${req.params.id}\``);
+   
+    Bandpost
+        .findByIdAndRemove(req.params.id)
+        .then(bandpost =>{
+            res.status(204).end();
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error' });
+        });
+});
 
 // --- Replies ---
-//POST
+// --- GET ---
+//GET all Replies for a Bandpost 
+router.get('/reply/:id', (req,res) => {
+    Bandpost
+        .findById(req.params.id)
+        .populate({
+            path: 'replies.createdBy', 
+            select: 'username id' //can name any field and populate
+        })
+        .then(bandpost => {
+            res.json(bandpost.serialize());
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error' });
+        }); 
+});
+
+// --- POST ---
 //Add Reply to a Bandpost post
-
-
-
 //Check for required fields
 router.post('/reply/:id', jwtAuth, (req, res) => {
     const requiredFields = ['topic', 'reply'];
@@ -189,7 +210,7 @@ router.post('/reply/:id', jwtAuth, (req, res) => {
         });
 });
 
-//PUT
+// --- PUT ---
 //REPLY UPDATE
 router.put('/reply/:id', jwtAuth, checkValidUser, (req, res) => {
     const requiredFields = ['bandpostId', 'createdById', 'replyId', 'topicUpdate', 'replyUpdate'];
@@ -224,39 +245,8 @@ console.log(`Updating reply entry \`${req.params.id}\``);
 });
 
        
-
-// --- Bandposts ---
-//DELETE
-router.delete('/:id', jwtAuth, checkValidUser, (req,res) => {
-    const requiredFields = ['bandpostId', 'createdById'];
-    for (let i=0; i<requiredFields.length; i++) {
-        const field =requiredFields[i];
-        if(!(field in req.body)) {
-            const message = `Missing \`${field}\` in request body`
-            console.error(message);
-            return res.status(400).send(message);
-        }
-    }
-    if (req.params.id !== req.body.bandpostId){
-        const message = `Request path id (${req.params.id}) and request body id (${req.body.bandpostId}) must match`;
-        console.error(message);
-        return res.status(400).send(message);
-    }
-console.log(`Deleting bandpost entry \`${req.params.id}\``);
-   
-    Bandpost
-        .findByIdAndRemove(req.params.id)
-        .then(bandpost =>{
-            res.status(204).end();
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error' });
-        });
-});
-
-// --- Reply ---
-//DELETE
+// ---DELETE ---
+//DELETE a reply from a bandpost
 router.delete('/reply/:id', jwtAuth, checkValidUser, (req,res) => {
     const requiredFields = ['bandpostId', 'replyId', 'createdById'];
     for (let i=0; i<requiredFields.length; i++) {

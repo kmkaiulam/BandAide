@@ -6,7 +6,7 @@ const {Announcement} = require('../models');
 const {jwtAuth, checkValidUser} = require('../auth')
 mongoose.Promise = global.Promise;
 
-
+// --- GET ---
 //GET request
 router.get('/', (req, res) => {
     console.log(req.route.path);  
@@ -54,7 +54,7 @@ router.get('/:id', (req, res) => {
 });
 
       
-//POST request
+// --- POST ---
 router.post('/', jwtAuth, (req, res) => {
         const requiredFields = ['text'];
         for (let i=0; i<requiredFields.length; i++) {
@@ -82,7 +82,7 @@ router.post('/', jwtAuth, (req, res) => {
               })
 });
 
-//PUT Request
+// --- PUT ---
 router.put('/:id', jwtAuth, checkValidUser, (req, res) => {
     console.log(req.path);
     const requiredFields = ['announcementId', 'createdById','text'];
