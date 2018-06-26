@@ -129,7 +129,7 @@ const checkRequiredFields = function(req,res,next) {
     next()
 };
 
-const checkValidId = function(req, res, next) {
+const checkValidId = function(req, res, next) {   //Not sure If i want this  or if i want to rewrite it <-----------------
   let resourceName = req.originalUrl.split('/')[2];
   console.log(resourceName)
   let specialId = req.body`.${resourceName}Id`.trim()
