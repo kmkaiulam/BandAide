@@ -79,4 +79,71 @@ const checkValidUser = function(req,res,next) {
   next();
 }
 
-module.exports = {localStrategy, jwtStrategy, jwtAuth, checkValidUser};
+const checkRequiredFields = function(req,res,next) {
+  let resourceName = req.originalUrl.split('/')[2];
+  let nestedResourceName = req.originalUrl.split('/')[3];
+  let requestMethod = req.method;
+  let requiredFields;
+
+  //write conditionals based on the Original url and the type of request that is being made)
+  //*SWITCH
+    // --- ANNOUNCEMENTS ---
+  if (resourceName === 'announcements' && requestMethod === 'POST') {
+     requiredFields = ['text'];
+  }
+  if (resourceName === 'announcements' && requestMethod === 'PUT') {
+     requiredFields = ['announcementsId', 'createdById','text'];
+  }
+  if (resourceName === 'announcements' && requestMethod === 'DELETE') {
+     requiredFields = ['announcementsId', 'createdById'];
+  }
+  // --- BANDPOSTS ---
+  if (resourceName === 'bandposts' && requestMethod === 'POST') {
+     requiredFields = ['posttype', 'topic', 'description'];
+  }
+  if (resourceName === 'bandposts' && requestMethod === 'PUT') {
+     requiredFields = ['bandpostId', 'posttype', 'topic', 'description'];
+  }
+  if (resourceName === 'bandposts' && requestMethod === 'DELETE') {
+     requiredFields = ['bandpostId', 'createdById'];
+  }
+  // --- REPLIES ---
+  if (nestedResourceName === 'reply' && requestMethod === 'POST') {
+     requiredFields = ['topic', 'reply'];
+  }
+  if (nestedResourceName === 'reply' && requestMethod === 'PUT') {
+     requiredFields = ['bandpostId', 'createdById', 'replyId', 'topicUpdate', 'replyUpdate'];
+  }
+  if (nestedResourceName === 'reply' && requestMethod === 'DELETE') {
+     requiredFields = ['bandpostId', 'replyId', 'createdById'];
+  }
+    console.log(nestedResourceName);
+    for (let i=0; i<requiredFields.length; i++) {
+      const field =requiredFields[i];
+      if(!(field in req.body)) {
+          const message = `Missing \`${field}\` in request body`
+          console.error(message);
+          return res.status(400).send(message);
+      }
+    }
+    next()
+};
+
+const checkValidId = function(req, res, next) {
+  let resourceName = req.originalUrl.split('/')[2];
+  console.log(resourceName)
+  let specialId = req.body`.${resourceName}Id`.trim()
+ 
+  console.log("Checking Valid Id");
+  if (req.params.id !== specialId){
+    const message = `Request path id (${req.params.id}) and request body (id) (${specialId}) must match`;
+    console.error(message);
+    return res.status(400).send(message); 
+  }
+  next();
+}
+  
+
+
+
+module.exports = {localStrategy, jwtStrategy, jwtAuth, checkValidUser, checkRequiredFields, checkValidId};

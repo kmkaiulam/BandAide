@@ -3,14 +3,14 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const {Announcement} = require('../models');
-const {jwtAuth, checkValidUser} = require('../auth')
+const {jwtAuth, checkValidUser, checkRequiredFields, checkValidId} = require('../auth')
 mongoose.Promise = global.Promise;
 
 // --- GET ---
 //GET request
 router.get('/', (req, res) => {
     console.log(req.route.path);  
-    console.log(req.originalUrl); 
+    console.log(req.originalUrl.split('/')); 
     /*
     MiddleWare function that check for required fields
         conditionals (if)
@@ -55,18 +55,7 @@ router.get('/:id', (req, res) => {
 
       
 // --- POST ---
-router.post('/', jwtAuth, (req, res) => {
-        const requiredFields = ['text'];
-        for (let i=0; i<requiredFields.length; i++) {
-            const field =requiredFields;
-            if(!(field in req.body)) {
-                const message = `Missing \`${field}\` in request body`
-                console.error(message);
-                console.log(req.user);
-                return res.status(400).send(message);
-            }
-    
-        }  
+router.post('/', jwtAuth, checkRequiredFields, (req, res) => {
         Announcement
             .create({
                 text: req.body.text,
@@ -83,27 +72,11 @@ router.post('/', jwtAuth, (req, res) => {
 });
 
 // --- PUT ---
-router.put('/:id', jwtAuth, checkValidUser, (req, res) => {
-    console.log(req.path);
-    const requiredFields = ['announcementId', 'createdById','text'];
-    for (let i=0; i<requiredFields.length; i++) {
-        const field =requiredFields[i];
-        if(!(field in req.body)) {
-            const message = `Missing \`${field}\` in request body`
-            console.error(message);
-            return res.status(400).send(message);
-        }
-    }
-    if (req.params.id !== req.body.announcementId){
-        const message = `Request path id (${req.params.id}) and request body id (${req.body.announcementId}) must match`;
-        console.error(message);
-        return res.status(400).send(message);
-    }
+router.put('/:id', jwtAuth, checkValidUser, checkRequiredFields, checkValidId, (req, res) => {
 console.log(`Updating bandpost entry \`${req.params.id}\``);
-
   const toUpdate = {};
   const updateableFields = ['text']; 
-  
+
   updateableFields.forEach(field => {
       if (field in req.body) {
           toUpdate[field] = req.body[field];

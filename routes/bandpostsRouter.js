@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose')
-const {jwtAuth, checkValidUser} = require('../auth')
+const {jwtAuth, checkValidUser, checkRequiredFields} = require('../auth')
 const {Bandpost} = require('../models');
 mongoose.Promise = global.Promise;
 
@@ -48,18 +48,7 @@ router.get('/:id', (req,res) => {
 
 // --- POST ---
 //Create New Bandpost
-router.post('/', jwtAuth, (req, res) => {
-    //let {posttype, topic, description, replies} = req.body;
-    
-    const requiredFields = ['posttype', 'topic', 'description'];
-    for (let i=0; i<requiredFields.length; i++) {
-        const field =requiredFields[i];
-        if(!(field in req.body)) {
-            const message = `Missing \`${field}\` in request body`
-            console.error(message);
-            return res.status(400).send(message);
-        }
-    }
+router.post('/', jwtAuth, checkRequiredFields, (req, res) => {
     Bandpost
         .create({
             posttype: req.body.posttype,
@@ -82,7 +71,7 @@ router.post('/', jwtAuth, (req, res) => {
 // --- PUT ---
 //Update a Bandpost
 //Check for required fields
-router.put('/:id', jwtAuth, checkValidUser, (req, res) => {
+router.put('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res) => {
     const requiredFields = ['bandpostId', 'posttype', 'topic', 'description'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
@@ -125,7 +114,7 @@ console.log(`Updating bandpost entry \`${req.params.id}\``);
 
 // --- DELETE ---
 //DELETE a Bandpost
-router.delete('/:id', jwtAuth, checkValidUser, (req,res) => {
+router.delete('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
     const requiredFields = ['bandpostId', 'createdById'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
@@ -175,7 +164,7 @@ router.get('/reply/:id', (req,res) => {
 // --- POST ---
 //Add Reply to a Bandpost post
 //Check for required fields
-router.post('/reply/:id', jwtAuth, (req, res) => {
+router.post('/reply/:id', jwtAuth, checkRequiredFields, (req, res) => {
     const requiredFields = ['topic', 'reply'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
@@ -212,7 +201,7 @@ router.post('/reply/:id', jwtAuth, (req, res) => {
 
 // --- PUT ---
 //REPLY UPDATE
-router.put('/reply/:id', jwtAuth, checkValidUser, (req, res) => {
+router.put('/reply/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res) => {
     const requiredFields = ['bandpostId', 'createdById', 'replyId', 'topicUpdate', 'replyUpdate'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
@@ -247,7 +236,7 @@ console.log(`Updating reply entry \`${req.params.id}\``);
        
 // ---DELETE ---
 //DELETE a reply from a bandpost
-router.delete('/reply/:id', jwtAuth, checkValidUser, (req,res) => {
+router.delete('/reply/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
     const requiredFields = ['bandpostId', 'replyId', 'createdById'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
@@ -257,11 +246,13 @@ router.delete('/reply/:id', jwtAuth, checkValidUser, (req,res) => {
             return res.status(400).send(message);
         }
     }
+    /* Remove? -----
     if (req.params.id !== req.body.bandpostId){
         const message = `Request path id (${req.params.id}) and request body id (${req.body.bandpostId}) must match`;
         console.error(message);
         return res.status(400).send(message);
     }
+    */
 console.log(`Deleting reply for bandpost \`${req.params.id}\``);
     Bandpost
         .findById(req.params.id)
