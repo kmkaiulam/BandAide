@@ -9,6 +9,20 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
       mongoose.Promise = global.Promise;
 const passport = require('passport');
+const ejs = require('ejs');
+// --- EJS
+app.set('views', './views')
+app.set('view engine', 'ejs');
+
+
+// --- VIEWS
+app.get('/login', (req,res) => {
+  res.render('pages/login')
+})
+app.get('/signup', (req,res) => {
+  res.render('pages/signup')
+})
+
 
 // --- MIDDLEWARE ---
 app.use(express.json());
