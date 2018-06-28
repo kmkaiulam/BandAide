@@ -3,7 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-
+const urlParser = bodyParser.urlencoded();
 // --- IMPORTS ---
 const {User} = require('../models');
 const {jwtAuth} = require('../auth')
@@ -11,7 +11,8 @@ const router = express.Router();
 
 
 // Post to register a new user
-router.post('/', jsonParser, (req, res) => {
+router.post('/', urlParser, (req, res) => {
+  console.log(req.body);
   const requiredFields = ['username', 'password', 'email'];
   const missingField = requiredFields.find(field => !(field in req.body));
 

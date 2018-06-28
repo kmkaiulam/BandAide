@@ -10,12 +10,36 @@ const mongoose = require('mongoose');
       mongoose.Promise = global.Promise;
 const passport = require('passport');
 const ejs = require('ejs');
+/*
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session');
+*/
 // --- EJS
 app.set('views', './views')
 app.set('view engine', 'ejs');
 
+/*
+//Express Session Middleware
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
 
+//Express Message Middleware
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+*/
 // --- VIEWS
+app.get('/', (req,res) => {
+  res.render('pages/home')
+})
+
 app.get('/login', (req,res) => {
   res.render('pages/login')
 })

@@ -23,8 +23,8 @@ const UserSchema = new Schema({
   myPosts: {
     type: ObjectId, ref: 'Post'
   },
-  firstName: {type: String, default: ''},
-  lastName: {type: String, default: ''},
+  firstName: {type: String, required: true},
+  lastName: {type: String, required: true},
 });
 
 
