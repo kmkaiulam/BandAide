@@ -10,22 +10,23 @@ const {jwtAuth} = require('../auth')
 const router = express.Router();
 
 
+
 // Post to register a new user
 router.post('/', urlParser, (req, res) => {
   console.log(req.body);
-  const requiredFields = ['username', 'password', 'email'];
+  const requiredFields = ['username', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
   if (missingField) {
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
-      message: 'Missing field',
+      message: `${missingField} Missing`,
       location: missingField
     });
   }
 
-    const stringFields = ['username', 'password', 'email', 'firstName', 'lastName']
+    const stringFields = ['username', 'password', 'firstName', 'lastName']
     const nonStringField = stringFields.find(
         field => field in req.body && typeof req.body[field] !== 'string'
         );
@@ -34,7 +35,7 @@ router.post('/', urlParser, (req, res) => {
     return res.status(422).json({
         code:422,
         reason: 'ValidationError',
-        message: 'Incorrect Field type: expected string',
+        message: `Incorrect Field type: expected string for ${nonStringField}`,
         location: nonStringField
      });
 }
@@ -48,7 +49,7 @@ const explicityTrimmedFields = ['username', 'password'];
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
-      message: 'Cannot start or end with whitespace',
+      message: `Cannot start or end with whitespace for ${nonTrimmedField}`,
       location: nonTrimmedField
     });
   }
@@ -58,7 +59,7 @@ const explicityTrimmedFields = ['username', 'password'];
       min: 1
     },
     password: {
-      min: 10,
+      min: 6,
       // bcrypt truncates after 72 characters, so let's not give the illusion
       // of security by storing extra (unused) info
       max: 72
@@ -75,31 +76,32 @@ const explicityTrimmedFields = ['username', 'password'];
             req.body[field].trim().length > sizedFields[field].max
   );
 
+
   if (tooSmallField || tooLargeField) {
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
       message: tooSmallField
-        ? `Must be at least ${sizedFields[tooSmallField]
+        ? `${tooSmallField.charAt(0).toUpperCase() + tooSmallField.slice(1)} must be at least ${sizedFields[tooSmallField]
           .min} characters long`
-        : `Must be at most ${sizedFields[tooLargeField]
+        : `${tooLargeField.charAt(0).toUpperCase() + tooLargeField.slice(1)} must be at most ${sizedFields[tooLargeField]
           .max} characters long`,
       location: tooSmallField || tooLargeField
     });
   }
 
-  let {username, password, email, firstName = '', lastName = ''} = req.body;
+  let {username, password, firstName = '', lastName = ''} = req.body;
   // Username and password come in pre-trimmed, otherwise we throw an error
   // before this
   firstName = firstName.trim();
   lastName = lastName.trim();
 
-     
 
   return User.find({username})
     .count()
     .then(count => {
       if (count > 0) {
+    
         // There is an existing user with the same username
         return Promise.reject({
           code: 422,
@@ -108,24 +110,12 @@ const explicityTrimmedFields = ['username', 'password'];
           location: 'username'
         })
       }
-      return User.find({email}).count();
-  })
-      .then(count => {  
-        if(count > 0){
-          return Promise.reject({
-            code: 422,
-            reason: 'ValidationError',
-            message:'Email already in use',
-            location: 'email'
-          })
-      }
       return User.hashPassword(password);
      })
     .then(hash => {
       return User.create({
         username,
         password: hash,
-        email,
         firstName,
         lastName
       });

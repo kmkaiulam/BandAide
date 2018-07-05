@@ -10,11 +10,9 @@ const mongoose = require('mongoose');
       mongoose.Promise = global.Promise;
 const passport = require('passport');
 const ejs = require('ejs');
-/*
-const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
-*/
+
 // --- EJS
 app.set('views', './views')
 app.set('view engine', 'ejs');
