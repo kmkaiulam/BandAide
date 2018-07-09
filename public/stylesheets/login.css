@@ -22,6 +22,9 @@ body {
     height:500px;
 }
 
+.spacer{
+  height:50px;
+}
 .bandaideIcon {
     width:200px;
     height:auto;

@@ -5,6 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
     "connect-flash": "^0.1.1",
@@ -39,5 +40,9 @@
   "bugs": {
     "url": "https://github.com/kmlamthinkful/BandAide/issues"
   },
-  "homepage": "https://github.com/kmlamthinkful/BandAide#readme"
+  "homepage": "https://github.com/kmlamthinkful/BandAide#readme",
+  "nodemonConfig": {
+    "ignore": ["public/*", "docs/*"],
+    "delay": "2500"
+  }
 }

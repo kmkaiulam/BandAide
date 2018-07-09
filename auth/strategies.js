@@ -80,6 +80,7 @@ const checkValidUser = function(req,res,next) {
 }
 
 const checkRequiredFields = function(req,res,next) {
+  console.log(req.body);
   let resourceName = req.originalUrl.split('/')[2];
   let nestedResourceName = req.originalUrl.split('/')[3];
   let requestMethod = req.method;
@@ -134,7 +135,7 @@ const checkValidId = function(req, res, next) {   //Not sure If i want this  or 
   console.log(resourceName)
   let specialId = req.body`.${resourceName}Id`.trim()
  
-  console.log("Checking Valid Id");
+  console.log('Checking Valid Id');
   if (req.params.id !== specialId){
     const message = `Request path id (${req.params.id}) and request body (id) (${specialId}) must match`;
     console.error(message);

@@ -1,6 +1,6 @@
 'use strict';
-const express = require('express');
-const router = express.Router();
+//const express = require('express');
+//const router = express.Router();
 
 const {router: announcementsRouter} = require('./announcementsRouter');
 const {router: bandpostsRouter} = require('./bandpostsRouter');

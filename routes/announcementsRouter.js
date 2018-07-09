@@ -2,6 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const urlParser = bodyParser.urlencoded();
 const {Announcement} = require('../models');
 const {jwtAuth, checkValidUser, checkRequiredFields, checkValidId} = require('../auth')
 mongoose.Promise = global.Promise;
@@ -9,22 +11,11 @@ mongoose.Promise = global.Promise;
 // --- GET ---
 //GET request
 router.get('/', (req, res) => {
-    console.log(req.route.path);  
-    console.log(req.originalUrl.split('/')); 
-    /*
-    MiddleWare function that check for required fields
-        conditionals (if)
-        req.originalUrl = _____ then set requiredFields === Model.requiredFields 
-        if index[2] = announcement 
-            then     required fields = ModelName.requiredfields;
-
-
-    */
     Announcement
         .find()
         .populate({
             path: 'createdBy', 
-            select: 'username id' //can name any field and populate
+            select: 'username _id' //can name any field and populate
         })
         .then(announcements => {
             res.json(announcements);
@@ -55,20 +46,29 @@ router.get('/:id', (req, res) => {
 
       
 // --- POST ---
-router.post('/', jwtAuth, checkRequiredFields, (req, res) => {
-        Announcement
-            .create({
-                text: req.body.text,
-                created: req.body.created,
-                createdBy: req.user.id 
-              })
-              .then(post => {
-                  res.status(201).json(post)
-              })
-              .catch(err => {
-                console.error(err);
-                res.status(500).json({ message: 'Internal server error'})
-              })
+router.post('/',urlParser, jwtAuth, checkRequiredFields, (req, res) => {
+        
+    Announcement
+        .create({
+             text: req.body.text,
+             created: req.body.created,
+             createdBy: req.user.id 
+        })
+        .then(post => {
+            Announcement.findById(post._id)
+                .populate({ 
+                    path: 'createdBy',
+                    select: 'username _id'
+                })         
+                .then(populatedpost => {
+                    console.log(populatedpost);
+                    res.status(201).json(populatedpost);
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).json({ message: 'Internal server error'})
+                 });
+              });
 });
 
 // --- PUT ---

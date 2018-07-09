@@ -18,12 +18,9 @@ const createAuthToken = function(user) {
 const localAuth = passport.authenticate('local', {session: false});
 // The user provides a username and password to login
 router.post('/login', urlParser, localAuth, (req, res) => {
-  console.log(req.cookies);
-  console.log(req.body)
   const authToken = createAuthToken(req.user.serialize());
   res.cookie('authToken', authToken);
-  //res.json({authToken});
-  res.redirect('/');
+  res.json({authToken});
 });
 
 const jwtAuth = passport.authenticate('jwt', {session: false});
@@ -34,7 +31,7 @@ router.post('/refresh', urlParser, jwtAuth, (req, res) => {
   res.json({authToken});
 });
 // The user signs out and clears the cookie
-router.post('/signout', urlParser, jwtAuth, (req, res) => {
+router.get('/logout', urlParser, (req, res) => {
   res.clearCookie('authToken')
   res.redirect('/login');
 });

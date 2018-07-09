@@ -1,5 +1,17 @@
 'use strict'
-console.log("this is working")
+
+function disableNewInput(){
+    $('#js-signup-form :input').prop('readonly',true);
+    $('#js-signup-btn').prop('disabled',true);
+}
+
+function clearForm(){ 
+    $('#firstName').val('');
+    $('#lastName').val('');
+    $('#username').val('');
+    $('#password').val('');
+}
+
 function listenSignupSubmit(){
     $('#js-signup-form').submit(event =>{
         event.preventDefault();
@@ -14,10 +26,8 @@ function listenSignupSubmit(){
             dataType: 'json',
             type: 'POST',
             success: function(res){
-                $('#js-signup-form :input').prop('readonly',true);
-                $('#js-response-message').html(`<div class = "text-success bg-dark"> New user successfully created <a href = "/login"> Login </a></div>`);
-                //alert('New user successfully created!')
-               //window.location.replace('/login');
+                disableNewInput();
+                $('#js-response-message').html(`<div class = 'text-success bg-dark'> New user successfully created <a href = '/login'> Login </a></div>`);
             },
             error: function (res){
                 console.log(res);
@@ -30,17 +40,5 @@ function listenSignupSubmit(){
         $.ajax(settings);
     });
 }
-        
-function clearForm(){ 
-    $('#firstName').val('');
-    $('#lastName').val('');
-    $('#username').val('');
-    $('#password').val('');
-}
 
-function handleLogin(){
-    listenSignupSubmit();
-}
-
-
-$(handleLogin);
+$(listenSignupSubmit);
