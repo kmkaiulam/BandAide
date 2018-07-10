@@ -1,19 +1,21 @@
+.bannerImage {
+  background-image: url('/images/bandaide_banner.jpg'); 
+  background-repeat: no-repeat;
+  background-size:cover;
+}  
 body {
     padding-top: 5rem;
     background-image: url('/images/bandaide_home.jpg'); 
     background-repeat: no-repeat;
-    background-size:cover;
+    background-size: cover;
   }
   
+
 main {
   background-color: gray;
 }
-  .starter-template {
-    padding: 3rem 1.5rem;
-    text-align: center;
-  }
   
-  .bandaideIcon{
+.bandaideIcon {
       height:65px;
       width:auto;
   }
