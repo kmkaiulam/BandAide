@@ -61,12 +61,20 @@ router.post('/', urlParser, jwtAuth, checkRequiredFields, (req, res) => {
             replies: req.body.replies
           })
           .then(post => {
-              res.status(201).json(post)
-          })
-          .catch(err => {
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error' }
-        );
+            Bandpost.findById(post._id)
+                    .populate({ 
+                        path: 'createdBy',
+                        select: 'username _id'
+                    })         
+                    .then(populatedpost => {
+                        console.log(populatedpost);
+                        res.status(201).json(populatedpost);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        res.status(500).json({ message: 'Internal server error'})
+                    });
+        
     });
 });
 
