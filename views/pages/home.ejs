@@ -48,7 +48,7 @@
       <div class='my-3 p-3 bg-white rounded box-shadow'>
         <h2 class='border-bottom border-gray pb-2 mb-0' >Event Eval <button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#eventsModal'>+</button></h2>
         <p><em>Event tech evaluations. A forum for discussing: what went right, what went wrong and what can we do to fix it.</em></p>
-        <div id = 'js-new-events'></div>
+        <div id = 'js-recent-events'></div>
         <div class="collapse" id="collapseAllEvents">
           <div id = 'js-all-events'></div>
         </div>
@@ -68,7 +68,7 @@
       <div class='my-3 p-3 bg-white rounded box-shadow'>
           <h2 class='border-bottom border-gray pb-2 mb-0' >Equipment Eval<button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#equipmentModal'>+</button></h2>
           <p><em>Projector needs a new bulb? Wire management issues?  Missing music stands? Here's where you can voice it.</em></p>
-          <div id = 'js-new-equipment'></div>
+          <div id = 'js-recent-equipment'></div>
           <div class="collapse" id="collapseAllequipment">
             <div id = 'js-all-equipment'></div>
           </div>
@@ -121,7 +121,7 @@
                 <span aria-hidden='true'>&times;</span>
               </button>
             </div>
-            <form id = 'js-post-announcement'>
+            <form id = 'js-post-announcement' class = 'js-error-message'>
               <div class='modal-body'>
                 <label for='message-text' class='col-form-label'>Message-text:</label>
                 <textarea class='form-control' id='message-text' required></textarea>
@@ -146,7 +146,7 @@
                   <span aria-hidden='true'>&times;</span>
                 </button>
               </div>
-              <form id = 'js-edit-announcement'>
+              <form id = 'js-edit-announcement' class = 'js-error-message'>
                 <div class='modal-body'>
                   <label for='message-edit' class='col-form-label'>Message-text:</label>
                   <textarea class='form-control' id='message-edit' required></textarea>
@@ -172,11 +172,11 @@
                   <span aria-hidden='true'>&times;</span>
                 </button>
               </div>
-              <form id = 'js-events'>
+              <form id = 'js-events' class = 'js-error-message'>
                 <div class='modal-body'>
                   <label for='eventTopic' class='col-form-label'>Topic:</label>
                   <input name= 'topic' type='text' id='eventTopic' class='form-control' placeholder='ex. SWS20180708' required autofocus>
-                  <label for='eventDescription' class='col-form-label'>description:</label>
+                  <label for='eventDescription' class='col-form-label'>Description:</label>
                   <textarea class='form-control' id='eventDescription' required></textarea>
                 </div>
               <div class='modal-footer'>
@@ -199,7 +199,7 @@
                   <span aria-hidden='true'>&times;</span>
                 </button>
               </div>
-              <form id = 'js-equipment'>
+              <form id = 'js-equipment' class = 'js-error-message'>
                   <div class='modal-body'>
                       <label for='equipmentTopic' class='col-form-label'>Topic:</label>
                       <input name= 'topic' type='text' id='equipmentTopic' class='form-control' placeholder='ex. Teradek Vidiu Pro' required autofocus>
@@ -227,7 +227,7 @@
                   <span aria-hidden='true'>&times;</span>
                 </button>
               </div>
-              <form id = 'js-resources'>
+              <form id = 'js-resources' class = 'js-error-message'>
                 <div class='modal-body'>
                     <label for='resourceTopic' class='col-form-label'>Topic:</label>
                     <input name= 'topic' type='text' id='resourceTopic' class='form-control' placeholder='ex. Compression and EQ' required autofocus>

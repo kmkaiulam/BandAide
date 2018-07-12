@@ -8,29 +8,63 @@ const {jwtAuth, checkValidUser, checkRequiredFields} = require('../auth')
 const {Bandpost} = require('../models');
 mongoose.Promise = global.Promise;
 
-// --- Bandposts ---
-// --- GET ---
 
-router.get('/', (req, res) => {
+// --- Common Functions ---
+function populateBandpost(req, res){
     Bandpost
-        .find()
+        .find({'posttype': `${req.body.posttype}`})
         .populate({
             path: 'createdBy', 
-            select: 'username id' 
+            select: 'username _id' 
         })
         .populate({
             path: 'replies.createdBy', 
             select: 'username id' 
         })
-        .then(bandposts => {
-            res.json(bandposts);
+        .then(populatedPosts =>{
+            if(req.method === 'GET'){
+                res.json(populatedPosts);
+            }
+            else{
+                res.status(201).json(populatedPosts)
+            }
         })
-        .catch(err => {
+        .catch(err =>{
             console.error(err);
             res.status(500).json({ message: 'Internal server error' });
-        }); 
+        });
+};
+// --- Bandposts ---
+// --- GET --- Events
+router.get('/', (req, res) => {
+    Bandpost
+        .find()
+        .populate({
+            path: 'createdBy', 
+            select: 'username _id' //can name any field and populate
+        })
+        .populate({
+            path: 'replies.createdBy', 
+            select: 'username id' 
+        })
+        .then(populatedPosts =>{
+            if(req.method === 'GET'){
+                res.json(populatedPosts);
+            }
+            else{
+                res.status(201).json(populatedPosts)
+            }
+        })
+        .catch(err =>{
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error' });
+        });
 });
 
+
+
+
+/* might not need this one
 //GET Bandpost by ID
 router.get('/:id', (req,res) => {
     Bandpost
@@ -47,7 +81,7 @@ router.get('/:id', (req,res) => {
             res.status(500).json({ message: 'Internal server error' });
         }); 
 });
-
+*/
 // --- POST ---
 //Create New Bandpost
 router.post('/', urlParser, jwtAuth, checkRequiredFields, (req, res) => {
@@ -61,22 +95,11 @@ router.post('/', urlParser, jwtAuth, checkRequiredFields, (req, res) => {
             replies: req.body.replies
           })
           .then(post => {
-            Bandpost.findById(post._id)
-                    .populate({ 
-                        path: 'createdBy',
-                        select: 'username _id'
-                    })         
-                    .then(populatedpost => {
-                        console.log(populatedpost);
-                        res.status(201).json(populatedpost);
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        res.status(500).json({ message: 'Internal server error'})
-                    });
+            populateBandpost(req,res);
+          });
         
-    });
 });
+
 
 // --- PUT ---
 //Update a Bandpost

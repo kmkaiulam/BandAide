@@ -19,7 +19,7 @@ function populateAnnouncements(req, res){
     })
     .then(populatedPosts =>{
         if(req.method === 'GET'){
-        res.json(populatedPosts);
+            res.json(populatedPosts);
         }
         else{
             res.status(201).json(populatedPosts)

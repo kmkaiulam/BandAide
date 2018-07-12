@@ -1,11 +1,10 @@
 'use strict'
 
 // --- Global Variables ---
+let newDate;
 let newAnnouncement;
 let newBandpost;
 let newErr;
-let dispRecent;
-let dispRest;
 let eventButton;
 let announcementsId;
 let userId;
@@ -15,6 +14,16 @@ let userId;
 function convertDate(date){
     return new Date(date).toDateString();
 }
+function defineDate(data){
+    if (data.modified) {
+        newDate = `edited on ${convertDate(data.modified)}`;
+    }
+    else{
+        newDate =`posted on ${convertDate(data.created)}`;
+    }
+    return newDate;
+}
+
 
 function clearForm(){ 
     $('#message-text').val('');
@@ -27,6 +36,16 @@ function clearForm(){
     $('#resourceTopic').val('');
     $('#resourceDescription').val('');
 }
+
+
+function listenEditClick(){
+    $(document).on('click', '.editButton', event => {
+        event.preventDefault();
+        findDataIds(event);
+        //$('.editButton').prop('disabled', true);   --------------- disable edit button - not won't need if i can fix the id issue
+    });
+};
+
 function findDataIds(event){
     eventButton = event.target || event.srcElement;
     announcementsId= eventButton.getAttribute('data-id');
@@ -35,21 +54,36 @@ function findDataIds(event){
     console.log(`announcementsId = ${announcementsId}`);
 }
 
-function listenEditClick(){
-    $(document).on('click', '.editButton', event => {
-        event.preventDefault();
-        findDataIds(event);
-    });
-};
-// --- Announcement Message Generation
-function generateAnnouncement(data){
-    let date;
-    if (data.modified) {date = `edited on ${convertDate(data.modified)}`;}
-    else{date =`posted on ${convertDate(data.created)}`;}
-    newAnnouncement = `<div class='media text-muted pt-1 announcement-post'>
+
+
+function handlePostFail(err){
+    generateErrorMessage(err);
+    clearForm();
+}
+
+function handleDeleteFail(err){
+    alert(`${err.responseText}. Please Login.`);
+    window.location = '/login';
+}
+
+// --- Message Generation
+
+function generateErrorMessage(err){
+    newErr = `<div class='modal-body'>
+    <label for='message-text' class='col-form-label'>Error:</label>
+    <textarea disabled class='form-control' id='message-text'></textarea>
+    </div>
+<div class='modal-footer'>
+  <div class = 'text-danger'> ${err.responseText}. Please<a href = '/login'> Login </a></div>`
+  return $('.js-error-message').html(newErr);
+}
+
+function generateAnnouncementPost(data){
+    defineDate(data); 
+        newAnnouncement = `<div class='media text-muted pt-1 announcement-post'>
         <img data-src='holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1' alt='' class='mr-2 rounded'>
         <div class ='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'>
-            <p><strong class='d-block text-gray-dark'>@${data.createdBy.username} ${date}</strong> 
+            <p><strong class='d-block text-gray-dark'>@${data.createdBy.username} ${newDate}</strong> 
             ${data.text}
             </p>
             <div class="btn-group d-flex flex-row-reverse" role="group" aria-label="Button Group">
@@ -57,17 +91,28 @@ function generateAnnouncement(data){
                 <button type='button' class='btn btn-outline-primary mr-2 editButton' data-toggle='modal' data-target='#editAnnModal'><i data-id = '${data._id}' data-userId= '${data.createdBy._id}' class="far fa-edit"></i></button>
         </div>
     </div>`
-    return newAnnouncement;
+    return newAnnouncement
+};
+  
+function generateBandpost(data){
+    defineDate(data)
+    newBandpost = `
+        <div class='media text-muted pt-1'>
+        <img data-src='holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1' alt='' class='mr-2 rounded'>
+        <div class ='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'>
+            <p><strong class='d-block text-gray-dark'>@${data.createdBy.username} on ${newDate}</strong> 
+                <h3> ${data.topic}</h3>
+                ${data.description}
+            </p>
+            <div class="btn-group d-flex flex-row-reverse" role="group" aria-label="Button Group">
+                <button type="button" class="btn btn-outline-secondary mr-2 deleteButton"><i class="far fa-trash-alt"></i></button>
+                <button type="button" class="btn btn-outline-primary mr-2 editButton"><i class="far fa-edit"></i></button>
+                <button type="button" class="btn btn-outline-success mr-2 replyButton"><i class="fas fa-reply"></i></button>
+        </div>
+    </div>`
+    return newBandpost;
 };
 
-function generateErrorMessage(err){
-    newErr = `<div class='modal-body'>
-    <label for='message-text' class='col-form-label'>Message-text:</label>
-    <textarea disabled class='form-control' id='message-text'></textarea>
-    </div>
-<div class='modal-footer'>
-  <div class = 'text-danger'> ${err.responseText}. Please<a href = '/login'> Login </a></div>`
-}
 
 
 // --- Display in the DOM ---
@@ -78,18 +123,21 @@ function displayAnnouncements(){
         dataType: 'json',
         type: 'GET',
         success: function(data){
-           handleAnnouncementSubmit(data);
+            renderAnnouncements(data);
         }
     }
         return $.ajax(settings)
         .fail(function (err){
-            generateErrorMessage(err);
-            clearForm();
+           handlePostFail(err);
     });
 }
+
+
     //Display Recent and Collapsed Announcement posts
 function renderAnnouncements(data){
-    let dispAnnouncement = data.map(generateAnnouncement);
+    let dispAnnouncement = data.map(generateAnnouncementPost);
+    let dispRecent;
+    let dispRest;
     dispAnnouncement.reverse();
     dispRecent = dispAnnouncement.slice(0,3);
     dispRest = dispAnnouncement.slice(3);
@@ -112,23 +160,22 @@ function listenAnnouncementPostModal(){
             type: 'POST',
             success: function(data){
               console.log(data);
-              handleAnnouncementSubmit(data)
+              renderAnnouncements(data)
                $('#postAnnModal').modal('hide');
             
             }
         }
             return $.ajax(settings)
             .fail(function (err){
-                generateErrorMessage(err);
-                $('#js-post-announcement').html(newErr)
-                clearForm();
+               handlePostFail(err);
             });
     });
 }
         
-function handleDeleteAnnouncementClick(){
+function listenDeleteAnnouncementClick(){
     $(document).on('click', '.deleteButton', event => {
         event.preventDefault();
+        if (window.confirm('Proceed to delete?')){
         findDataIds(event);
         const settings = {
             url: `/api/announcements/${announcementsId}`,
@@ -143,12 +190,12 @@ function handleDeleteAnnouncementClick(){
                 console.log('Deleted post');
             }
         }
+        
         return $.ajax(settings)
             .fail(function (err){
-                console.log(err);
-                clearForm();
+               handleDeleteFail(err);
             });
-       
+        };
     })    
 }
 
@@ -166,25 +213,66 @@ function listenEditAnnouncement(){
         dataType: 'json',
         type: 'PUT',
         success: function(data){
-            handleAnnouncementSubmit(data)
+           renderAnnouncements(data)
             $('#editAnnModal').modal('hide');
+           // $('.editButton').prop('disabled', false);  --------------- disable edit button - not won't need if i can fix the id issue
             console.log('Edited Post');
         }
     }
     return $.ajax(settings)
         .fail(function (err){
-            console.log(err);
-            clearForm();
+           // $('.editButton').prop('disabled', false);  --------------- disable edit button - not won't need if i can fix the id issue
+            handlePostFail(err);
         });
    
     });
 };
 
 // -- Event Eval --
+function displayBandposts(){
+    const settings = {
+        url: '/api/bandposts/',
+        dataType: 'json',
+        type: 'GET',
+        success: function(data){
+            renderBandposts(data);
+        }
+    }
+        return $.ajax(settings)
+        .fail(function (err){
+           handlePostFail(err);
+    });
+}
+function renderBandposts(data){
+    let dispBandpost = data.map(generateBandpost);
+    dispBandpost.reverse();
+    let dispBandpostRecent = dispBandpost.slice(0,5);
+    let dispBandpostRest = dispBandpost.slice(5);
+    dispBandpostRecent.join('');
+    dispBandpostRest.join('');
+    //depending on 'posttype' display in DOM all posts in proper sections
+    console.log(data);
+    let bandpostPosttype = data[0].posttype 
+        if(bandpostPosttype === 'Event_Eval'){
+            $('#js-recent-events').html(dispBandpostRecent);
+            $('#js-all-events').html(dispBandpostRest);
+        }
+        if(bandpostPosttype === 'Equipment_Eval'){  
+            $('#js-recent-equipment').html(dispBandpostRecent);
+            $('#js-all-equipment').html(dispBandpostRest);
+
+            }
+        if(bandpostPosttype === 'Training_Resource'){
+            $('#js-recent-resources').html(dispBandpostRecent);
+            $('#js-all-resources').html(dispBandpostRest);
+        }
+   
+    clearForm();
+};
+
 function listenEventEval(){
     $('#js-events').submit(event =>{
         event.preventDefault();
-        console.log(userId);
         const settings = {
             url: '/api/bandposts/',
             data: {
@@ -195,16 +283,15 @@ function listenEventEval(){
             dataType: 'json',
             type: 'POST',
             success: function(data){
-                generateBandPost(data);
-                $('#js-new-events').append(newBandpost);
+               renderBandposts(data);
                 $('#eventsModal').modal('hide')
+                console.log(data);
                 clearForm();
             }
         }
         return $.ajax(settings)
             .fail(function (err){
-                console.log(err);
-                clearForm();
+              handlePostFail(err);
             });
         });
 };
@@ -224,16 +311,15 @@ function listenEquipmentEval(){
             type: 'POST',
             success: function(data){
                 console.log(data);
-                generateBandPost(data);
-                $('#js-new-equipment').append(newBandpost);
+                generateBandpost(data);
+                $('#js-new-equipment').append(newPost);
                 $('#equipmentModal').modal('hide')
                 clearForm();
             }
         }
         return $.ajax(settings)
             .fail(function (err){
-                clearForm();
-                console.log(err);
+                handlePostFail(err);
             });
         });
 };
@@ -252,52 +338,42 @@ function listenTraining(){
             dataType: 'json',
             type: 'POST',
             success: function(data){
-                generateBandPost(data);
-                $('#js-new-resources').append(newBandpost);
+                generateBandpost(data);
+                $('#js-new-resources').append(newPost);
                 $('#resourcesModal').modal('hide')
                 clearForm();
             }
         }
         return $.ajax(settings)
             .fail(function (err){
-                console.log(err);
-                clearForm();
+               handlePostFail(err);
             });
         });
 };
         
-            
-    
-
-
-
-function generateBandPost(data){
-    let date = convertDate(data.created);
-    newBandpost = `
-    <div id = '${data._id}' class='media text-muted pt-1'>
-        <img data-src='holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1' alt='' class='mr-2 rounded'>
-        <div class ='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'>
-            <p><strong class='d-block text-gray-dark'>@${data.createdBy.username} on ${date}</strong> 
-            <h3> ${data.topic}</h3>
-            ${data.description}
-            </p>
-            <div class="btn-group d-flex flex-row-reverse" role="group" aria-label="Button Group">
-                <button type="button" class="btn btn-outline-secondary mr-2 deleteButton"><i class="far fa-trash-alt"></i></button>
-                <button type="button" class="btn btn-outline-primary mr-2 editButton"><i class="far fa-edit"></i></button>
-                <button type="button" class="btn btn-outline-success mr-2 replyButton"><i class="fas fa-reply"></i></button>
-        </div>
-    </div>`
+function displayInDom(){
+    displayAnnouncements();
+    displayBandposts();
 }
 
-function onLoad(){
-    displayAnnouncements();
+function handleListenButtons(){
     listenEditClick();
     listenEditAnnouncement();
     listenAnnouncementPostModal();
     listenEventEval();
     listenEquipmentEval();
     listenTraining();
-    handleDeleteAnnouncementClick();
+    listenDeleteAnnouncementClick();
+}            
+    
+
+
+
+
+
+function onLoad(){
+    handleListenButtons();
+    displayInDom();
 }
 
 
