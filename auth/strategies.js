@@ -103,20 +103,20 @@ const checkRequiredFields = function(req,res,next) {
      requiredFields = ['posttype', 'topic', 'description'];
   }
   if (resourceName === 'bandposts' && requestMethod === 'PUT') {
-     requiredFields = ['bandpostId', 'posttype', 'topic', 'description'];
+     requiredFields = ['bandpostsId', 'posttype', 'topic', 'description'];
   }
   if (resourceName === 'bandposts' && requestMethod === 'DELETE') {
-     requiredFields = ['bandpostId', 'createdById'];
+     requiredFields = ['bandpostsId', 'createdById'];
   }
   // --- REPLIES ---
   if (nestedResourceName === 'reply' && requestMethod === 'POST') {
      requiredFields = ['topic', 'reply'];
   }
   if (nestedResourceName === 'reply' && requestMethod === 'PUT') {
-     requiredFields = ['bandpostId', 'createdById', 'replyId', 'topicUpdate', 'replyUpdate'];
+     requiredFields = ['bandpostsId', 'createdById', 'replyId', 'topicUpdate', 'replyUpdate'];
   }
   if (nestedResourceName === 'reply' && requestMethod === 'DELETE') {
-     requiredFields = ['bandpostId', 'replyId', 'createdById'];
+     requiredFields = ['bandpostsId', 'replyId', 'createdById'];
   }
     console.log(nestedResourceName);
     for (let i=0; i<requiredFields.length; i++) {
@@ -130,6 +130,7 @@ const checkRequiredFields = function(req,res,next) {
     next()
 };
 
+//Consider deleting this middleware
 const checkValidId = function(req, res, next) {   //Not sure If i want this  or if i want to rewrite it <-----------------
   let resourceName = req.originalUrl.split('/')[2];
   console.log(resourceName)
@@ -143,7 +144,8 @@ const checkValidId = function(req, res, next) {   //Not sure If i want this  or 
   }
   next();
 }
-  
+
+
 
 
 

@@ -25,7 +25,7 @@
     <main role='main' class = 'container'>
      <!-- Announcements -->
       <div class='my-3 p-3 bg-white rounded box-shadow'>
-        <h2 class='border-bottom border-gray pb-2 mb-0' >Announcements <button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#announcementsModal'>+</button></h2>
+        <h2 class='border-bottom border-gray pb-2 mb-0' >Announcements <button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#postAnnModal'>+</button></h2>
         <div id = 'js-recent-announcement'></div>
         <div class="collapse" id="collapseAllAnnouncement">
           <div id = 'js-all-announcement'></div>
@@ -112,11 +112,11 @@
   <!--Announcement Modal -->
       <!-- POST-->
   <section> 
-    <div class='modal' id='announcementsModal' tabindex='-1' role='dialog' aria-labelledby='announcementsModalLabel' aria-hidden='true'>
+    <div class='modal' id='postAnnModal' tabindex='-1' role='dialog' aria-labelledby='postAnnModalLabel' aria-hidden='true'>
         <div class='modal-dialog modal-dialog-centered' role='document'>
           <div class='modal-content'>
             <div class='modal-header'>
-              <h5 class='modal-title' id='announcementsModalLabel'>Create a New Announcement</h5>
+              <h5 class='modal-title' id='postAnnModalLabel'>Create a New Announcement</h5>
               <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
                 <span aria-hidden='true'>&times;</span>
               </button>
@@ -124,7 +124,7 @@
             <form id = 'js-post-announcement'>
               <div class='modal-body'>
                 <label for='message-text' class='col-form-label'>Message-text:</label>
-                <textarea class='form-control' id='message-text'></textarea>
+                <textarea class='form-control' id='message-text' required></textarea>
               </div>
             <div class='modal-footer'>
               <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
@@ -135,6 +135,30 @@
       </div>
     </section>
 
+    <!-- PUT -->
+    <section> 
+      <div class='modal' id='editAnnModal' tabindex='-1' role='dialog' aria-labelledby='editAnnModalLabel' aria-hidden='true'>
+          <div class='modal-dialog modal-dialog-centered' role='document'>
+            <div class='modal-content'>
+              <div class='modal-header'>
+                <h5 class='modal-title' id='editAnnModalLabel'>Edit Announcement</h5>
+                <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                  <span aria-hidden='true'>&times;</span>
+                </button>
+              </div>
+              <form id = 'js-edit-announcement'>
+                <div class='modal-body'>
+                  <label for='message-edit' class='col-form-label'>Message-text:</label>
+                  <textarea class='form-control' id='message-edit' required></textarea>
+                </div>
+              <div class='modal-footer'>
+                <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+                <button type='submit' class='btn btn-primary' >Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
   
  <!--Event Evals Modal -->
   

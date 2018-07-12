@@ -8,26 +8,39 @@ const {Announcement} = require('../models');
 const {jwtAuth, checkValidUser, checkRequiredFields, checkValidId} = require('../auth')
 mongoose.Promise = global.Promise;
 
+
+// --- Common Functions ---
+function populateAnnouncements(req, res){
+    Announcement
+    .find()
+    .populate({
+        path: 'createdBy', 
+        select: 'username _id' //can name any field and populate
+    })
+    .then(populatedPosts =>{
+        if(req.method === 'GET'){
+        res.json(populatedPosts);
+        }
+        else{
+            res.status(201).json(populatedPosts)
+        }
+    })
+    .catch(err =>{
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }); 
+};
+
+
 // --- GET ---
 //GET request
-router.get('/', (req, res) => {
-    Announcement
-        .find()
-        .populate({
-            path: 'createdBy', 
-            select: 'username _id' //can name any field and populate
-        })
-        .then(announcements => {
-            res.json(announcements);
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error' });
-        }); 
+router.get('/', (req, res) =>{
+  populateAnnouncements(req,res);
 });
 
+/* MIGHT NOT NEED THIS ONE
 //GET announcement by ID
-router.get('/:id', (req, res) => {
+router.get('/:id', (req, res) =>{
     
     Announcement
         .findById(req.params.id)
@@ -35,50 +48,37 @@ router.get('/:id', (req, res) => {
             path: 'createdBy',
             select: 'username _id' //can name any field and populate
         })
-        .then(announcement => {
+        .then(announcement =>{
             res.json(announcement);
         })
-        .catch(err => {
+        .catch(err =>{
             console.error(err);
             res.status(500).json({ message: 'Internal server error' });
         }); 
 });
-
+*/
       
 // --- POST ---
-router.post('/',urlParser, jwtAuth, checkRequiredFields, (req, res) => {
-        
+router.post('/',urlParser, jwtAuth, checkRequiredFields, (req, res) =>{
     Announcement
         .create({
              text: req.body.text,
              created: req.body.created,
              createdBy: req.user.id 
         })
-        .then(post => {
-            Announcement.findById(post._id)
-                .populate({ 
-                    path: 'createdBy',
-                    select: 'username _id'
-                })         
-                .then(populatedpost => {
-                    console.log(populatedpost);
-                    res.status(201).json(populatedpost);
-                })
-                .catch(err => {
-                    console.error(err);
-                    res.status(500).json({ message: 'Internal server error'})
-                 });
+        .then(post =>{
+           populateAnnouncements(req,res)
               });
 });
 
 // --- PUT ---
-router.put('/:id', jwtAuth, checkValidUser, checkRequiredFields, checkValidId, (req, res) => {
+router.put('/:id', urlParser, jwtAuth, checkValidUser, checkRequiredFields, (req, res) =>{
 console.log(`Updating bandpost entry \`${req.params.id}\``);
   const toUpdate = {};
   const updateableFields = ['text']; 
 
-  updateableFields.forEach(field => {
-      if (field in req.body) {
+  updateableFields.forEach(field =>{
+      if (field in req.body){
           toUpdate[field] = req.body[field];
       }
   })
@@ -87,33 +87,15 @@ console.log(`Updating bandpost entry \`${req.params.id}\``);
 
   Announcement
         .findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
-        .then(announcement => {
-            console.log(announcement)
-            res.status(201).send(announcement)
-        })
-          .catch(err => {
-              console.error(err);
-              res.status(500).json({ message: 'Internal server error' });         
-        })
+        .then(announcement =>{
+           populateAnnouncements(req,res)
+        });
 });
 
 
+
 // --- DELETE ---
-router.delete('/:id', jwtAuth, checkValidUser, (req,res) => {
-    const requiredFields = ['announcementId', 'createdById'];
-    for (let i=0; i<requiredFields.length; i++) {
-        const field =requiredFields[i];
-        if(!(field in req.body)) {
-            const message = `Missing \`${field}\` in request body`
-            console.error(message);
-            return res.status(400).send(message);
-        }
-    }
-    if (req.params.id !== req.body.announcementId){
-        const message = `Request path id (${req.params.id}) and request body id (${req.body.announcementId}) must match`;
-        console.error(message);
-        return res.status(400).send(message);
-    }
+router.delete('/:id', urlParser, jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
 console.log(`Deleting bandpost entry \`${req.params.id}\``);
    
     Announcement
@@ -121,7 +103,7 @@ console.log(`Deleting bandpost entry \`${req.params.id}\``);
         .then(Announcement =>{
             res.status(204).end();
         })
-        .catch(err => {
+        .catch(err =>{
             console.error(err);
             res.status(500).json({ message: 'Internal server error' });
         });
