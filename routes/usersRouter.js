@@ -1,9 +1,6 @@
 'use strict';
 // --- MODULES ---
 const express = require('express');
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
-const urlParser = bodyParser.urlencoded();
 // --- IMPORTS ---
 const {User} = require('../models');
 const {jwtAuth} = require('../auth')
@@ -12,7 +9,7 @@ const router = express.Router();
 
 
 // Post to register a new user
-router.post('/', urlParser, (req, res) => {
+router.post('/', (req, res) => {
   console.log(req.body);
   const requiredFields = ['username', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));

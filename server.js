@@ -31,6 +31,9 @@ app.get('/signup', (req,res) => {
 // --- MIDDLEWARE ---
 app.use(express.json());
 app.use(express.static('public'));
+app.use(express.urlencoded(({
+  extended: true
+})));
 app.use(cookieParser());
 
 // --- LOGGING ---

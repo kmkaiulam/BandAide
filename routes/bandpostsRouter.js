@@ -2,43 +2,31 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose')
-const bodyParser = require('body-parser');
-const urlParser = bodyParser.urlencoded();
 const {jwtAuth, checkValidUser, checkRequiredFields} = require('../auth')
 const {Bandpost} = require('../models');
 mongoose.Promise = global.Promise;
 
 
 // --- Common Functions ---
-function populateBandpost(req, res){
-    Bandpost
-        .find({'posttype': `${req.body.posttype}`})
-        .populate({
+function populateBandpost(req){
+    return Bandpost.find({'posttype': `${req.body.posttype}`})
+    .populate({
             path: 'createdBy', 
             select: 'username _id' 
         })
-        .populate({
+    .populate({
             path: 'replies.createdBy', 
             select: 'username id' 
         })
-        .then(populatedPosts =>{
-            if(req.method === 'GET'){
-                res.json(populatedPosts);
-            }
-            else{
-                res.status(201).json(populatedPosts)
-            }
-        })
-        .catch(err =>{
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error' });
-        });
 };
+      
+
 // --- Bandposts ---
-// --- GET --- Events
-router.get('/', (req, res) => {
+    // --- GET  
+    // ---Display Events    
+router.get('/events', (req, res) => {
     Bandpost
-        .find()
+        .find({'posttype': 'Event_Eval'})
         .populate({
             path: 'createdBy', 
             select: 'username _id' //can name any field and populate
@@ -48,12 +36,7 @@ router.get('/', (req, res) => {
             select: 'username id' 
         })
         .then(populatedPosts =>{
-            if(req.method === 'GET'){
-                res.json(populatedPosts);
-            }
-            else{
-                res.status(201).json(populatedPosts)
-            }
+            res.json(populatedPosts)
         })
         .catch(err =>{
             console.error(err);
@@ -61,64 +44,80 @@ router.get('/', (req, res) => {
         });
 });
 
-
-
-
-/* might not need this one
-//GET Bandpost by ID
-router.get('/:id', (req,res) => {
+    // --- Display Equipment
+router.get('/equipment', (req, res) => {
     Bandpost
-        .findById(req.params.id)
+        .find({'posttype': 'Equipment_Eval'})
         .populate({
             path: 'createdBy', 
-            select: 'username id' //can name any field and populate
+            select: 'username _id' //can name any field and populate
         })
-        .then(bandpost =>{
-            res.json(bandpost)
+        .populate({
+            path: 'replies.createdBy', 
+            select: 'username id' 
         })
-        .catch(err => {
+        .then(populatedPosts =>{
+            res.json(populatedPosts)
+        })
+        .catch(err =>{
             console.error(err);
             res.status(500).json({ message: 'Internal server error' });
-        }); 
+        });
 });
-*/
+
+    // --- Display Training 
+router.get('/training', (req, res) => { 
+    Bandpost
+        .find({'posttype': 'Training_Resource'})
+        .populate({
+            path: 'createdBy', 
+            select: 'username _id' //can name any field and populate
+        })
+        .populate({
+            path: 'replies.createdBy', 
+            select: 'username id' 
+        })
+        .then(populatedPosts =>{
+            res.json(populatedPosts)
+        })
+        .catch(err =>{
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+        });
+});
+
+
+
 // --- POST ---
 //Create New Bandpost
-router.post('/', urlParser, jwtAuth, checkRequiredFields, (req, res) => {
+router.post('/', jwtAuth, checkRequiredFields, (req, res) => {
     Bandpost
         .create({
             posttype: req.body.posttype,
             topic: req.body.topic,
             description: req.body.description,
             created: req.body.created,
+            youtubeLink: req.body.youtubeLink,
             createdBy: req.user.id,
             replies: req.body.replies
-          })
-          .then(post => {
-            populateBandpost(req,res);
-          });
-        
+        })
+        .then(post => {
+            return populateBandpost(req);
+        })
+        .then(populatedPosts =>{
+            res.status(201).json(populatedPosts)
+        })
+        .catch(err =>{
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error' });
+        });       
 });
 
 
 // --- PUT ---
 //Update a Bandpost
 //Check for required fields
-router.put('/:id',urlParser, jwtAuth, checkValidUser, checkRequiredFields, (req, res) => {
-    const requiredFields = ['bandpostId', 'posttype', 'topic', 'description'];
-    for (let i=0; i<requiredFields.length; i++) {
-        const field =requiredFields[i];
-        if(!(field in req.body)) {
-            const message = `Missing \`${field}\` in request body`
-            console.error(message);
-            return res.status(400).send(message);
-        }
-    }
-    if (req.params.id !== req.body.bandpostId){
-        const message = `Request path id (${req.params.id}) and request body id (${req.body.bandpostId}) must match`;
-        console.error(message);
-        return res.status(400).send(message);
-    }
+router.put('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res) => {
 console.log(`Updating bandpost entry \`${req.params.id}\``);
 
   const toUpdate = {};
@@ -132,36 +131,24 @@ console.log(`Updating bandpost entry \`${req.params.id}\``);
   //Add modified date to post 
   toUpdate.modified = Date.now();
   console.log(toUpdate);
-  //add middleware to validate that the user owns this post, otherwise throw error
+  
   Bandpost
       .findByIdAndUpdate(req.params.id, {$set: toUpdate}, { new: true })
         .then(post => {
-            console.log(post)
-            res.status(201).send(post)
+            return populateBandpost(req);
         })
-          .catch(err => {
-              console.error(err);
-              res.status(500).json({ message: 'Internal server error' }); 
-          });
+        .then(populatedAnnouncement =>{
+            res.status(200).send(populatedAnnouncement)
+        })
+        .catch(err =>{
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error' });
+        });          
 });
 
 // --- DELETE ---
 //DELETE a Bandpost
-router.delete('/:id', urlParser, jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
-    const requiredFields = ['bandpostId', 'createdById'];
-    for (let i=0; i<requiredFields.length; i++) {
-        const field =requiredFields[i];
-        if(!(field in req.body)) {
-            const message = `Missing \`${field}\` in request body`
-            console.error(message);
-            return res.status(400).send(message);
-        }
-    }
-    if (req.params.id !== req.body.bandpostId){
-        const message = `Request path id (${req.params.id}) and request body id (${req.body.bandpostId}) must match`;
-        console.error(message);
-        return res.status(400).send(message);
-    }
+router.delete('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
 console.log(`Deleting bandpost entry \`${req.params.id}\``);
    
     Bandpost
@@ -197,7 +184,7 @@ router.get('/reply/:id', (req,res) => {
 // --- POST ---
 //Add Reply to a Bandpost post
 //Check for required fields
-router.post('/reply/:id', urlParser, jwtAuth, checkRequiredFields, (req, res) => {
+router.post('/reply/:id', jwtAuth, checkRequiredFields, (req, res) => {
     const requiredFields = ['topic', 'reply'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
@@ -234,7 +221,7 @@ router.post('/reply/:id', urlParser, jwtAuth, checkRequiredFields, (req, res) =>
 
 // --- PUT ---
 //REPLY UPDATE
-router.put('/reply/:id', urlParser, jwtAuth, checkValidUser, checkRequiredFields, (req, res) => {
+router.put('/reply/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res) => {
     const requiredFields = ['bandpostId', 'createdById', 'replyId', 'topicUpdate', 'replyUpdate'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
@@ -269,7 +256,7 @@ console.log(`Updating reply entry \`${req.params.id}\``);
        
 // ---DELETE ---
 //DELETE a reply from a bandpost
-router.delete('/reply/:id',urlParser, jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
+router.delete('/reply/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
     const requiredFields = ['bandpostId', 'replyId', 'createdById'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
@@ -279,13 +266,6 @@ router.delete('/reply/:id',urlParser, jwtAuth, checkValidUser, checkRequiredFiel
             return res.status(400).send(message);
         }
     }
-    /* Remove? -----
-    if (req.params.id !== req.body.bandpostId){
-        const message = `Request path id (${req.params.id}) and request body id (${req.body.bandpostId}) must match`;
-        console.error(message);
-        return res.status(400).send(message);
-    }
-    */
 console.log(`Deleting reply for bandpost \`${req.params.id}\``);
     Bandpost
         .findById(req.params.id)

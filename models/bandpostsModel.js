@@ -40,6 +40,9 @@ const BandpostSchema = new Schema({
     type: String,
     required: true
   },
+  youtubeLink: {
+    type: String
+  },
   created: {
     type: Date, 
     default: Date.now

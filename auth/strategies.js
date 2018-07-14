@@ -103,7 +103,7 @@ const checkRequiredFields = function(req,res,next) {
      requiredFields = ['posttype', 'topic', 'description'];
   }
   if (resourceName === 'bandposts' && requestMethod === 'PUT') {
-     requiredFields = ['bandpostsId', 'posttype', 'topic', 'description'];
+     requiredFields = ['bandpostsId','createdById', 'posttype', 'topic', 'description'];
   }
   if (resourceName === 'bandposts' && requestMethod === 'DELETE') {
      requiredFields = ['bandpostsId', 'createdById'];

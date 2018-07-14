@@ -21,7 +21,7 @@
             <h3><em>Be Heard</em></h3>
       </div>
     </header>
-    
+  
     <main role='main' class = 'container'>
      <!-- Announcements -->
       <div class='my-3 p-3 bg-white rounded box-shadow'>
@@ -69,14 +69,14 @@
           <h2 class='border-bottom border-gray pb-2 mb-0' >Equipment Eval<button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#equipmentModal'>+</button></h2>
           <p><em>Projector needs a new bulb? Wire management issues?  Missing music stands? Here's where you can voice it.</em></p>
           <div id = 'js-recent-equipment'></div>
-          <div class="collapse" id="collapseAllequipment">
+          <div class="collapse" id="collapseAllEquipment">
             <div id = 'js-all-equipment'></div>
           </div>
 
           <div>
             <small class='d-block text-right mt-3'>
               <p>
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAllresources" aria-expanded="false" aria-controls="collapseresource">
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAllEquipment" aria-expanded="false" aria-controls="collapseEquipment">
                 <!--Button with data-target --> All Equipment
                 </button>              
               </p>
@@ -85,17 +85,17 @@
       </div>         
       <!-- Training Resources --> 
       <div class='my-3 p-3 bg-white rounded box-shadow'>
-        <h2 class='border-bottom border-gray pb-2 mb-0' >Training Resources<button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#resourcesModal'>+</button></h2>
+        <h2 class='border-bottom border-gray pb-2 mb-0' >Training Resources<button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#trainingModal'>+</button></h2>
         <p><em>We need all the help we can get. Here's where you can share training videos, articles or anything else you think would help.</em></p>
-        <div id = 'js-new-resources'></div>
-        <div class="collapse" id="collapseAllresources">
-          <div id = 'js-all-resources'></div>
+        <div id = 'js-recent-training'></div>
+        <div class="collapse" id="collapseAllTraining">
+          <div id = 'js-all-training'></div>
         </div>
 
         <div>
           <small class='d-block text-right mt-3'>
             <p>
-              <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAllresources" aria-expanded="false" aria-controls="collapseresource">
+              <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAllTraining" aria-expanded="false" aria-controls="collapseTraining">
               <!--Button with data-target --> All Resources
               </button>              
             </p>
@@ -160,8 +160,8 @@
         </div>
       </section>
   
- <!--Event Evals Modal -->
-  
+  <!--Event Evals Modal -->
+    <!-- POST-->
     <section>
       <div class='modal' id='eventsModal' tabindex='-1' role='dialog' aria-labelledby='eventsModalLabel' aria-hidden='true'>
           <div class='modal-dialog modal-dialog-centered' role='document'>
@@ -187,6 +187,34 @@
           </div>
         </div>
       </section>
+
+    <!-- PUT -->
+    <section>
+      <div class='modal' id='editEventsModal' tabindex='-1' role='dialog' aria-labelledby='editEventsModalLabel' aria-hidden='true'>
+          <div class='modal-dialog modal-dialog-centered' role='document'>
+            <div class='modal-content'>
+              <div class='modal-header'>
+                <h5 class='modal-title' id='editEventsModalLabel'>Edit Event Eval</h5>
+                <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                  <span aria-hidden='true'>&times;</span>
+                </button>
+              </div>
+              <form id = 'js-edit-events' class = 'js-error-message'>
+                <div class='modal-body'>
+                  <label for='editEventTopic' class='col-form-label'>Topic:</label>
+                  <input name= 'topic' type='text' id='editEventTopic' class='form-control' placeholder='ex. SWS20180708' required autofocus>
+                  <label for='editEventDescription' class='col-form-label'>Description:</label>
+                  <textarea class='form-control' id='editEventDescription' required></textarea>
+                </div>
+              <div class='modal-footer'>
+                <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+                <button type='submit' class='btn btn-primary' >Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
 
   <!-- Equipment Evals Modal -->
    <section>
@@ -218,21 +246,24 @@
 
 <!-- Training Resources Modal -->
     <section>
-      <div class='modal' id='resourcesModal' tabindex='-1' role='dialog' aria-labelledby='resourcesModalLabel' aria-hidden='true'>
+      <div class='modal' id='trainingModal' tabindex='-1' role='dialog' aria-labelledby='trainingModalLabel' aria-hidden='true'>
           <div class='modal-dialog modal-dialog-centered' role='document'>
             <div class='modal-content'>
               <div class='modal-header'>
-                <h5 class='modal-title' id='resourcesModalLabel'>Add a New Training Resource</h5>
+                <h5 class='modal-title' id='trainingModalLabel'>Add a New Training Resource</h5>
                 <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
                   <span aria-hidden='true'>&times;</span>
                 </button>
               </div>
-              <form id = 'js-resources' class = 'js-error-message'>
+              <form id = 'js-training' class = 'js-error-message'>
                 <div class='modal-body'>
-                    <label for='resourceTopic' class='col-form-label'>Topic:</label>
-                    <input name= 'topic' type='text' id='resourceTopic' class='form-control' placeholder='ex. Compression and EQ' required autofocus>
-                    <label for='resourceDescription' class='col-form-label'>description:</label>
-                    <textarea class='form-control' id='resourceDescription' required></textarea>
+                    <label for='trainingVideo' class='col-form-label'>Youtube Link (optional):</label>
+                    <input name = 'youtubeLink' class = 'form-control' id='trainingVideo' placeholder='ex. https://www.youtube.com/watch?v=eY_6B1EDj0I'>  
+                    <label for='trainingTopic' class='col-form-label'>Topic:</label>
+                    <input name= 'topic' type='text' id='trainingTopic' class='form-control' placeholder='ex. Compression and EQ' required autofocus>
+                    <label for='trainingDescription' class='col-form-label'>description:</label>
+                    <textarea class='form-control' id='trainingDescription' required></textarea>
+                    
                 </div>
               <div class='modal-footer'>
                 <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
