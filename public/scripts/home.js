@@ -1,7 +1,6 @@
 'use strict'
 // Make render bandPosts and render Announcements 1 function using conditionals
 // Figure out Video Js to make videos load properly
-// Add urlParser into server.js to apply to all routes and remove the parser from the middleware for all routes
 // Remove Equipment eval
 // Try to use 1 modal for multiple bandposts - altering the content inside depending on posttype
  
@@ -115,24 +114,24 @@ function generateBandpost(data){
     }
     newBandpost = ` 
         <div class='media text-muted pt-1 bandpost-post'>
-        <img data-src='holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1' alt='' class='mr-2 rounded'>
-        <div class ='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'>
-       
-        <div class = 'container'>
-            <div><strong class='d-block text-gray-dark'>@${data.createdBy.username} on ${newDate}</strong></div>
-                <h3> ${data.topic}</h3>
-                <div class = 'd-flex align-items-center justify-content-center'>${video} </div>
-                <p>${data.description} </p>
-        </div>
+         <img data-src='holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1' alt='' class='mr-2 rounded'>
+            <div class ='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'>
+                <div class = 'container'>
+                    <div><strong class='d-block text-gray-dark'>@${data.createdBy.username} on ${newDate}</strong></div>
+                    <h3> ${data.topic}</h3>
+                    <div class = 'd-flex align-items-center justify-content-center'>${video} </div>
+                    <p>${data.description} </p>
+                </div>
            
             
             <div class='btn-group d-flex flex-row-reverse' role='group' aria-label='Button Group'>
-                
             <button type='button' data-id = '${data._id}' data-userId= '${data.createdBy._id}' class='btn btn-outline-secondary mr-2 deleteBandpostButton'><i data-id = '${data._id}' data-userId= '${data.createdBy._id}' class="far fa-trash-alt"></i>
             <button type='button' data-id = '${data._id}' data-userId= '${data.createdBy._id}' class='btn btn-outline-primary mr-2 editButton' data-toggle='modal' data-target='#editEventsModal'><i data-id = '${data._id}' data-userId= '${data.createdBy._id}' class="far fa-edit"></i></button>
             <button type='button' data-id = '${data._id}' data-userId= '${data.createdBy._id}' class='btn btn-outline-success mr-2 replyButton'><i data-id = '${data._id}' data-userId= '${data.createdBy._id}' class='fas fa-reply'></i></button>
-        </div>
-    </div>`
+            </div>
+        </div>`
+
+
     return newBandpost;
 };
 
@@ -158,18 +157,46 @@ function displayAnnouncements(){
 
     //Display Recent and Collapsed Announcement posts
 function renderAnnouncements(data){
-    let dispAnnouncement = data.map(generateAnnouncementPost);
-    let dispRecent;
-    let dispRest;
-    dispAnnouncement.reverse();
-    dispRecent = dispAnnouncement.slice(0,3);
-    dispRest = dispAnnouncement.slice(3);
+   let dispPost;
+   let dispRecent;
+   let dispRest;
+   if (!data.posttype){
+        dispPost = data.map(generateAnnouncementPost);
+    }
+    else{
+        dispPost = data.map(generateBandpost);
+    }
+    dispPost.reverse();
+    dispRecent = dispPost.slice(0,3);
+    dispRest = dispPost.slice(3);
     dispRecent.join('');
     dispRest.join('');
+
+    if (!data.posttype){
     $('#js-recent-announcement').html(dispRecent);
     $('#js-all-announcement').html(dispRest);
     clearForm();
-}
+    }
+
+    else {
+        let bandpostType = data[0].posttype;
+            if(bandpostPosttype === 'Event_Eval'){
+                $('#js-recent-events').html(dispBandpostRecent);
+                $('#js-all-events').html(dispBandpostRest);
+            }
+            if(bandpostPosttype === 'Equipment_Eval'){  
+                $('#js-recent-equipment').html(dispBandpostRecent);
+                $('#js-all-equipment').html(dispBandpostRest);
+            }
+            if(bandpostPosttype === 'Training_Resource'){
+                $('#js-recent-training').html(dispBandpostRecent);
+                $('#js-all-training').html(dispBandpostRest);
+            }
+        clearForm();
+    }
+};
+    
+
 
 function listenAnnouncementPost(){
     $('#js-post-announcement').submit(event =>{
@@ -426,8 +453,8 @@ function listenEquipmentEvalPost(){
             success: function(data){
                 console.log(data);
                 renderBandposts(data)
-             //  $('#equipmentModal').modal('hide')
-               // clearForm();
+               $('#equipmentModal').modal('hide')
+                clearForm();
             }
         }
         return $.ajax(settings)
@@ -436,6 +463,35 @@ function listenEquipmentEvalPost(){
             });
         });
 };
+
+function listenEquipmentEdit(){
+    $('#js-edit-events').submit(event =>{
+        event.preventDefault();
+        const settings = {
+            url: `/api/bandposts/${postId}`,
+            data: {
+                'bandpostsId':`${postId}`,
+                'createdById':`${userId}`,
+                'posttype': 'Event_Eval',
+                'topic': $('#editEventTopic').val(),
+                'description': $('#editEventDescription').val(),
+                },
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data){
+               console.log(data);
+                renderBandposts(data);
+                $('#editEventsModal').modal('hide')
+                clearForm();
+            }
+        }
+        return $.ajax(settings)
+            .fail(function (err){
+              handlePostFail(err);
+            });
+        });
+};
+
 
 
 // -- Training Resources --

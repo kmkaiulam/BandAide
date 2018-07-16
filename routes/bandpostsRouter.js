@@ -2,7 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose')
-const {jwtAuth, checkValidUser, checkRequiredFields} = require('../auth')
+const {jwtAuth} = require('../auth')
+const {checkValidUser, checkRequiredFields} = require('../middleware/validation')
 const {Bandpost} = require('../models');
 mongoose.Promise = global.Promise;
 
