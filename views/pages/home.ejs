@@ -11,6 +11,8 @@
   </head>
 
   <body>
+
+    
      <!-- Navigation Bar -->
     <% include ../partials/navbar %>
    
@@ -22,295 +24,129 @@
       </div>
     </header>
   
-    <main role='main' class = 'container'>
-     <!-- Announcements -->
+    <main role='main' class ='container'>
+    
       <div class='my-3 p-3 bg-white rounded box-shadow'>
-        <h2 class='border-bottom border-gray pb-2 mb-0' >Announcements <button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#postAnnModal'>+</button></h2>
-        <div id = 'js-recent-announcement'></div>
-        <div class="collapse" id="collapseAllAnnouncement">
-          <div id = 'js-all-announcement'></div>
+          <div class="accordion" id="accordionExample">
+          <div class="card">
+
+            <div class="card-header" id="headingOne">
+              <h5 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                  <h2>Announcements</h2>
+                </button>
+              </h5>
+            </div>
+        
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+              <div class="card-body">
+                  <p><em>What's Happening Now.</em></p>  
+                  <div class="btn-group d-flex flex-row-reverse" role="group" aria-label="Button Group">
+                  <button type='button' class='btn btn-outline-primary mr-2' data-toggle='modal' data-target='#postAnnModal'>+</button>
+                  </div>
+                  
+                  <div id = 'js-recent-announcement'></div>
+                  <div class="collapse" id="collapseAllAnnouncement">
+                    <div id = 'js-all-announcement'></div>
+                  </div>
+        
+                  <div>
+                    <small class='d-block text-right mt-3'>
+                      <p>
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAllAnnouncement" aria-expanded="false" aria-controls="collapseAnnouncement">
+                        All Announcements
+                        </button>
+                      </p>
+                    </small>
+                  </div>
+
+              </div>
+            </div>
+
+          </div>
+          
+          <div class="card">
+
+            <div class="card-header" id="headingTwo">
+              <h5 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  <h2>Event Eval</h2>
+                </button>
+              </h5>
+            </div>
+
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+              <div class="card-body">
+                  <p><em>Here's a space that we can discuss tech issues by event. Notice it. Work on it. Own it. Now. </em></p>
+                  
+                  <div class="btn-group d-flex flex-row-reverse" role="group" aria-label="Button Group">
+                      <button type='button' class='btn btn-outline-primary mr-2'  data-toggle='modal' data-target='#eventsModal'>+</button>
+                  </div>
+                  <div id = 'js-recent-event'></div>
+                  
+                  <div class="collapse" id="collapseAllEvents">
+                    <div id = 'js-all-event'></div>
+                  </div>
+        
+                  <div>
+                    <small class='d-block text-right mt-3'>
+                      <p>
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAllEvents" aria-expanded="false" aria-controls="collapseAllEvents">
+                        All Events
+                        </button>
+                      </p>
+                    </small>
+                  </div>
+                
+                
+                </div>   
+              </div>
+
+            </div>
+         
+          
+          <div class="card">
+            <div class="card-header" id="headingThree">
+              <h5 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  <h2>Training Resources</h2>
+                </button>
+              </h5>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+              <div class="card-body">
+                <p><em>We need all the help we can get. Here's where you can share training videos, articles or anything else you think would help.</em></p>
+                      
+                <div class="btn-group d-flex flex-row-reverse" role="group" aria-label="Button Group">
+                  <button type='button' class='btn btn-outline-primary mr-2'  data-toggle='modal' data-target='#trainingModal'>+</button>
+                </div>
+                <div id = 'js-recent-training'></div>
+                <div class="collapse" id="collapseAllTraining">
+                  <div id = 'js-all-training'></div>
+                </div>
+              
+                <div>
+                  <small class='d-block text-right mt-3'>
+                    <p>
+                      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAllTraining" aria-expanded="false" aria-controls="collapseTraining">
+                        All Resources
+                      </button>              
+                    </p>
+                  </small>
+                </div>
+              </div>  
+            </div>
+          </div>
+        
         </div>
-           
-        <div>
-          <small class='d-block text-right mt-3'>
-           <p>
-             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAllAnnouncement" aria-expanded="false" aria-controls="collapseAnnouncement">
-               All Announcements
-             </button>
-           </p>
-          </small>
-        </div>
-      
       </div>
 
-      
-      <!-- Event Eval --> 
-      <nav aria-label="Page navigation example">
-          <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-          </ul>
-        </nav>
-      <div class='my-3 p-3 bg-white rounded box-shadow'>
-        <h2 class='border-bottom border-gray pb-2 mb-0' >Event Eval <button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#eventsModal'>+</button></h2>
-        <p><em>Event tech evaluations. A forum for discussing: what went right, what went wrong and what can we do to fix it.</em></p>
-        <div id = 'js-recent-events'></div>
-        <div class="collapse" id="collapseAllEvents">
-          <div id = 'js-all-events'></div>
-        </div>
-
-        <div>
-          <small class='d-block text-right mt-3'>
-            <p>
-              <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAllEvents" aria-expanded="false" aria-controls="collapseEvent">
-              <!--Button with data-target --> All Events
-              </button>
-            </p>
-          </small>
-        </div>
-      </div>
-
-      <!-- Equipment Eval 
-      <div class='my-3 p-3 bg-white rounded box-shadow'>
-          <h2 class='border-bottom border-gray pb-2 mb-0' >Equipment Eval<button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#equipmentModal'>+</button></h2>
-          <p><em>Projector needs a new bulb? Wire management issues?  Missing music stands? Here's where you can voice it.</em></p>
-          <div id = 'js-recent-equipment'></div>
-          <div class="collapse" id="collapseAllEquipment">
-            <div id = 'js-all-equipment'></div>
-          </div>
-
-          <div>
-            <small class='d-block text-right mt-3'>
-              <p>
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAllEquipment" aria-expanded="false" aria-controls="collapseEquipment">
-                 All Equipment
-                </button>              
-              </p>
-            </small>
-          </div>
-      </div>     
-    -->     
-      <!-- Training Resources --> 
-      <div class='my-3 p-3 bg-white rounded box-shadow'>
-        <h2 class='border-bottom border-gray pb-2 mb-0' >Training Resources<button type='button' class='btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#trainingModal'>+</button></h2>
-        <p><em>We need all the help we can get. Here's where you can share training videos, articles or anything else you think would help.</em></p>
-        <div id = 'js-recent-training'></div>
-        <div class="collapse" id="collapseAllTraining">
-          <div id = 'js-all-training'></div>
-        </div>
-
-        <div>
-          <small class='d-block text-right mt-3'>
-            <p>
-              <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAllTraining" aria-expanded="false" aria-controls="collapseTraining">
-              <!--Button with data-target --> All Resources
-              </button>              
-            </p>
-          </small>
-        </div>
-      </div>   
-
-      
+      <% include ../partials/modal %>
+   
          
 
 
-<!-- Modals -->
-  <!--Announcement Modal -->
-  <!-- POST-->
-  <section> 
-    <div class='modal' id='postAnnModal' tabindex='-1' role='dialog' aria-labelledby='postAnnModalLabel' aria-hidden='true'>
-      <div class='modal-dialog modal-dialog-centered' role='document'>
-        <div class='modal-content'>
-           <div class='modal-header'>
-            <h5 class='modal-title' id='postAnnModalLabel'>Create a New Announcement</h5>
-             <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-              <span aria-hidden='true'>&times;</span>
-             </button>
-          </div>
-          <form id = 'js-post-announcement' class = 'js-error-message'>
-            <div class='modal-body'>
-               <label for='message-text' class='col-form-label'>Message-text:</label>
-              <textarea class='form-control' id='message-text' required></textarea>
-            </div>
-          <div class='modal-footer'>
-            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-            <button type='submit' class='btn btn-primary' >Submit</button>
-          </form>
-        </div>
-       </div>
-    </div>
-  </section>
-
-  <!-- PUT -->
-  <section> 
-    <div class='modal' id='editAnnModal' tabindex='-1' role='dialog' aria-labelledby='editAnnModalLabel' aria-hidden='true'>
-        <div class='modal-dialog modal-dialog-centered' role='document'>
-          <div class='modal-content'>
-             <div class='modal-header'>
-               <h5 class='modal-title' id='editAnnModalLabel'>Edit Announcement</h5>
-               <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                <span aria-hidden='true'>&times;</span>
-               </button>
-            </div>
-             <form id = 'js-edit-announcement' class = 'js-error-message'>
-              <div class='modal-body'>
-              <label for='message-edit' class='col-form-label'>Message-text:</label>
-              <textarea class='form-control' id='message-edit' required></textarea>
-            </div>
-            <div class='modal-footer'>
-            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-            <button type='submit' class='btn btn-primary' >Submit</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!--Event Evals Modal -->
-  <!-- POST-->
-  <section>
-    <div class='modal' id='eventsModal' tabindex='-1' role='dialog' aria-labelledby='eventsModalLabel' aria-hidden='true'>
-         <div class='modal-dialog modal-dialog-centered' role='document'>
-          <div class='modal-content'>
-            <div class='modal-header'>
-              <h5 class='modal-title' id='eventsModalLabel'>Create New Event Eval</h5>
-              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                <span aria-hidden='true'>&times;</span>
-              </button>
-            </div>
-            <form id = 'js-events' class = 'js-error-message'>
-               <div class='modal-body'>
-                 <label for='eventTopic' class='col-form-label'>Topic:</label>
-                 <input name= 'topic' type='text' id='eventTopic' class='form-control' placeholder='ex. SWS20180708' required autofocus>
-                 <label for='eventDescription' class='col-form-label'>Description:</label>
-                 <textarea class='form-control' id='eventDescription' required></textarea>
-              </div>
-            <div class='modal-footer'>
-              <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-              <button type='submit' class='btn btn-primary' >Submit</button>
-            </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
-    <!-- PUT -->
-  <section>
-    <div class='modal' id='editEventsModal' tabindex='-1' role='dialog' aria-labelledby='editEventsModalLabel' aria-hidden='true'>
-      <div class='modal-dialog modal-dialog-centered' role='document'>
-        <div class='modal-content'>
-          <div class='modal-header'>
-            <h5 class='modal-title' id='editEventsModalLabel'>Edit Event Eval</h5>
-             <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-              <span aria-hidden='true'>&times;</span>
-             </button>
-          </div>
-          <form id = 'js-edit-events' class = 'js-error-message'>
-            <div class='modal-body'>
-              <label for='editEventTopic' class='col-form-label'>Topic:</label>
-              <input name= 'topic' type='text' id='editEventTopic' class='form-control' placeholder='ex. SWS20180708' required autofocus>
-              <label for='editEventDescription' class='col-form-label'>Description:</label>
-              <textarea class='form-control' id='editEventDescription' required></textarea>
-            </div>
-            <div class='modal-footer'>
-              <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-              <button type='submit' class='btn btn-primary' >Submit</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- Equipment Evals Modal -->
-    <!-- POST 
-    <section>
-        <div class='modal' id='equipmentModal' tabindex='-1' role='dialog' aria-labelledby='equipmentModalLabel' aria-hidden='true'>
-            <div class='modal-dialog modal-dialog-centered' role='document'>
-              <div class='modal-content'>
-                <div class='modal-header'>
-                  <h5 class='modal-title' id='equipmentModalLabel'>Create a New Equipment Post</h5>
-                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                    <span aria-hidden='true'>&times;</span>
-                  </button>
-                </div>
-                <form id = 'js-equipment' class = 'js-error-message'>
-                    <div class='modal-body'>
-                        <label for='equipmentTopic' class='col-form-label'>Topic:</label>
-                        <input name= 'topic' type='text' id='equipmentTopic' class='form-control' placeholder='ex. Teradek Vidiu Pro' required autofocus>
-                        <label for='equipmentDescription' class='col-form-label'>description:</label>
-                        <textarea class='form-control' id='equipmentDescription' required></textarea>
-                    </div>
-      
-                <div class='modal-footer'>
-                  <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-                  <button type='submit' class='btn btn-primary' >Submit</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
-
-
-   PUT 
-  <section>
-    <div class='modal' id='editEventsModal' tabindex='-1' role='dialog' aria-labelledby='editEventsModalLabel' aria-hidden='true'>
-      <div class='modal-dialog modal-dialog-centered' role='document'>
-        <div class='modal-content'>
-          <div class='modal-header'>
-            <h5 class='modal-title' id='editEventsModalLabel'>Edit Event Eval</h5>
-              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                <span aria-hidden='true'>&times;</span>
-              </button>
-          </div>
-          <form id = 'js-edit-events' class = 'js-error-message'>
-            <div class='modal-body'>
-              <label for='editEventTopic' class='col-form-label'>Topic:</label>
-              <input name= 'topic' type='text' id='editEventTopic' class='form-control' placeholder='ex. SWS20180708' required autofocus>
-               <label for='editEventDescription' class='col-form-label'>Description:</label>  
-               <textarea class='form-control' id='editEventDescription' required></textarea>
-            </div>
-            <div class='modal-footer'>
-              <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-              <button type='submit' class='btn btn-primary' >Submit</button>
-          </form>
-        </div>
-       </div>
-     </div>
-  </section>      
---> 
-<!-- Training Resources Modal -->
-    <section>
-      <div class='modal' id='trainingModal' tabindex='-1' role='dialog' aria-labelledby='trainingModalLabel' aria-hidden='true'>
-          <div class='modal-dialog modal-dialog-centered' role='document'>
-            <div class='modal-content'>
-              <div class='modal-header'>
-                <h5 class='modal-title' id='trainingModalLabel'>Add a New Training Resource</h5>
-                <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                  <span aria-hidden='true'>&times;</span>
-                </button>
-              </div>
-              <form id = 'js-training' class = 'js-error-message'>
-                <div class='modal-body'>
-                    <label for='trainingVideo' class='col-form-label'>Youtube Link (optional):</label>
-                    <input name = 'youtubeLink' class = 'form-control' id='trainingVideo' placeholder='ex. https://www.youtube.com/watch?v=eY_6B1EDj0I'>  
-                    <label for='trainingTopic' class='col-form-label'>Topic:</label>
-                    <input name= 'topic' type='text' id='trainingTopic' class='form-control' placeholder='ex. Compression and EQ' required autofocus>
-                    <label for='trainingDescription' class='col-form-label'>description:</label>
-                    <textarea class='form-control' id='trainingDescription' required></textarea>
-                    
-                </div>
-              <div class='modal-footer'>
-                <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-                <button type='submit' class='btn btn-primary' >Submit</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>      
+ 
 
     </main>
   </body>

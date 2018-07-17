@@ -35,6 +35,7 @@ router.get('/', (req, res) =>{
 router.post('/', jwtAuth, checkRequiredFields, (req, res) =>{
     Announcement
         .create({
+             posttype: req.body.posttype,
              text: req.body.text,
              created: req.body.created,
              createdBy: req.user.id 

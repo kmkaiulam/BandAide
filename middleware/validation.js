@@ -22,10 +22,10 @@ const checkValidUser = function(req,res,next) {
     //*SWITCH
       // --- ANNOUNCEMENTS ---
     if (resourceName === 'announcements' && requestMethod === 'POST') {
-       requiredFields = ['text'];
+       requiredFields = ['posttype', 'text'];
     }
     if (resourceName === 'announcements' && requestMethod === 'PUT') {
-       requiredFields = ['announcementsId', 'createdById','text'];
+       requiredFields = ['posttype', 'announcementsId', 'createdById','text'];
     }
     if (resourceName === 'announcements' && requestMethod === 'DELETE') {
        requiredFields = ['announcementsId', 'createdById'];

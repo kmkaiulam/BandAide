@@ -35,10 +35,13 @@ function clearForm(){
     $('#description').val('');
     $('#eventTopic').val('');
     $('#eventDescription').val('');
-    $('#equipmentTopic').val('');
-    $('#equipmentDescription').val('');
+    
     $('#resourceTopic').val('');
     $('#resourceDescription').val('');
+    /*
+    $('#equipmentTopic').val('');
+    $('#equipmentDescription').val('');
+    */
 }
 
 
@@ -101,17 +104,19 @@ function generateAnnouncementPost(data){
 function generateBandpost(data){
     defineDate(data)
     let video;
-    if (data.youtubeLink){
-        console.log(`Youtube link : ${data.youtubeLink} exists`)
+    let modalTarget;
+    if (data.posttype === 'Training_Resource' && data.youtubeLink != ''){
         video = `<div class = ' align-items-center justify-content-center'> 
-                    <video class ='video-js vjs-default-skin' controls= 'true' preload = 'true'   width='640' height='264' 
-                    data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "${data.youtubeLink}"}] }'>
-                    </video>
-                </div>`
-    }           
+        <video class ='video-js vjs-default-skin' controls= 'true' preload = 'true'   width='640' height='264' 
+        data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "${data.youtubeLink}"}] }'>
+        </video>
+        </div>`;
+        modalTarget ='editTrainingModal';
+    }
     else{
         video ='';
-    }
+        modalTarget = 'editEventsModal'
+    }              
     newBandpost = ` 
         <div class='media text-muted pt-1 bandpost-post'>
          <img data-src='holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1' alt='' class='mr-2 rounded'>
@@ -123,15 +128,21 @@ function generateBandpost(data){
                     <p>${data.description} </p>
                 </div>
            
-            
             <div class='btn-group d-flex flex-row-reverse' role='group' aria-label='Button Group'>
             <button type='button' data-id = '${data._id}' data-userId= '${data.createdBy._id}' class='btn btn-outline-secondary mr-2 deleteBandpostButton'><i data-id = '${data._id}' data-userId= '${data.createdBy._id}' class="far fa-trash-alt"></i>
-            <button type='button' data-id = '${data._id}' data-userId= '${data.createdBy._id}' class='btn btn-outline-primary mr-2 editButton' data-toggle='modal' data-target='#editEventsModal'><i data-id = '${data._id}' data-userId= '${data.createdBy._id}' class="far fa-edit"></i></button>
-            <button type='button' data-id = '${data._id}' data-userId= '${data.createdBy._id}' class='btn btn-outline-success mr-2 replyButton'><i data-id = '${data._id}' data-userId= '${data.createdBy._id}' class='fas fa-reply'></i></button>
+            <button type='button' data-id = '${data._id}' data-userId= '${data.createdBy._id}' class='btn btn-outline-primary mr-2 editButton' data-toggle='modal' data-target='#${modalTarget}'><i data-id = '${data._id}' data-userId= '${data.createdBy._id}' class="far fa-edit"></i></button>
+            <button type='button' data-id = '${data._id}' data-userId= '${data.createdBy._id}' class='btn btn-outline-success mr-2 replyButton' data-toggle="collapse" data-target="#collapseReply${data._id}" aria-expanded="false" aria-controls="collapseReply"><i data-id = '${data._id}' data-userId= '${data.createdBy._id}' class='fas fa-reply'></i></button>
             </div>
-        </div>`
-
-
+        </div>
+        
+        <div class="collapse" id="#collapseReply${data._id}">
+        <div id = bandpost${data._id}> </div>
+        <form id = 'js-post-announcement' class = 'js-error-message'>
+            <label for='message-text' class='col-form-label'>Message-text:</label>
+            <textarea class='form-control' id='message-text' required></textarea>
+            <button type='submit' class='btn btn-primary' >Submit</button>
+      </form>
+      </div>`
     return newBandpost;
 };
 
@@ -145,7 +156,7 @@ function displayAnnouncements(){
         dataType: 'json',
         type: 'GET',
         success: function(data){
-            renderAnnouncements(data);
+           renderPosts(data);
         }
     }
         return $.ajax(settings)
@@ -155,47 +166,70 @@ function displayAnnouncements(){
 }
 
 
-    //Display Recent and Collapsed Announcement posts
+    //Display Recent and Collapsed Posts
+/*
 function renderAnnouncements(data){
-   let dispPost;
-   let dispRecent;
-   let dispRest;
-   if (!data.posttype){
-        dispPost = data.map(generateAnnouncementPost);
+    if (data.length <1){
+        return;
     }
-    else{
-        dispPost = data.map(generateBandpost);
-    }
+    let dispPost;
+    let dispRecent;
+    let dispRest;
+    let bandpostPosttype;
+    dispPost = data.map(generateAnnouncementPost);
     dispPost.reverse();
     dispRecent = dispPost.slice(0,3);
     dispRest = dispPost.slice(3);
     dispRecent.join('');
     dispRest.join('');
-
-    if (!data.posttype){
     $('#js-recent-announcement').html(dispRecent);
-    $('#js-all-announcement').html(dispRest);
-    clearForm();
-    }
+    $('#js-all-announcement').html(dispRest);    
+}
+*/
 
-    else {
-        let bandpostType = data[0].posttype;
-            if(bandpostPosttype === 'Event_Eval'){
-                $('#js-recent-events').html(dispBandpostRecent);
-                $('#js-all-events').html(dispBandpostRest);
-            }
-            if(bandpostPosttype === 'Equipment_Eval'){  
-                $('#js-recent-equipment').html(dispBandpostRecent);
-                $('#js-all-equipment').html(dispBandpostRest);
-            }
-            if(bandpostPosttype === 'Training_Resource'){
-                $('#js-recent-training').html(dispBandpostRecent);
-                $('#js-all-training').html(dispBandpostRest);
-            }
-        clearForm();
+
+
+
+    // function getRecent (data) { return data[0] }
+function renderPosts(data){
+    let dispPost;
+    let dispRecent;
+    // let dispRecent = getRecent(data);
+    // dispRecent = 
+    let dispRest;
+    let bandpostPosttype;
+    if (data.length === 0){
+        return; 
     }
-};
-    
+        bandpostPosttype = data[0].posttype;
+        if (bandpostPosttype === 'Announcement'){
+            dispPost = data.map(generateAnnouncementPost);
+            dispPost.reverse();
+            dispRecent = dispPost.slice(0,3);
+            dispRest = dispPost.slice(3);
+            dispRecent.join('');
+            dispRest.join('');
+            $('#js-recent-announcement').html(dispRecent);
+            $('#js-all-announcement').html(dispRest);  
+        }
+        else {
+            dispPost = data.map(generateBandpost);
+            dispPost.reverse();
+            dispRecent = dispPost.slice(0,3);
+            dispRest = dispPost.slice(3);
+            dispRecent.join('');
+            dispRest.join('');
+            if (bandpostPosttype === 'Event_Eval'){
+                $('#js-recent-event').html(dispRecent);
+                $('#js-all-event').html(dispRest);
+                }
+            if(bandpostPosttype === 'Training_Resource'){
+                $('#js-recent-training').html(dispRecent);
+                $('#js-all-training').html(dispRest);
+            };         
+        }; 
+};    
+
 
 
 function listenAnnouncementPost(){
@@ -204,15 +238,16 @@ function listenAnnouncementPost(){
         const settings = {
             url: '/api/announcements/',
             data: {
-                "text": $('#message-text').val(),
+                'posttype': 'Announcement', 
+                'text': $('#message-text').val(),
                 },
             dataType: 'json',
             type: 'POST',
             success: function(data){
               console.log(data);
-              renderAnnouncements(data)
+              renderPosts(data)
                $('#postAnnModal').modal('hide');
-            
+               clearForm();
             }
         }
             return $.ajax(settings)
@@ -256,6 +291,7 @@ function listenAnnouncementEdit(){
         const settings = {
         url: `/api/announcements/${postId}`,
         data: {
+            'posttype': 'Announcements',
             'announcementsId':`${postId}`, 
             'createdById':`${userId}`,
             'text':  $('#message-edit').val(),
@@ -263,15 +299,13 @@ function listenAnnouncementEdit(){
         dataType: 'json',
         type: 'PUT',
         success: function(data){
-           renderAnnouncements(data)
+           renderPosts(data)
             $('#editAnnModal').modal('hide');
-           // $('.editButton').prop('disabled', false);  --------------- disable edit button -  won't need if i can fix the id issue
             console.log('Edited Post');
         }
     }
     return $.ajax(settings)
         .fail(function (err){
-           // $('.editButton').prop('disabled', false);  --------------- disable edit button -  won't need if i can fix the id issue
             handlePostFail(err);
         });
    
@@ -286,7 +320,7 @@ function displayEventBandposts(){
         dataType: 'json',
         type: 'GET',
         success: function(data){
-            renderBandposts(data);
+            renderPosts(data);
         }
     }
         return $.ajax(settings)
@@ -294,14 +328,14 @@ function displayEventBandposts(){
            handlePostFail(err);
     });
 };
-
+/*
 function displayEquipmentBandposts(){
     const settings = {
         url: '/api/bandposts/equipment',
         dataType: 'json',
         type: 'GET',
         success: function(data){
-            renderBandposts(data);
+            renderPosts(data);
         }
     }
         return $.ajax(settings)
@@ -310,47 +344,20 @@ function displayEquipmentBandposts(){
     });
 };
 
+*/
 function displayTrainingBandposts(){
     const settings = {
         url: '/api/bandposts/training',
         dataType: 'json',
         type: 'GET',
         success: function(data){
-            renderBandposts(data);
+            renderPosts(data);
         }
     }
         return $.ajax(settings)
         .fail(function (err){
            handlePostFail(err);
     });
-};
-
-
-
-function renderBandposts(data){
-    if(data[0]){
-        let dispBandpost = data.map(generateBandpost);
-        dispBandpost.reverse();
-        let dispBandpostRecent = dispBandpost.slice(0,5);
-        let dispBandpostRest = dispBandpost.slice(5);
-        dispBandpostRecent.join('');
-        dispBandpostRest.join('');
-        //depending on 'posttype' display in DOM all posts in proper sections
-        let bandpostPosttype = data[0].posttype 
-            if(bandpostPosttype === 'Event_Eval'){
-                $('#js-recent-events').html(dispBandpostRecent);
-                $('#js-all-events').html(dispBandpostRest);
-            }
-            if(bandpostPosttype === 'Equipment_Eval'){  
-                $('#js-recent-equipment').html(dispBandpostRecent);
-                $('#js-all-equipment').html(dispBandpostRest);
-
-                }
-            if(bandpostPosttype === 'Training_Resource'){
-                $('#js-recent-training').html(dispBandpostRecent);
-                $('#js-all-training').html(dispBandpostRest);
-            }
-    }
 };
 
 function listenBandpostDelete(){
@@ -394,7 +401,7 @@ function listenEventEvalPost(){
             dataType: 'json',
             type: 'POST',
             success: function(data){
-                renderBandposts(data);
+                renderPosts(data);
                 $('#eventsModal').modal('hide')
                 clearForm();
             }
@@ -423,7 +430,7 @@ function listenEventEdit(){
             type: 'PUT',
             success: function(data){
                console.log(data);
-                renderBandposts(data);
+                renderPosts(data);
                 $('#editEventsModal').modal('hide')
                 clearForm();
             }
@@ -436,7 +443,7 @@ function listenEventEdit(){
 };
 
 
-
+/*
 // -- Equipment Eval --
 function listenEquipmentEvalPost(){
     $('#js-equipment').submit(event =>{
@@ -452,7 +459,7 @@ function listenEquipmentEvalPost(){
             type: 'POST',
             success: function(data){
                 console.log(data);
-                renderBandposts(data)
+                renderPosts(data)
                $('#equipmentModal').modal('hide')
                 clearForm();
             }
@@ -480,7 +487,7 @@ function listenEquipmentEdit(){
             type: 'PUT',
             success: function(data){
                console.log(data);
-                renderBandposts(data);
+                renderPosts(data);
                 $('#editEventsModal').modal('hide')
                 clearForm();
             }
@@ -492,6 +499,7 @@ function listenEquipmentEdit(){
         });
 };
 
+*/
 
 
 // -- Training Resources --
@@ -509,7 +517,7 @@ function listenTrainingPost(){
             dataType: 'json',
             type: 'POST',
             success: function(data){
-                renderBandposts(data);
+                renderPosts(data);
                $('#trainingModal').modal('hide')
                 clearForm();
             }
@@ -520,11 +528,40 @@ function listenTrainingPost(){
             });
         });
 };
+
+function listenTrainingEdit(){
+    $('#js-edit-training').submit(event =>{
+        event.preventDefault();
+        const settings = {
+            url: `/api/bandposts/${postId}`,
+            data: {
+                'bandpostsId':`${postId}`,
+                'createdById':`${userId}`,
+                'posttype': 'Training_Resource',
+                'youtubeLink' : $('#editTrainingVideo').val(),
+                'topic': $('#editTrainingTopic').val(),
+                'description': $('#editTrainingDescription').val(),
+                },
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data){
+               console.log(data);
+                renderPosts(data);
+                $('#editTrainingModal').modal('hide')
+                clearForm();
+            }
+        }
+        return $.ajax(settings)
+            .fail(function (err){
+              handlePostFail(err);
+            });
+        });
+};
         
 function displayInDom(){
     displayAnnouncements();
     displayEventBandposts();
-    displayEquipmentBandposts();
+    //displayEquipmentBandposts();
     displayTrainingBandposts();
 }
 
@@ -537,8 +574,9 @@ function handleListenBandpostButtons(){
     listenBandpostDelete();
     listenEventEvalPost();
     listenEventEdit();
-    listenEquipmentEvalPost();
+  //  listenEquipmentEvalPost();
     listenTrainingPost(); 
+    listenTrainingEdit();
 }
 
 function handleListenButtons(){

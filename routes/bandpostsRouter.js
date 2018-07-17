@@ -45,6 +45,7 @@ router.get('/events', (req, res) => {
         });
 });
 
+/*
     // --- Display Equipment
 router.get('/equipment', (req, res) => {
     Bandpost
@@ -65,7 +66,7 @@ router.get('/equipment', (req, res) => {
             res.status(500).json({ message: 'Internal server error' });
         });
 });
-
+*/
     // --- Display Training 
 router.get('/training', (req, res) => { 
     Bandpost
@@ -122,7 +123,7 @@ router.put('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res) => {
 console.log(`Updating bandpost entry \`${req.params.id}\``);
 
   const toUpdate = {};
-  const updateableFields = ['posttype', 'topic', 'description']; 
+  const updateableFields = ['posttype', 'topic', 'description', 'youtubeLink']; 
   
   updateableFields.forEach(field => {
       if (field in req.body) {
