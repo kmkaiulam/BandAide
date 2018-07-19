@@ -43,7 +43,6 @@ const localStrategy = new LocalStrategy((username, password, callback) => {
 
 //JWT Cookie Extractor
 let cookieExtractor = function(req){
-  console.log('this is passing through jwt strategy');
   var token = null;
   if (req && req.cookies)
   {

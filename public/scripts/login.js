@@ -1,8 +1,7 @@
 'use strict'
 
 function clearForm(){ 
-    $('#inputUsername').val('');
-    $('#inputPassword').val('');
+    $(':input').val('');
 }
 
 function listenLogin(){

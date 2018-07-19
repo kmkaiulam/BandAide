@@ -63,20 +63,4 @@ const checkValidUser = function(req,res,next) {
   };
 
 
-
-  //Consider deleting this middleware
-const checkValidId = function(req, res, next) {   //Not sure If i want this  or if i want to rewrite it <-----------------
-    let resourceName = req.originalUrl.split('/')[2];
-    console.log(resourceName)
-    let specialId = req.body`.${resourceName}Id`.trim()
-   
-    console.log('Checking Valid Id');
-    if (req.params.id !== specialId){
-      const message = `Request path id (${req.params.id}) and request body (id) (${specialId}) must match`;
-      console.error(message);
-      return res.status(400).send(message); 
-    }
-    next();
-  };
-  
-  module.exports = {checkValidUser, checkRequiredFields, checkValidId};
+  module.exports = {checkValidUser, checkRequiredFields};

@@ -149,18 +149,6 @@ router.get('/', (req, res) => {
 
 
 
-//GET Personal Profile information
-router.get('/profile', jwtAuth, (req, res) => {
-  console.log(req.user.id);
-  return User.findById(req.user.id)
-    .then(user => res.json(user.serialize()))
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ message: 'Internal server error' });
-  });
-});
-
-
 module.exports = {router};
 
     

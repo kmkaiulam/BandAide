@@ -2,9 +2,11 @@
 <html lang='en'>
   <head>
     <% include ../partials/head %>
-    <!-- Title -->
+   
     <title>BandAide Home</title>
     <!-- Javascript-->
+    <script src = '/scripts/home-messages.js'></script>
+    <script src = '/scripts/home-onload.js'></script>
     <script src = '/scripts/home.js'></script> 
     <!-- Custom styles for this template -->
     <link href='/stylesheets/home.css' rel='stylesheet'>
@@ -16,15 +18,16 @@
      <!-- Navigation Bar -->
     <% include ../partials/navbar %>
    
-    <header role = 'banner'>
-      <div class ='jumbotron bannerImage text-light border-bottom border-top'>
-          <div class="container pt-3"></div>
-            <h1 class="display-3"><em>Band-Aide</em></h1>
-            <h3><em>Be Heard</em></h3>
-      </div>
-    </header>
+   
   
     <main role='main' class ='container'>
+        <header role = 'banner'>
+            <div class ='jumbotron bannerImage text-light border-bottom border-top'>
+                <div class="container pt-3"></div>
+                  <h1 class="display-3"><em>Band-Aide</em></h1>
+                  <h3><em>Be Heard</em></h3>
+            </div>
+          </header>
     
       <div class='my-3 p-3 bg-white rounded box-shadow'>
           <div class="accordion" id="accordionExample">
@@ -77,7 +80,7 @@
 
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
               <div class="card-body">
-                  <p><em>Here's a space that we can discuss tech issues by event. Notice it. Work on it. Own it. Now. </em></p>
+                  <p><em>Here's a space that we can discuss tech issues by event. Notice it. Own it. Work on it.</em></p>
                   
                   <div class="btn-group d-flex flex-row-reverse" role="group" aria-label="Button Group">
                       <button type='button' class='btn btn-outline-primary mr-2'  data-toggle='modal' data-target='#eventsModal'>+</button>
@@ -143,8 +146,6 @@
 
       <% include ../partials/modal %>
    
-         
-
 
  
 

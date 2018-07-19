@@ -6,10 +6,7 @@ function disableNewInput(){
 }
 
 function clearForm(){ 
-    $('#firstName').val('');
-    $('#lastName').val('');
-    $('#username').val('');
-    $('#password').val('');
+    $(':input').val('');
 }
 
 function listenSignupSubmit(){

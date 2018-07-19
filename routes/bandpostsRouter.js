@@ -7,17 +7,15 @@ const {checkValidUser, checkRequiredFields} = require('../middleware/validation'
 const {Bandpost} = require('../models');
 mongoose.Promise = global.Promise;
 
-
 // --- Common Functions ---
-function populateBandpost(req){
-    return Bandpost.find({'posttype': `${req.body.posttype}`})
-    .populate({
+function populateBandpost(post){
+    return Bandpost.findById(post._id).populate({
             path: 'createdBy', 
             select: 'username _id' 
         })
     .populate({
             path: 'replies.createdBy', 
-            select: 'username id' 
+            select: 'username _id' 
         })
 };
       
@@ -99,15 +97,17 @@ router.post('/', jwtAuth, checkRequiredFields, (req, res) => {
             topic: req.body.topic,
             description: req.body.description,
             created: req.body.created,
+            modified: req.body.modified,
             youtubeLink: req.body.youtubeLink,
             createdBy: req.user.id,
-            replies: req.body.replies
+            replies: req.body.replies,
+            
         })
         .then(post => {
-            return populateBandpost(req);
+            return populateBandpost(post);
         })
-        .then(populatedPosts =>{
-            res.status(201).json(populatedPosts)
+        .then(populatedPost =>{
+            res.status(201).json(populatedPost)
         })
         .catch(err =>{
             console.error(err);
@@ -137,10 +137,10 @@ console.log(`Updating bandpost entry \`${req.params.id}\``);
   Bandpost
       .findByIdAndUpdate(req.params.id, {$set: toUpdate}, { new: true })
         .then(post => {
-            return populateBandpost(req);
+            return populateBandpost(post);
         })
-        .then(populatedAnnouncement =>{
-            res.status(200).send(populatedAnnouncement)
+        .then(populatedPost =>{
+            res.status(200).send(populatedPost)
         })
         .catch(err =>{
             console.error(err);

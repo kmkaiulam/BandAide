@@ -16,6 +16,13 @@ function populateAnnouncements(){
     })  
 };
 
+function populateNewAnnouncement(post){
+    return  Announcement.findById(post._id).populate({
+         path: 'createdBy', 
+         select: 'username _id' //can name any field and populate
+     }) 
+}; 
+
 
 // --- GET ---
 //GET request
@@ -38,13 +45,14 @@ router.post('/', jwtAuth, checkRequiredFields, (req, res) =>{
              posttype: req.body.posttype,
              text: req.body.text,
              created: req.body.created,
+             modified: req.body.modified,
              createdBy: req.user.id 
         })
         .then(post =>{
-           return populateAnnouncements()
+           return populateNewAnnouncement(post)
             })
         .then(populatedAnnouncement => {
-            res.json(populatedAnnouncement);
+            res.status(201).json(populatedAnnouncement);
         })
         .catch(err =>{
         console.error(err);
@@ -71,7 +79,7 @@ console.log(`Updating bandpost entry \`${req.params.id}\``);
   Announcement
         .findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
         .then(announcement =>{
-           return populateAnnouncements();
+           return populateNewAnnouncement(announcement);
         })
         .then(populatedAnnouncement =>{
             res.status(200).send(populatedAnnouncement)

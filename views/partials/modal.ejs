@@ -16,7 +16,7 @@
                   <input id = 'annPosttype' name = 'posttype' type = 'hidden' value = 'Announcement'>
               
                   <label for='message-text' class='col-form-label'>Message-text:</label>
-                  <textarea id='message-text' name = 'text' class='form-control'  required></textarea>
+                  <textarea id='message-text' name = 'text' class='form-control' type="text"   required></textarea>
                 </div>
               <div class='modal-footer'>
                 <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
@@ -111,64 +111,6 @@
       </section>
     
     
-      <!-- Equipment Evals Modal  POST 
-        <section>
-            <div class='modal' id='equipmentModal' tabindex='-1' role='dialog' aria-labelledby='equipmentModalLabel' aria-hidden='true'>
-                <div class='modal-dialog modal-dialog-centered' role='document'>
-                  <div class='modal-content'>
-                    <div class='modal-header'>
-                      <h5 class='modal-title' id='equipmentModalLabel'>Create a New Equipment Post</h5>
-                      <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                        <span aria-hidden='true'>&times;</span>
-                      </button>
-                    </div>
-                    <form id = 'js-equipment' class = 'js-error-message'>
-                        <div class='modal-body'>
-                            <input id = 'equipmentPosttype' name = 'posttype' type = 'hidden' value = 'Equipment_Eval'>  
-                            <label for='equipmentTopic' class ='col-form-label'>Topic:</label>
-                            <input id='equipmentTopic' name = 'topic' type='text'  class='form-control' placeholder='ex. Teradek Vidiu Pro' required autofocus>
-                            <label for='equipmentDescription' class='col-form-label'>description:</label>
-                            <textarea id='equipmentDescription' name = 'description' class='form-control'  required></textarea>
-                        </div>
-          
-                    <div class='modal-footer'>
-                      <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-                      <button type='submit' class='btn btn-primary' >Submit</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </section>
-    
-    
-      PUT 
-      <section>
-        <div class='modal' id='editEquipmentModal' tabindex='-1' role='dialog' aria-labelledby='editEquipmentModalLabel' aria-hidden='true'>
-          <div class='modal-dialog modal-dialog-centered' role='document'>
-            <div class='modal-content'>
-              <div class='modal-header'>
-                <h5 class='modal-title' id='editEquipmentModalLabel'>Edit Event Eval</h5>
-                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                    <span aria-hidden='true'>&times;</span>
-                  </button>
-              </div>
-              <form id = 'js-edit-equipment' class = 'js-error-message'>
-                <div class='modal-body'>
-                  <input id = 'editEquipmentPosttype' name = 'posttype' type = 'hidden' value = 'Equipment_Eval'>
-                  <label for='editEquipmentTopic' class='col-form-label'>Topic:</label>
-                  <input name= 'topic' type='text' id='editEquipmentTopic' class='form-control' placeholder='ex. SWS20180708' required autofocus>
-                   <label for='editEquipmentDescription' class='col-form-label'>Description:</label>  
-                   <textarea class='form-control' id='editEquipmentDescription' required></textarea>
-                </div>
-                <div class='modal-footer'>
-                  <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-                  <button type='submit' class='btn btn-primary' >Submit</button>
-              </form>
-            </div>
-           </div>
-         </div>
-      </section>      
-    -->
     <!-- Training Resources Modal -->
         <section>
           <div class='modal' id='trainingModal' tabindex='-1' role='dialog' aria-labelledby='trainingModalLabel' aria-hidden='true'>
@@ -230,3 +172,63 @@
                   </div>
                 </div>
               </section>     
+
+              
+      <!-- Equipment Evals Modal  POST 
+        <section>
+            <div class='modal' id='equipmentModal' tabindex='-1' role='dialog' aria-labelledby='equipmentModalLabel' aria-hidden='true'>
+                <div class='modal-dialog modal-dialog-centered' role='document'>
+                  <div class='modal-content'>
+                    <div class='modal-header'>
+                      <h5 class='modal-title' id='equipmentModalLabel'>Create a New Equipment Post</h5>
+                      <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                      </button>
+                    </div>
+                    <form id = 'js-equipment' class = 'js-error-message'>
+                        <div class='modal-body'>
+                            <input id = 'equipmentPosttype' name = 'posttype' type = 'hidden' value = 'Equipment_Eval'>  
+                            <label for='equipmentTopic' class ='col-form-label'>Topic:</label>
+                            <input id='equipmentTopic' name = 'topic' type='text'  class='form-control' placeholder='ex. Teradek Vidiu Pro' required autofocus>
+                            <label for='equipmentDescription' class='col-form-label'>description:</label>
+                            <textarea id='equipmentDescription' name = 'description' class='form-control'  required></textarea>
+                        </div>
+          
+                    <div class='modal-footer'>
+                      <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+                      <button type='submit' class='btn btn-primary' >Submit</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </section>
+    
+    
+      PUT 
+      <section>
+        <div class='modal' id='editEquipmentModal' tabindex='-1' role='dialog' aria-labelledby='editEquipmentModalLabel' aria-hidden='true'>
+          <div class='modal-dialog modal-dialog-centered' role='document'>
+            <div class='modal-content'>
+              <div class='modal-header'>
+                <h5 class='modal-title' id='editEquipmentModalLabel'>Edit Event Eval</h5>
+                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                    <span aria-hidden='true'>&times;</span>
+                  </button>
+              </div>
+              <form id = 'js-edit-equipment' class = 'js-error-message'>
+                <div class='modal-body'>
+                  <input id = 'editEquipmentPosttype' name = 'posttype' type = 'hidden' value = 'Equipment_Eval'>
+                  <label for='editEquipmentTopic' class='col-form-label'>Topic:</label>
+                  <input name= 'topic' type='text' id='editEquipmentTopic' class='form-control' placeholder='ex. SWS20180708' required autofocus>
+                   <label for='editEquipmentDescription' class='col-form-label'>Description:</label>  
+                   <textarea class='form-control' id='editEquipmentDescription' required></textarea>
+                </div>
+                <div class='modal-footer'>
+                  <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+                  <button type='submit' class='btn btn-primary' >Submit</button>
+              </form>
+            </div>
+           </div>
+         </div>
+      </section>      
+    -->

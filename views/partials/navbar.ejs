@@ -7,10 +7,10 @@
   <div class='collapse navbar-collapse' id='navbarsExampleDefault'>
     <ul class='navbar-nav mr-auto'>
       <li class='nav-item active'>
-        <a class='nav-link' href='#'>Home <span class='sr-only'>(current)</span></a>
+        <a class='nav-link' href='/login'>Login <span class='sr-only'>(current)</span></a>
       </li>
       <li class='nav-item'>
-        <a class='nav-link' href='#'>My Profile</a>
+        <a class='nav-link' href='/signup'>Sign up</a>
       </li>
       <!--
       <li class="nav-item dropdown">
@@ -25,12 +25,7 @@
     </ul>
     
     <div class="btn-group" role="group" aria-label="Basic example">
-      <form action = '/login'>
-        <input type ='submit' class="btn btn-primary my-2 my-sm-0" value = 'Log in'>
-      </form>
-      <form action = '/api/auth/logout'>
-        <input type = 'submit' class="btn btn-secondary my-2 my-sm-0" value = 'Log out'>
-      </form>
+       <a href= '/api/auth/logout'><button class="btn btn-primary my-2 my-sm-0" >Log Out</button></a>
     </div>                
   </div>
 </nav>
