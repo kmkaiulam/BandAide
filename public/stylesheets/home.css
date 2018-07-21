@@ -8,7 +8,7 @@ body {
     background-image: url('/images/bandaide_home.jpg'); 
     background-repeat: no-repeat;
     background-size: cover;
-  }
+}
   
 
 main {
@@ -18,4 +18,13 @@ main {
 .bandaideIcon {
       height:65px;
       width:auto;
-  }
+}
+
+.replySection{
+  margin-left: .9rem;
+  padding: 5rem 8rem;
+}
+
+.replyAppend{
+  margin: 0 -1rem;
+}

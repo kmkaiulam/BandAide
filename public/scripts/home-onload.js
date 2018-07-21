@@ -1,4 +1,6 @@
 'use strict'
+
+
 //--- Announcements ---
   function displayAnnouncements(){
     const settings = {

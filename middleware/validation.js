@@ -42,10 +42,10 @@ const checkValidUser = function(req,res,next) {
     }
     // --- REPLIES ---
     if (nestedResourceName === 'reply' && requestMethod === 'POST') {
-       requiredFields = ['topic', 'reply'];
+       requiredFields = ['bandpostsId', 'topic', 'reply'];
     }
     if (nestedResourceName === 'reply' && requestMethod === 'PUT') {
-       requiredFields = ['bandpostsId', 'createdById', 'replyId', 'topicUpdate', 'replyUpdate'];
+       requiredFields = ['bandpostsId', 'createdById', 'replyId', 'topic', 'reply'];
     }
     if (nestedResourceName === 'reply' && requestMethod === 'DELETE') {
        requiredFields = ['bandpostsId', 'replyId', 'createdById'];

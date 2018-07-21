@@ -12,11 +12,15 @@ function populateBandpost(post){
     return Bandpost.findById(post._id).populate({
             path: 'createdBy', 
             select: 'username _id' 
-        })
-    .populate({
-            path: 'replies.createdBy', 
-            select: 'username _id' 
-        })
+    })
+            .populate({
+                path: 'replies', 
+                select: 'topic reply created modified' 
+    })
+            .populate({
+                path: 'replies.createdBy', 
+                select: 'username _id' 
+    })
 };
       
 
@@ -97,7 +101,6 @@ router.post('/', jwtAuth, checkRequiredFields, (req, res) => {
             topic: req.body.topic,
             description: req.body.description,
             created: req.body.created,
-            modified: req.body.modified,
             youtubeLink: req.body.youtubeLink,
             createdBy: req.user.id,
             replies: req.body.replies,
@@ -164,6 +167,7 @@ console.log(`Deleting bandpost entry \`${req.params.id}\``);
         });
 });
 
+
 // --- Replies ---
 // --- GET ---
 //GET all Replies for a Bandpost 
@@ -172,8 +176,8 @@ router.get('/reply/:id', (req,res) => {
         .findById(req.params.id)
         .populate({
             path: 'replies.createdBy', 
-            select: 'username id' //can name any field and populate
-        })
+            select: 'username _id' 
+})
         .then(bandpost => {
             res.json(bandpost.serialize());
         })
@@ -187,7 +191,7 @@ router.get('/reply/:id', (req,res) => {
 //Add Reply to a Bandpost post
 //Check for required fields
 router.post('/reply/:id', jwtAuth, checkRequiredFields, (req, res) => {
-    const requiredFields = ['topic', 'reply'];
+    const requiredFields = ['bandpostsId', 'topic', 'reply'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
         if(!(field in req.body)) {
@@ -211,6 +215,10 @@ router.post('/reply/:id', jwtAuth, checkRequiredFields, (req, res) => {
             },
             {new: true}
         )
+        .populate({
+            path: 'replies.createdBy', 
+            select: 'username _id' 
+        })
         .then(reply => {
             res.status(201).json(reply.serialize())
         })
@@ -224,7 +232,7 @@ router.post('/reply/:id', jwtAuth, checkRequiredFields, (req, res) => {
 // --- PUT ---
 //REPLY UPDATE
 router.put('/reply/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res) => {
-    const requiredFields = ['bandpostId', 'createdById', 'replyId', 'topicUpdate', 'replyUpdate'];
+    const requiredFields = ['bandpostsId', 'createdById', 'replyId', 'topic', 'reply'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
         if(!(field in req.body)) {
@@ -233,33 +241,33 @@ router.put('/reply/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res
             return res.status(400).send(message);
         }
     }
-    if (req.params.id !== req.body.bandpostId){
-        const message = `Request path id (${req.params.id}) and request body id (${req.body.bandpostId}) must match`;
-        console.error(message);
-        return res.status(400).send(message);
-    }
+    
 console.log(`Updating reply entry \`${req.params.id}\``);
     
     let bandPostId = req.params.id;
-    let {replyId, replyUpdate, topicUpdate} = req.body;
+    let {replyId, reply, topic} = req.body;
     Bandpost
         .findById(bandPostId, function (err, bandpost) {
             let subDoc = bandpost.replies.id(replyId);
-            subDoc.$set({"topic": topicUpdate});
-            subDoc.$set({"reply": replyUpdate});
+            subDoc.$set({"topic": topic});
+            subDoc.$set({"reply": reply});
             subDoc.$set({"modified": Date.now()});
             bandpost.save()
-                .then(result => {
-                    res.status(200).json(result)
-                })
-       });
+        })
+        .populate({
+            path: 'replies.createdBy', 
+            select: 'username _id' 
+            })
+        .then(result => {
+            res.status(200).json(result)
+        })             
 });
 
        
 // ---DELETE ---
 //DELETE a reply from a bandpost
 router.delete('/reply/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
-    const requiredFields = ['bandpostId', 'replyId', 'createdById'];
+    const requiredFields = ['bandpostsId', 'replyId', 'createdById'];
     for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
         if(!(field in req.body)) {

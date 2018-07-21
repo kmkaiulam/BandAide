@@ -1,177 +1,232 @@
 <!-- Modals -->
   <!--Announcement Modal -->
-  <!-- POST-->
-  <section> 
-        <div class='modal' id='postAnnModal' tabindex='-1' role='dialog' aria-labelledby='postAnnModalLabel' aria-hidden='true'>
-          <div class='modal-dialog modal-dialog-centered' role='document'>
-            <div class='modal-content'>
-               <div class='modal-header'>
-                <h5 class='modal-title' id='postAnnModalLabel'>Create a New Announcement</h5>
-                 <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                  <span aria-hidden='true'>&times;</span>
-                 </button>
-              </div>
-              <form id = 'js-post-announcement' class = 'js-error-message'>
-                <div class='modal-body'>
-                  <input id = 'annPosttype' name = 'posttype' type = 'hidden' value = 'Announcement'>
-              
-                  <label for='message-text' class='col-form-label'>Message-text:</label>
-                  <textarea id='message-text' name = 'text' class='form-control' type="text"   required></textarea>
-                </div>
-              <div class='modal-footer'>
-                <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-                <button type='submit' class='btn btn-primary' >Submit</button>
-              </form>
-            </div>
-           </div>
+    <!-- POST-->
+<section> 
+  <div class='modal' id='postAnnModal' tabindex='-1' role='dialog' aria-labelledby='postAnnModalLabel' aria-hidden='true'>
+    <div class='modal-dialog modal-dialog-centered' role='document'>
+      <div class='modal-content'>
+          <div class='modal-header'>
+          <h5 class='modal-title' id='postAnnModalLabel'>Create a New Announcement</h5>
+            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span>
+            </button>
         </div>
-      </section>
-    
-      <!-- PUT -->
-      <section> 
-        <div class='modal' id='editAnnModal' tabindex='-1' role='dialog' aria-labelledby='editAnnModalLabel' aria-hidden='true'>
-            <div class='modal-dialog modal-dialog-centered' role='document'>
-              <div class='modal-content'>
-                 <div class='modal-header'>
-                   <h5 class='modal-title' id='editAnnModalLabel'>Edit Announcement</h5>
-                   <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                    <span aria-hidden='true'>&times;</span>
-                   </button>
-                </div>
-                 <form id = 'js-edit-announcement' class = 'js-error-message'>
-                  <div class='modal-body'>
-                    <input id = 'editAnnPosttype' name = 'posttype' type = 'hidden' value = 'Announcement'>
-                    <label for='message-edit' class='col-form-label'>Message-text:</label>
-                    <textarea id='message-edit' name = 'text' class='form-control'  required></textarea>
-                </div>
-                <div class='modal-footer'>
-                <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-                <button type='submit' class='btn btn-primary' >Submit</button>
-              </form>
-            </div>
+        <form id = 'js-post-announcement' class = 'js-error-message'>
+          <div class='modal-body'>
+            <input id = 'annPosttype' name = 'posttype' type = 'hidden' value = 'Announcement'>
+        
+            <label for='message-text' class='col-form-label'>Message-text:</label>
+            <textarea id='message-text' name = 'text' class='form-control' type="text"   required></textarea>
           </div>
-        </div>
-      </section>
+        <div class='modal-footer'>
+          <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+          <button type='submit' class='btn btn-primary' >Submit</button>
+        </form>
+      </div>
+      </div>
+  </div>
+</section>
+    
+    <!-- PUT -->
+<section> 
+  <div class='modal' id='editAnnModal' tabindex='-1' role='dialog' aria-labelledby='editAnnModalLabel' aria-hidden='true'>
+      <div class='modal-dialog modal-dialog-centered' role='document'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+              <h5 class='modal-title' id='editAnnModalLabel'>Edit Announcement</h5>
+              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+              <span aria-hidden='true'>&times;</span>
+              </button>
+          </div>
+            <form id = 'js-edit-announcement' class = 'js-error-message'>
+            <div class='modal-body'>
+              <input id = 'editAnnPosttype' name = 'posttype' type = 'hidden' value = 'Announcement'>
+              <label for='message-edit' class='col-form-label'>Message-text:</label>
+              <textarea id='message-edit' name = 'text' class='form-control'  required></textarea>
+          </div>
+          <div class='modal-footer'>
+          <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+          <button type='submit' class='btn btn-primary' >Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
       
-      <!--Event Evals Modal -->
-      <!-- POST-->
-      <section>
-        <div class='modal' id='eventsModal' tabindex='-1' role='dialog' aria-labelledby='eventsModalLabel' aria-hidden='true'>
-             <div class='modal-dialog modal-dialog-centered' role='document'>
-              <div class='modal-content'>
-                <div class='modal-header'>
-                  <h5 class='modal-title' id='eventsModalLabel'>Create New Event Eval</h5>
-                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                    <span aria-hidden='true'>&times;</span>
-                  </button>
-                </div>
-                <form id = 'js-events' class = 'js-error-message'>
-                   <div class ='modal-body'>
-                     <input id = 'eventPosttype' name = 'posttype' type = 'hidden' value = 'Event_Eval'>
-                     <label for = 'eventTopic' class = 'col-form-label'>Topic:</label>
-                     <input id = 'eventTopic' name = 'topic' type='text'  class='form-control' placeholder = 'ex. SWS20180708' required autofocus>
-                     <label for = 'eventDescription' class = 'col-form-label'>Description:</label>
-                     <textarea id = 'eventDescription' name = 'description' class = 'form-control'  required></textarea>
-                  </div>
-                <div class='modal-footer'>
-                  <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-                  <button type='submit' class='btn btn-primary' >Submit</button>
-                </form>
-            </div>
+  <!--Event Evals Modal -->
+    <!-- POST-->
+<section>
+  <div class='modal' id='eventsModal' tabindex='-1' role='dialog' aria-labelledby='eventsModalLabel' aria-hidden='true'>
+        <div class='modal-dialog modal-dialog-centered' role='document'>
+        <div class='modal-content'>
+          <div class='modal-header'>
+            <h5 class='modal-title' id='eventsModalLabel'>Create New Event Eval</h5>
+            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+              <span aria-hidden='true'>&times;</span>
+            </button>
           </div>
-        </div>
-      </section>
-    
-        <!-- PUT -->
-      <section>
-        <div class='modal' id='editEventsModal' tabindex='-1' role='dialog' aria-labelledby='editEventsModalLabel' aria-hidden='true'>
-          <div class='modal-dialog modal-dialog-centered' role='document'>
-            <div class='modal-content'>
-              <div class='modal-header'>
-                <h5 class='modal-title' id='editEventsModalLabel'>Edit Event Eval</h5>
-                 <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                  <span aria-hidden='true'>&times;</span>
-                 </button>
-              </div>
-              <form id = 'js-edit-events' class = 'js-error-message'>
-                <div class='modal-body'>
-                  <input id = 'editEventPosttype' name = 'posttype' type = 'hidden' value = 'Event_Eval'>                 
-                  <label for='editEventTopic' class='col-form-label'>Topic:</label>
-                  <input id ='editEventTopic' name= 'topic' type='text'  class='form-control' placeholder='ex. SWS20180708' required autofocus>
-                  <label for ='editEventDescription' class = 'col-form-label'>Description:</label>
-                  <textarea id='editEventDescription' name = 'description' class = 'form-control'  required></textarea>
-                </div>
-                <div class='modal-footer'>
-                  <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-                  <button type='submit' class='btn btn-primary' >Submit</button>
-              </form>
+          <form id = 'js-events' class = 'js-error-message'>
+              <div class ='modal-body'>
+                <input id = 'eventPosttype' name = 'posttype' type = 'hidden' value = 'Event_Eval'>
+                <label for = 'eventTopic' class = 'col-form-label'>Topic:</label>
+                <input id = 'eventTopic' name = 'topic' type='text'  class='form-control' placeholder = 'ex. SWS20180708' required autofocus>
+                <label for = 'eventDescription' class = 'col-form-label'>Description:</label>
+                <textarea id = 'eventDescription' name = 'description' class = 'form-control'  required></textarea>
             </div>
+          <div class='modal-footer'>
+            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+            <button type='submit' class='btn btn-primary' >Submit</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</section>
+  
+    <!-- PUT -->
+<section>
+  <div class='modal' id='editEventsModal' tabindex='-1' role='dialog' aria-labelledby='editEventsModalLabel' aria-hidden='true'>
+    <div class='modal-dialog modal-dialog-centered' role='document'>
+      <div class='modal-content'>
+        <div class='modal-header'>
+          <h5 class='modal-title' id='editEventsModalLabel'>Edit Event Eval</h5>
+            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span>
+            </button>
+        </div>
+        <form id = 'js-edit-events' class = 'js-error-message'>
+          <div class='modal-body'>
+            <input id = 'editEventPosttype' name = 'posttype' type = 'hidden' value = 'Event_Eval'>                 
+            <label for='editEventTopic' class='col-form-label'>Topic:</label>
+            <input id ='editEventTopic' name= 'topic' type='text'  class='form-control' placeholder='ex. SWS20180708' required autofocus>
+            <label for ='editEventDescription' class = 'col-form-label'>Description:</label>
+            <textarea id='editEventDescription' name = 'description' class = 'form-control'  required></textarea>
           </div>
+          <div class='modal-footer'>
+            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+            <button type='submit' class='btn btn-primary' >Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+    
+  <!-- Training Resources Modal -->
+    <!-- POST-->
+<section>
+  <div class='modal' id='trainingModal' tabindex='-1' role='dialog' aria-labelledby='trainingModalLabel' aria-hidden='true'>
+    <div class='modal-dialog modal-dialog-centered' role='document'>
+      <div class='modal-content'>
+        <div class='modal-header'>
+          <h5 class='modal-title' id='trainingModalLabel'>Add a New Training Resource</h5>
+          <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span>
+          </button>
         </div>
-      </section>
-    
-    
-    <!-- Training Resources Modal -->
-        <section>
-          <div class='modal' id='trainingModal' tabindex='-1' role='dialog' aria-labelledby='trainingModalLabel' aria-hidden='true'>
-              <div class='modal-dialog modal-dialog-centered' role='document'>
-                <div class='modal-content'>
-                  <div class='modal-header'>
-                    <h5 class='modal-title' id='trainingModalLabel'>Add a New Training Resource</h5>
-                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                      <span aria-hidden='true'>&times;</span>
-                    </button>
-                  </div>
-                  <form id = 'js-training' class = 'js-error-message'>
-                    <div class='modal-body'>
-                        <input id = 'trainingPosttype' name = 'posttype' type = 'hidden' value = 'Training_Resource'>
-                        <label for='trainingVideo' class='col-form-label'>Youtube Link (optional):</label>
-                        <input name = 'youtubeLink' class = 'form-control' id='trainingVideo' placeholder='ex. https://www.youtube.com/watch?v=eY_6B1EDj0I'>  
-                        <label for='trainingTopic' class='col-form-label'>Topic:</label>
-                        <input id='trainingTopic' name= 'topic' type='text'  class='form-control' placeholder='ex. Compression and EQ' required autofocus>
-                        <label for='trainingDescription' class='col-form-label'>description:</label>
-                        <textarea id='trainingDescription' name = 'description' class='form-control'  required></textarea>
-                        
-                    </div>
-                  <div class='modal-footer'>
-                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-                    <button type='submit' class='btn btn-primary' >Submit</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </section>   
-          
-          
-          <section>
-              <div class='modal' id='editTrainingModal' tabindex='-1' role='dialog' aria-labelledby='editTrainingModalLabel' aria-hidden='true'>
-                  <div class='modal-dialog modal-dialog-centered' role='document'>
-                    <div class='modal-content'>
-                      <div class='modal-header'>
-                        <h5 class='modal-title' id='editTrainingModalLabel'>Edit Training Resource</h5>
-                        <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                          <span aria-hidden='true'>&times;</span>
-                        </button>
-                      </div>
-                      <form id = 'js-edit-training' class = 'js-error-message'>
-                        <div class='modal-body'>
-                            <input id = 'editTrainingPosttype' name = 'posttype' type = 'hidden' value = 'Training_Resource'>
-                            <label for='trainingVideo' class='col-form-label'>Youtube Link (optional):</label>
-                            <input  id='editTrainingVideo' name = 'youtubeLink' class = 'form-control'  placeholder='ex. https://www.youtube.com/watch?v=eY_6B1EDj0I'>  
-                            <label for='trainingTopic' class='col-form-label'>Topic:</label>
-                            <input id='editTrainingTopic' name= 'topic' type='text'  class='form-control' placeholder='ex. Compression and EQ' required autofocus>
-                            <label for='trainingDescription' class='col-form-label'>description:</label>
-                            <textarea id='editTrainingDescription' name = 'description' class='form-control'  required></textarea>
-                            
-                        </div>
-                      <div class='modal-footer'>
-                        <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-                        <button type='submit' class='btn btn-primary' >Submit</button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </section>     
+        <form id = 'js-training' class = 'js-error-message'>
+          <div class='modal-body'>
+              <input id = 'trainingPosttype' name = 'posttype' type = 'hidden' value = 'Training_Resource'>
+              <label for='trainingVideo' class='col-form-label'>Youtube Link (optional):</label>
+              <input name = 'youtubeLink' class = 'form-control' id='trainingVideo' placeholder='ex. https://www.youtube.com/watch?v=eY_6B1EDj0I'>  
+              <label for='trainingTopic' class='col-form-label'>Topic:</label>
+              <input id='trainingTopic' name= 'topic' type='text'  class='form-control' placeholder='ex. Compression and EQ' required autofocus>
+              <label for='trainingDescription' class='col-form-label'>description:</label>
+              <textarea id='trainingDescription' name = 'description' class='form-control'  required></textarea>      
+          </div>
+        <div class='modal-footer'>
+          <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+          <button type='submit' class='btn btn-primary' >Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>   
+
+    <!-- PUT -->  
+<section>
+  <div class='modal' id='editTrainingModal' tabindex='-1' role='dialog' aria-labelledby='editTrainingModalLabel' aria-hidden='true'>
+    <div class='modal-dialog modal-dialog-centered' role='document'>
+      <div class='modal-content'>
+        <div class='modal-header'>
+          <h5 class='modal-title' id='editTrainingModalLabel'>Edit Training Resource</h5>
+          <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span>
+          </button>
+        </div>
+        <form id = 'js-edit-training' class = 'js-error-message'>
+          <div class='modal-body'>
+              <input id = 'editTrainingPosttype' name = 'posttype' type = 'hidden' value = 'Training_Resource'>
+              <label for='trainingVideo' class='col-form-label'>Youtube Link (optional):</label>
+              <input  id='editTrainingVideo' name = 'youtubeLink' class = 'form-control'  placeholder='ex. https://www.youtube.com/watch?v=eY_6B1EDj0I'>  
+              <label for='trainingTopic' class='col-form-label'>Topic:</label>
+              <input id='editTrainingTopic' name= 'topic' type='text'  class='form-control' placeholder='ex. Compression and EQ' required autofocus>
+              <label for='trainingDescription' class='col-form-label'>description:</label>
+              <textarea id='editTrainingDescription' name = 'description' class='form-control'  required></textarea>
+          </div>
+        <div class='modal-footer'>
+          <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+          <button type='submit' class='btn btn-primary' >Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>     
+
+
+  <!-- Reply Modal  -->
+      <!-- POST -->
+<section>
+  <div class='modal' id='replyModal' tabindex='-1' role='dialog' aria-labelledby='replyModalLabel' aria-hidden='true'>
+    <div class='modal-dialog modal-dialog-centered' role='document'>
+      <div class='modal-content'>
+        <div class='modal-header'>
+          <h5 class='modal-title' id='replyModalLabel'>Reply to a post</h5>
+          <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span>
+          </button>
+        </div>
+        <form id = 'js-reply' class = 'js-error-message'>
+          <div class='modal-body'>
+              <label for='replyTopic' class='col-form-label'>topic:</label>
+              <input id='replyTopic' name = 'topic' type = 'text' class='form-control'  required></textarea>  
+              <label for='replyText' class='col-form-label'>reply:</label>
+              <textarea id='replyText' name = 'text' type = 'text' class='form-control'  required></textarea>
+          </div>
+        <div class='modal-footer'>
+          <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+          <button type='submit' class='btn btn-primary' >Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>     
+    <!-- PUT -->
+<section>
+  <div class='modal' id='editReplyModal' tabindex='-1' role='dialog' aria-labelledby='editReplyModalLabel' aria-hidden='true'>
+    <div class='modal-dialog modal-dialog-centered' role='document'>
+      <div class='modal-content'>
+        <div class='modal-header'>
+          <h5 class='modal-title' id='editReplyModalLabel'>Edit Reply</h5>
+          <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span>
+          </button>
+        </div>
+        <form id = 'js-edit-reply' class = 'js-error-message'>
+          <div class='modal-body'>
+              <label for='editReplyTopic' class='col-form-label'>topic:</label>
+              <input id='editReplyTopic' name = 'topic' type = 'text' class='form-control'  required></textarea>  
+              <label for='editReplyText' class='col-form-label'>reply:</label>
+              <textarea id='editReplyText' name = 'text' type = 'text' class='form-control'  required></textarea>
+          </div>
+        <div class='modal-footer'>
+          <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+          <button type='submit' class='btn btn-primary' >Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>   
+
 
               
       <!-- Equipment Evals Modal  POST 

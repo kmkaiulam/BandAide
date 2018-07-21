@@ -16,7 +16,7 @@ const ReplySchema = new Schema({
     type: Date,
     default: Date.now
   }, 
-  modified: {type: Date, default: ''},
+  modified: {type: Date},
   createdBy:{
     type: ObjectId, 
     ref: 'User'
@@ -45,7 +45,7 @@ const BandpostSchema = new Schema({
     type: Date, 
     default: Date.now
   },
-  modified:{type: Date, default: ''},
+  modified:{type: Date},
   createdBy: {
       type: ObjectId, 
       ref:'User'

@@ -7,47 +7,52 @@ let newErr;
 let eventButton;
 let postId;
 let userId;
+let replyId;
 
 // --- Endpoints ---
 let url = {
     'announcements' : '/api/announcements/',
     'bandposts': '/api/bandposts/',
     'events' : '/api/bandposts/events',
-    'training': '/api/bandposts/training',   
+    'training': '/api/bandposts/training',
+    'reply':'/api/bandposts/reply/'   
 }
 
+// --- Common Functions ---
 function clearForm(){ 
     $(':input').val('');
 }
 
-
-function listenEditClick(){
-    $(document).on('click', '.editButton', event => {
+function listenDataIdButton(){
+    $(document).on('click', '.dataIdButton', event => {
         event.preventDefault();
         eventButton = event.target;
         findDataIds(event);
    });
 };
 
+
 // --- Grabs The userId and postId for any entry to allow for deletion
 function findDataIds(event){
    eventButton = event.target;
-    postId= eventButton.getAttribute('data-id');
+    postId= eventButton.closest('div.data').getAttribute('data-id');
     userId = eventButton.getAttribute('data-userId');
+    replyId = eventButton.getAttribute('data-replyId');
     console.log(`userId = ${userId}`);
     console.log(`postId = ${postId}`);
-}
+    console.log(`replyId = ${replyId}`)
+};
 
 function handlePostFail(err){
     generateErrorMessage(err);
     clearForm();
-}
+};
 
 function handleDeleteFail(err){
     alert(`${err.responseText}.`);
-}
+};
 
-    //Display Recent and Collapsed Posts
+//Display Recent and Collapsed Posts
 function preparePosts(post){
     let recentPosts; 
     let restPosts;
@@ -58,7 +63,7 @@ function preparePosts(post){
     restPosts.join('')
     let preparedPosts = [recentPosts , restPosts]
     return preparedPosts;
-}   
+};   
 
 function renderPosts(data){
     let bandpostPosttype;
@@ -69,12 +74,15 @@ function renderPosts(data){
     bandpostPosttype = data[0].posttype;
     if (bandpostPosttype === 'Announcement'){
         let newAnnouncements = data.map(generateAnnouncementPost);
+        console.log(newAnnouncements);
             preparedPosts = preparePosts(newAnnouncements);
+            console.log(preparedPosts[0]);
         $('#js-recent-announcement').html(preparedPosts[0]);
         $('#js-all-announcement').html(preparedPosts[1]);  
     }
     else {
            let  newBandposts = data.map(generateBandpost);
+           //let  newReplies = data.replies.map(generateReply);
            preparedPosts = preparePosts(newBandposts);
             if (bandpostPosttype === 'Event_Eval'){
                 $('#js-recent-event').html(preparedPosts[0]);
@@ -83,11 +91,12 @@ function renderPosts(data){
             if(bandpostPosttype === 'Training_Resource'){
 
                 $('#js-recent-training').html(preparedPosts[0]);
-                $('#js-all-training').html(preparedPosts[1]);
-                //let player  = videojs('vidplayer');
+                $('#js-all-training').html(preparedPosts[1]);    
             };         
         }; 
 };    
+
+ 
 
 
 
@@ -114,13 +123,12 @@ function listenAnnouncementPost(){
                handlePostFail(err);
             });
     });
-}
+};
         
 function listenAnnouncementDelete(){
     $(document).on('click', '.deleteAnnouncementButton', event => {
         event.preventDefault();
         if (window.confirm('Proceed to delete?')){
-        findDataIds(event);
         const settings = {
             url: `${url.announcements}${postId}`,
             data: {
@@ -178,7 +186,6 @@ function listenBandpostDelete(){
     $(document).on('click', '.deleteBandpostButton', event => {
         event.preventDefault();
         if (window.confirm('Proceed to delete?')){
-        findDataIds(event);
         const settings = {
             url: `${url.bandposts}${postId}`,
             data: {
@@ -188,7 +195,7 @@ function listenBandpostDelete(){
             dataType: 'json',
             type: 'DELETE',
             success: function(data){
-                $(`i[data-id= ${postId}]`).closest('div.bandpost-post').hide();
+                $(`i[data-id= ${postId}]`).closest('div.js-bandpost-update').hide();
                 console.log('Deleted post');
             }
         }
@@ -276,6 +283,8 @@ function listenTrainingPost(){
             type: 'POST',
             success: function(data){
                let newBandpost= generateBandpost(data)
+               console.log(data._id);
+               //let player  = videojs(`${data._id}`);
                $('#js-recent-training').prepend(newBandpost)
                $('#trainingModal').modal('hide')
                 clearForm();
@@ -305,6 +314,7 @@ function listenTrainingEdit(){
             type: 'PUT',
             success: function(data){
                 let newBandpost= generateBandpost(data)
+                //let player  = videojs('vidplayer');
                 $(`i[data-id= ${postId}]`).closest('div.js-bandpost-update').html(newBandpost);
                 $('#editTrainingModal').modal('hide')
                 clearForm();
@@ -317,6 +327,94 @@ function listenTrainingEdit(){
         });
 };
         
+
+// --- Reply ---
+function listenReplyPost(){
+    $('#js-reply').submit(event =>{
+        event.preventDefault();
+        const settings = {
+            url: `${url.reply}${postId}`,
+            data: {
+                'bandpostsId' : `${postId}`,
+                'topic': $('#replyTopic').val(),
+                'reply': $('#replyText').val(),
+                },
+            dataType: 'json',
+            type: 'POST',
+            success: function(data){
+               let latestReply = data[data.length-1]
+               let newReply = generateReply(latestReply)
+               console.log(newReply);
+               $(`#js-reply-${postId}`).append(newReply);
+               $('#replyModal').modal('hide');
+               clearForm();
+            }
+        }
+        return $.ajax(settings)
+            .fail(function (err){
+              handlePostFail(err);
+            });
+        });
+};
+function listenReplyDelete(){
+    $(document).on('click', '.deleteReplyButton', event => {
+        event.preventDefault();
+        if (window.confirm('Proceed to delete?')){
+        const settings = {
+            url: `${url.reply}${postId}`,
+            data: {
+                'bandpostsId':`${postId}`, 
+                'replyId':`${replyId}`,
+                'createdById':`${userId}`,
+               
+                },
+            dataType: 'json',
+            type: 'DELETE',
+            success: function(data){
+                $(`i[data-replyid= ${replyId}]`).closest('div.js-reply-modify').hide();
+                console.log('Deleted reply');
+            }
+        }
+        
+        return $.ajax(settings)
+            .fail(function (err){
+                handleDeleteFail(err);
+            });
+        };
+    });    
+};
+
+function listenReplyEdit(){
+    $('#js-edit-reply').submit(event => {
+        event.preventDefault();
+        const settings = {
+            url: `${url.reply}${postId}`,
+            data: {
+                'bandpostsId':`${postId}`, 
+                'replyId':`${replyId}`,
+                'createdById':`${userId}`,
+                'topic': $('#editReplyTopic').val(),
+                'reply': $('#editReplyText').val(),
+                },
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data){
+                console.log(data);
+                let recentReply = data.replies[data.replies.length-1]
+                let newReply = generateReply(recentReply);
+                $(`i[data-replyid= ${replyId}]`).closest('.js-reply-edit').html(newReply)
+                //$(`i[data-replyid= ${replyId}]`).closest('div.js-reply-modify').html(newReply);
+               
+                console.log('Edited Reply');
+            }
+        }
+        return $.ajax(settings)
+            .fail(function (err){
+                handleDeleteFail(err);
+        }); 
+    });    
+}
+
 function handleListenAnnouncementButtons(){
     listenAnnouncementEdit();
     listenAnnouncementPost();
@@ -328,10 +426,13 @@ function handleListenBandpostButtons(){
     listenEventEdit();
     listenTrainingPost(); 
     listenTrainingEdit();
+    listenReplyPost();
+    listenReplyDelete();
+    listenReplyEdit();
 }
 
 function handleListenButtons(){
-    listenEditClick();
+    listenDataIdButton();
     handleListenAnnouncementButtons();
     handleListenBandpostButtons();
 }            
@@ -344,7 +445,6 @@ function handleListenButtons(){
 function onLoad(){
     displayInDom();
     handleListenButtons();
-    
 }
 
 

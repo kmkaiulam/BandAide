@@ -45,7 +45,6 @@ router.post('/', jwtAuth, checkRequiredFields, (req, res) =>{
              posttype: req.body.posttype,
              text: req.body.text,
              created: req.body.created,
-             modified: req.body.modified,
              createdBy: req.user.id 
         })
         .then(post =>{
