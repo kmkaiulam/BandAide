@@ -14,10 +14,6 @@ function populateBandpost(post){
             select: 'username _id' 
     })
             .populate({
-                path: 'replies', 
-                select: 'topic reply created modified' 
-    })
-            .populate({
                 path: 'replies.createdBy', 
                 select: 'username _id' 
     })
@@ -47,28 +43,6 @@ router.get('/events', (req, res) => {
         });
 });
 
-/*
-    // --- Display Equipment
-router.get('/equipment', (req, res) => {
-    Bandpost
-        .find({'posttype': 'Equipment_Eval'})
-        .populate({
-            path: 'createdBy', 
-            select: 'username _id' //can name any field and populate
-        })
-        .populate({
-            path: 'replies.createdBy', 
-            select: 'username id' 
-        })
-        .then(populatedPosts =>{
-            res.json(populatedPosts)
-        })
-        .catch(err =>{
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error' });
-        });
-});
-*/
     // --- Display Training 
 router.get('/training', (req, res) => { 
     Bandpost
@@ -167,39 +141,10 @@ console.log(`Deleting bandpost entry \`${req.params.id}\``);
         });
 });
 
-
-// --- Replies ---
-// --- GET ---
-//GET all Replies for a Bandpost 
-router.get('/reply/:id', (req,res) => {
-    Bandpost
-        .findById(req.params.id)
-        .populate({
-            path: 'replies.createdBy', 
-            select: 'username _id' 
-})
-        .then(bandpost => {
-            res.json(bandpost.serialize());
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error' });
-        }); 
-});
-
 // --- POST ---
 //Add Reply to a Bandpost post
-//Check for required fields
+
 router.post('/reply/:id', jwtAuth, checkRequiredFields, (req, res) => {
-    const requiredFields = ['bandpostsId', 'topic', 'reply'];
-    for (let i=0; i<requiredFields.length; i++) {
-        const field =requiredFields[i];
-        if(!(field in req.body)) {
-            const message = `Missing \`${field}\` in request body`
-            console.error(message);
-            return res.status(400).send(message);
-        }
-    }
     console.log(`Adding reply to bandpost \`${req.params.id}\``);
 
     
@@ -229,54 +174,10 @@ router.post('/reply/:id', jwtAuth, checkRequiredFields, (req, res) => {
         });
 });
 
-// --- PUT ---
-//REPLY UPDATE
-router.put('/reply/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res) => {
-    const requiredFields = ['bandpostsId', 'createdById', 'replyId', 'topic', 'reply'];
-    for (let i=0; i<requiredFields.length; i++) {
-        const field =requiredFields[i];
-        if(!(field in req.body)) {
-            const message = `Missing \`${field}\` in request body`
-            console.error(message);
-            return res.status(400).send(message);
-        }
-    }
-    
-console.log(`Updating reply entry \`${req.params.id}\``);
-    
-    let bandPostId = req.params.id;
-    let {replyId, reply, topic} = req.body;
-    Bandpost
-        .findById(bandPostId, function (err, bandpost) {
-            let subDoc = bandpost.replies.id(replyId);
-            subDoc.$set({"topic": topic});
-            subDoc.$set({"reply": reply});
-            subDoc.$set({"modified": Date.now()});
-            bandpost.save()
-        })
-        .populate({
-            path: 'replies.createdBy', 
-            select: 'username _id' 
-            })
-        .then(result => {
-            res.status(200).json(result)
-        })             
-});
-
        
 // ---DELETE ---
 //DELETE a reply from a bandpost
 router.delete('/reply/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
-    const requiredFields = ['bandpostsId', 'replyId', 'createdById'];
-    for (let i=0; i<requiredFields.length; i++) {
-        const field =requiredFields[i];
-        if(!(field in req.body)) {
-            const message = `Missing \`${field}\` in request body`
-            console.error(message);
-            return res.status(400).send(message);
-        }
-    }
-console.log(`Deleting reply for bandpost \`${req.params.id}\``);
     Bandpost
         .findById(req.params.id)
         .then(bandpost => {

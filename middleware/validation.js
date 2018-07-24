@@ -1,10 +1,10 @@
 'use strict';
-
+//Post Routers Middleware
 const checkValidUser = function(req,res,next) { 
     console.log(`this is req.body.createdById ${req.body.createdById}`);
     console.log(`this is req.user.id ${req.user.id}`);
     if(!(req.body.createdById === req.user.id)) {
-      const message = `You don't have the rights to modify/delete this entry`
+      const message = `You don't have the rights to modify this entry`
       console.error(message);
       return res.status(400).send(message);
     }
@@ -18,9 +18,8 @@ const checkValidUser = function(req,res,next) {
     let requestMethod = req.method;
     let requiredFields;
   
-    //write conditionals based on the Original url and the type of request that is being made)
-    //*SWITCH
-      // --- ANNOUNCEMENTS ---
+  
+    // --- ANNOUNCEMENTS ---
     if (resourceName === 'announcements' && requestMethod === 'POST') {
        requiredFields = ['posttype', 'text'];
     }
@@ -44,13 +43,9 @@ const checkValidUser = function(req,res,next) {
     if (nestedResourceName === 'reply' && requestMethod === 'POST') {
        requiredFields = ['bandpostsId', 'topic', 'reply'];
     }
-    if (nestedResourceName === 'reply' && requestMethod === 'PUT') {
-       requiredFields = ['bandpostsId', 'createdById', 'replyId', 'topic', 'reply'];
-    }
     if (nestedResourceName === 'reply' && requestMethod === 'DELETE') {
        requiredFields = ['bandpostsId', 'replyId', 'createdById'];
     }
-      console.log(nestedResourceName);
       for (let i=0; i<requiredFields.length; i++) {
         const field =requiredFields[i];
         if(!(field in req.body) || field === null) {
