@@ -63,37 +63,37 @@ router.post('/', jwtAuth, checkRequiredFields, (req, res) =>{
 
 // --- PUT ---
 router.put('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res) =>{
-console.log(`Updating bandpost entry \`${req.params.id}\``);
-  const toUpdate = {};
-  const updateableFields = ['text']; 
+    console.log(`Updating bandpost entry \`${req.params.id}\``);
+    const toUpdate = {};
+    const updateableFields = ['text']; 
 
-  updateableFields.forEach(field =>{
-      if (field in req.body){
-          toUpdate[field] = req.body[field];
-      }
-  })
-  //Add modified date to post 
-  toUpdate.modified = Date.now();
+    updateableFields.forEach(field =>{
+        if (field in req.body){
+            toUpdate[field] = req.body[field];
+        }
+    })
+    //Add modified date to post 
+    toUpdate.modified = Date.now();
 
-  Announcement
-        .findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
-        .then(announcement =>{
-           return populateNewAnnouncement(announcement);
-        })
-        .then(populatedAnnouncement =>{
-            res.status(200).send(populatedAnnouncement)
-        })
-        .catch(err =>{
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error' });
-        })
-});
+    Announcement
+            .findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
+            .then(announcement =>{
+            return populateNewAnnouncement(announcement);
+            })
+            .then(populatedAnnouncement =>{
+                res.status(200).send(populatedAnnouncement)
+            })
+            .catch(err =>{
+                console.error(err);
+                res.status(500).json({ message: 'Internal server error' });
+            })
+    });
 
 
 
 // --- DELETE ---
 router.delete('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
-console.log(`Deleting bandpost entry \`${req.params.id}\``);
+    console.log(`Deleting bandpost entry \`${req.params.id}\``);
    
     Announcement
         .findByIdAndRemove(req.params.id)

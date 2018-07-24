@@ -21,8 +21,8 @@ function populateBandpost(post){
       
 
 // --- Bandposts ---
-    // --- GET  
-    // ---Display Events    
+    // --- GET ---  
+        //Display Events    
 router.get('/events', (req, res) => {
     Bandpost
         .find({'posttype': 'Event_Eval'})
@@ -43,7 +43,7 @@ router.get('/events', (req, res) => {
         });
 });
 
-    // --- Display Training 
+            //Display Training 
 router.get('/training', (req, res) => { 
     Bandpost
         .find({'posttype': 'Training_Resource'})
@@ -66,8 +66,8 @@ router.get('/training', (req, res) => {
 
 
 
-// --- POST ---
-//Create New Bandpost
+    // --- POST ---
+        //Create New Bandpost
 router.post('/', jwtAuth, checkRequiredFields, (req, res) => {
     Bandpost
         .create({
@@ -93,40 +93,36 @@ router.post('/', jwtAuth, checkRequiredFields, (req, res) => {
 });
 
 
-// --- PUT ---
-//Update a Bandpost
-//Check for required fields
+    // --- PUT ---
+        //Update a Bandpost
 router.put('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res) => {
-console.log(`Updating bandpost entry \`${req.params.id}\``);
-
-  const toUpdate = {};
-  const updateableFields = ['posttype', 'topic', 'description', 'youtubeLink']; 
-  
-  updateableFields.forEach(field => {
-      if (field in req.body) {
-          toUpdate[field] = req.body[field];
-      }
-  })
-  //Add modified date to post 
-  toUpdate.modified = Date.now();
-  console.log(toUpdate);
-  
-  Bandpost
-      .findByIdAndUpdate(req.params.id, {$set: toUpdate}, { new: true })
-        .then(post => {
-            return populateBandpost(post);
-        })
-        .then(populatedPost =>{
-            res.status(200).send(populatedPost)
-        })
-        .catch(err =>{
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error' });
-        });          
+    console.log(`Updating bandpost entry \`${req.params.id}\``);
+    const toUpdate = {};
+    const updateableFields = ['posttype', 'topic', 'description', 'youtubeLink']; 
+    
+    updateableFields.forEach(field => {
+        if (field in req.body) {
+            toUpdate[field] = req.body[field];
+        }
+    })
+   toUpdate.modified = Date.now();
+    
+    Bandpost
+        .findByIdAndUpdate(req.params.id, {$set: toUpdate}, { new: true })
+            .then(post => {
+                return populateBandpost(post);
+            })
+            .then(populatedPost =>{
+                res.status(200).send(populatedPost)
+            })
+            .catch(err =>{
+                console.error(err);
+                res.status(500).json({ message: 'Internal server error' });
+            });          
 });
 
-// --- DELETE ---
-//DELETE a Bandpost
+    // --- DELETE ---
+        //DELETE a Bandpost
 router.delete('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
 console.log(`Deleting bandpost entry \`${req.params.id}\``);
    
@@ -141,13 +137,10 @@ console.log(`Deleting bandpost entry \`${req.params.id}\``);
         });
 });
 
-// --- POST ---
-//Add Reply to a Bandpost post
-
+// --- Reply ---
+    // --- POST ---
 router.post('/reply/:id', jwtAuth, checkRequiredFields, (req, res) => {
     console.log(`Adding reply to bandpost \`${req.params.id}\``);
-
-    
     Bandpost
         .findByIdAndUpdate(req.params.id, 
             {$push: {replies:
@@ -174,9 +167,8 @@ router.post('/reply/:id', jwtAuth, checkRequiredFields, (req, res) => {
         });
 });
 
-       
-// ---DELETE ---
-//DELETE a reply from a bandpost
+    // --- Delete ---
+        //Delete a reply
 router.delete('/reply/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,res) => {
     Bandpost
         .findById(req.params.id)

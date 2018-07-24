@@ -6,7 +6,7 @@ function convertDate(date){
 function defineDate(post){
     let newDate;
     newDate =`posted on ${convertDate(post.created)}`
-    if (post.modified != null) {
+    if (post.modified != null){
         newDate = `modified on ${convertDate(post.modified)}`;
     }
     return newDate;
@@ -14,20 +14,10 @@ function defineDate(post){
 function defineReplyDate(reply){
     let newReplyDate;
     newReplyDate = `replied on ${convertDate(reply.created)}`
-   return newReplyDate;
+    return newReplyDate;
 }
 
-function generateErrorMessage(err){
-    newErr = `<div class='modal-body'>
-    <label for='message-text' class='col-form-label'>Error:</label>
-    <textarea disabled class='form-control' id='message-text'></textarea>
-    </div>
-<div class='modal-footer'>
-  <div class = 'text-danger'> ${err.responseText}. Please<a href = '/login'> Login </a></div>`
-  return $('.js-error-message').html(newErr);
-}
-
-// --- Message Generation
+// --- Message Partials Generation ---
 function generateReply(reply){
     let newReplyDate = defineReplyDate(reply)
     let newReply = `<div class = 'container-fluid col-9 border border-black mr-3 js-reply-modify'>
@@ -62,11 +52,10 @@ function generateCollapsedReplies(post){
 function generateVideo(post){
     let video='';
     if (post.posttype === 'Training_Resource' && post.youtubeLink != ''){
-        video = `  
-             <div class='borderless-card borderless-card-body video'>
-             <button class = 'container-youtube btn btn-danger btn'><i  class='fab fa-youtube-square'></i></button>
-             <div id ='player-${post._id}' class= 'plyer borderless-card borderless-card-body' data-plyr-provider='youtube' data-plyr-embed-id='${post.youtubeLink}'></div>
-            </div>`
+        video = `<div class='borderless-card borderless-card-body video'>
+                    <button class = 'container-youtube btn btn-danger btn'><i  class='fab fa-youtube-square'></i></button>
+                    <div id ='player-${post._id}' class= 'plyer borderless-card borderless-card-body' data-plyr-provider='youtube' data-plyr-embed-id='${post.youtubeLink}'></div>
+                 </div>`
     }
     return video;
 };
@@ -98,23 +87,22 @@ function generateModifyButtons(post){
     return modifyButtons
 };
 
- 
+ // --- Post Generation ---
 
 function generateAnnouncementPost(announcement){
     let newDate = defineDate(announcement); 
-       let newAnnouncement = `
-        <div data-id = '${announcement._id}' class = 'js-announcement-update data'>
-            <div class='media  pt-1 announcement-post'>
-               <div class ='media-body pb-3 mb-0  border-bottom border-gray'>
-                        <p><strong class='d-block text-gray-dark'>#${announcement.createdBy.username} ${newDate}</strong> 
-                        ${announcement.text}
-                        </p>
-                    <div class='btn-group d-flex flex-row-reverse' role='group' aria-label='Button Group'>
-                        <button type='button' data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='btn btn-outline-secondary mr-2 deleteAnnouncementButton dataIdButton'><i data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='far fa-trash-alt'></i></button>
-                        <button type='button' data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='btn btn-outline-primary mr-2 editButton dataIdButton' data-toggle='modal' data-target='#editAnnModal'><i data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='far fa-edit'></i></button>
-                    </div>
-            </div>
-        </div>`
+    let newAnnouncement =  `<div data-id = '${announcement._id}' class = 'js-announcement data'>
+                                <div class='media  pt-1'>
+                                <div class ='media-body pb-3 mb-0  border-bottom border-gray'>
+                                    <p><strong class='d-block text-gray-dark'>#${announcement.createdBy.username} ${newDate}</strong> 
+                                    ${announcement.text}
+                                    </p>
+                                    <div class='btn-group d-flex flex-row-reverse' role='group' aria-label='Button Group'>
+                                        <button type='button' data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='btn btn-outline-secondary mr-2 deleteAnnouncementButton dataIdButton'><i data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='far fa-trash-alt'></i></button>
+                                        <button type='button' data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='btn btn-outline-primary mr-2 editButton dataIdButton' data-toggle='modal' data-target='#editAnnModal'><i data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='far fa-edit'></i></button>
+                                    </div>
+                                </div>
+                            </div>`
     return newAnnouncement
 };
 
@@ -124,21 +112,21 @@ function generateBandpost(post){
     let modifyButtons = generateModifyButtons(post);
     let collapse = generateCollapsedReplies(post)
     
-    let newBandpost = ` <div data-id = '${post._id}' class = 'js-bandpost-update data'>
-                        <div class='media pt-1 bandpost-post'>
-                            <div class ='media-body pb-3 mb-0  border border-gray'>
-                                <div class = 'container'>
-                                    <div><strong class='d-block text-gray-dark'>#${post.createdBy.username} ${newDate}</strong></div>
-                                    <h3> ${post.topic}</h3>
-                                    <div class = 'd-flex align-items-center justify-content-center'>${video} </div>
-                                    <p>${post.description}</p>
+    let newBandpost =  `<div data-id = '${post._id}' class = 'js-bandpost-update data'>
+                            <div class='media pt-1'>
+                                <div class ='media-body pb-3 mb-0  border border-gray'>
+                                    <div class = 'container'>
+                                        <div><strong class='d-block text-gray-dark'>#${post.createdBy.username} ${newDate}</strong></div>
+                                        <h3> ${post.topic}</h3>
+                                        <div class = 'd-flex align-items-center justify-content-center'>${video} </div>
+                                        <p>${post.description}</p>
+                                    </div>
+                                    ${modifyButtons}
+                                    </div>
                                 </div>
-                                ${modifyButtons}
-                                </div>
-                            </div>
-                            ${collapse}
-                        </div> 
-                    </div>` 
+                                ${collapse}
+                            </div> 
+                        </div>` 
     return newBandpost;
 };
 
@@ -146,7 +134,7 @@ function generateBandpost(post){
 
 
 
-//Display Recent and Collapsed Posts
+// --- Display Recent and Collapsed Posts ---
 function preparePosts(post){
     let recentPosts; 
     let restPosts;

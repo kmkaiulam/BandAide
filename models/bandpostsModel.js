@@ -53,9 +53,6 @@ const BandpostSchema = new Schema({
   replies: [ReplySchema]
 }); 
 
-//how do I grab just one value from another schema? in this case I want 
-//createdBy to automatically populate with the signed in user's username
-  
 BandpostSchema.methods.serialize = function() {
   return  this.replies;
 };

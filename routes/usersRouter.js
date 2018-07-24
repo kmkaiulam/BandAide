@@ -8,7 +8,7 @@ const {checkUserRequiredFields, checkUserStringFields, checkUserTrimmedFields, c
 
 
 // Post to register a new user
-router.post('/', checkUserRequiredFields, checkUserStringFields, checkUserTrimmedFields, checkUserSizedFields, (req, res) => {
+router.post('/', checkUserRequiredFields, checkUserStringFields, checkUserTrimmedFields, checkUserSizedFields, (req, res) =>{
   let {username, password, firstName = '', lastName = ''} = req.body;
   firstName = firstName.trim();
   lastName = lastName.trim();
@@ -45,6 +45,23 @@ router.post('/', checkUserRequiredFields, checkUserStringFields, checkUserTrimme
       res.status(500).json({code: 500, message: 'Internal server error'});
     });
 });
+
+/*
+router.get('/', (req ,res) => {
+  return User.find()
+    .then (user => {
+      console.log(user);
+      return res.json(user);
+    })
+    .catch(err => {
+      console.log(err);
+      if (err.reason === 'ValidationError') {
+        return res.status(err.code).json(err);
+      }
+      res.status(500).json({code: 500, message: 'Internal server error'});
+    });
+});
+*/
 
 module.exports = {router};
 

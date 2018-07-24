@@ -1,7 +1,4 @@
 'use strict'
-// Figure out Video Js to make videos load properly
-// Try to use 1 modal for multiple bandposts - altering the content inside depending on posttype
- 
 // --- Global Variables ---
 let eventButton;
 let postId;
@@ -40,17 +37,11 @@ function findDataIds(event){
     console.log(`replyId = ${replyId}`)
 };
 
-function handlePostFail(err){
+function handleFail(err){
     alert(`${err.responseText}`);
     clearForm();
 };
-
-function handleDeleteFail(err){
-    alert(`${err.responseText}.`);
-};
-
- 
-
+// --- Announcements --- 
 function listenAnnouncementPost(){
     $('#js-post-announcement').submit(event =>{
         event.preventDefault();
@@ -71,7 +62,7 @@ function listenAnnouncementPost(){
         }
             return $.ajax(settings)
             .fail(function (err){
-               handlePostFail(err);
+               handleFail(err);
             });
     });
 };
@@ -89,19 +80,18 @@ function listenAnnouncementDelete(){
             dataType: 'json',
             type: 'DELETE',
             success: function(data){
-                $(`i[data-id= ${postId}]`).closest('div.announcement-post').hide();
+                $(`i[data-id= ${postId}]`).closest('div.js-announcement').hide();
                 console.log('Deleted post');
             }
         }
         
         return $.ajax(settings)
             .fail(function (err){
-               handleDeleteFail(err);
+               handleFail(err);
             });
         };
     })    
 }
-
 
 function listenAnnouncementEdit(){
     $('#js-edit-announcement').submit(event =>{
@@ -118,7 +108,7 @@ function listenAnnouncementEdit(){
         type: 'PUT',
         success: function(data){
             let newAnnouncement= generateAnnouncementPost(data)
-            $(`i[data-id= ${postId}]`).closest('div.js-announcement-update').html(newAnnouncement);
+            $(`i[data-id= ${postId}]`).closest('div.js-announcement').html(newAnnouncement);
             $('#editAnnModal').modal('hide');
             clearForm();
             console.log('Edited Post');
@@ -126,7 +116,7 @@ function listenAnnouncementEdit(){
     }
     return $.ajax(settings)
         .fail(function (err){
-            handlePostFail(err);
+            handleFail(err);
         });
    
     });
@@ -153,13 +143,13 @@ function listenBandpostDelete(){
         
         return $.ajax(settings)
             .fail(function (err){
-               handleDeleteFail(err);
+               handleFail(err);
             });
         };
     });    
 };
 
-// -- Event Eval --
+// --- Event Eval ---
 function listenEventEvalPost(){
     $('#js-events').submit(event =>{
         event.preventDefault();
@@ -181,11 +171,10 @@ function listenEventEvalPost(){
         }
         return $.ajax(settings)
             .fail(function (err){
-              handlePostFail(err);
+              handleFail(err);
             });
         });
 };
-
 
 function listenEventEdit(){
     $('#js-edit-events').submit(event =>{
@@ -210,15 +199,12 @@ function listenEventEdit(){
         }
         return $.ajax(settings)
             .fail(function (err){
-              handlePostFail(err);
+              handleFail(err);
             });
         });
 };
 
-
-
-
-// -- Training Resources --
+// --- Training Resources ---
 function listenTrainingPost(){
     $('#js-training').submit(event =>{
         event.preventDefault();
@@ -241,7 +227,7 @@ function listenTrainingPost(){
         }
         return $.ajax(settings)
             .fail(function (err){
-               handlePostFail(err);
+               handleFail(err);
             });
         });
 };
@@ -270,11 +256,18 @@ function listenTrainingEdit(){
         }
         return $.ajax(settings)
             .fail(function (err){
-              handlePostFail(err);
+              handleFail(err);
             });
         });
 };
         
+function listenYoutubeClick(){
+    $(document).on('click', 'button.container-youtube', function (){
+        let playerId = $(this).siblings('.plyer').attr('id');
+        let player = new Plyr(`#${playerId}`);
+        $(this).hide();
+    });
+};
 
 // --- Reply ---
 function listenReplyPost(){
@@ -299,10 +292,11 @@ function listenReplyPost(){
         }
         return $.ajax(settings)
             .fail(function (err){
-              handlePostFail(err);
+              handleFail(err);
             });
         });
 };
+
 function listenReplyDelete(){
     $(document).on('click', '.deleteReplyButton', event => {
         event.preventDefault();
@@ -313,7 +307,6 @@ function listenReplyDelete(){
                 'bandpostsId':`${postId}`, 
                 'replyId':`${replyId}`,
                 'createdById':`${userId}`,
-               
                 },
             dataType: 'json',
             type: 'DELETE',
@@ -322,25 +315,13 @@ function listenReplyDelete(){
                 console.log('Deleted reply');
             }
         }
-        
         return $.ajax(settings)
             .fail(function (err){
-                handleDeleteFail(err);
+                handleFail(err);
             });
         };
     });    
 };
-
-
-
-function listenYoutubeClick(){
-    $(document).on('click', 'button.container-youtube', function (){
-        let playerId = $(this).siblings('.plyer').attr('id');
-        let player = new Plyr(`#${playerId}`);
-        $(this).hide();
-    });
-};
-
 
 function handleListenAnnouncementButtons(){
     listenAnnouncementEdit();
@@ -353,22 +334,16 @@ function handleListenBandpostButtons(){
     listenEventEdit();
     listenTrainingPost(); 
     listenTrainingEdit();
+    listenYoutubeClick()
     listenReplyPost();
     listenReplyDelete();
 }
 
-function handleListenButtons(){
+function handleApp(){
     listenDataIdButton();
     handleListenAnnouncementButtons();
     handleListenBandpostButtons();
-    listenYoutubeClick()
 }            
     
-function onLoad(){
-    handleListenButtons();
-}
 
-
-
-
-$(onLoad);
+$(handleApp);
