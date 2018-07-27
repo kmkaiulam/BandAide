@@ -14,7 +14,15 @@ body {
   background-image: url('/images/bandaide_bw_bg.jpg'); 
   background-repeat: no-repeat;
   background-size:cover;
-
+}
+.blueButton{
+  background-color: blue;
+  border-color: black;
+  color:white;
+}
+.login-link{
+  background-color: black;
+  color: white;
 }
 
 .container{

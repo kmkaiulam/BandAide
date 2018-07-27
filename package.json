@@ -16,6 +16,7 @@
     "express-messages": "^1.0.1",
     "express-session": "^1.15.6",
     "express-validator": "^5.2.0",
+    "faker": "^4.1.0",
     "jsonwebtoken": "^8.3.0",
     "mongo": "^0.1.0",
     "mongoose": "^5.1.4",
@@ -42,7 +43,10 @@
   },
   "homepage": "https://github.com/kmlamthinkful/BandAide#readme",
   "nodemonConfig": {
-    "ignore": ["public/*", "docs/*"],
+    "ignore": [
+      "public/*",
+      "docs/*"
+    ],
     "delay": "2500"
   }
 }

@@ -11,30 +11,30 @@
   </head>
 
    <body class='text-center'>
-    <div class ='container'>
+    <main role = 'main' class = 'container'>
         <form class='form-login' id = 'js-signup-form'>
             <img class=' mt-3 mb-4 bandaideIcon' src='/images/bandaide_icon.png' alt='bandaide icon'>
             <h1 class='h3 mb-3 font-weight-normal'>BandAide - Sign up</h1>
             <div class ='mb-3'>
                 <label for='firstName' class='sr-only mb-3'>First Name</label>
-                <input name = 'firstName' type='text' id='firstName' class='form-control' placeholder='First Name' required>
+                <input aria-label= 'first name' name = 'firstName' type='text' id='firstName' class='form-control' placeholder='First Name' required>
             </div>
             <div class ='mb-3'>
                 <label for='lastName' class='sr-only mb-3'>Last Name</label>
-                <input name = 'lastName' type='text' id='lastName' class='form-control' placeholder='Last Name' required>
+                <input aria-label = 'last Name' name = 'lastName' type='text' id='lastName' class='form-control' placeholder='Last Name' required>
             </div>
             <div class ='mb-3'>
                 <label for='inputUsername' class='sr-only mb-3'>Username</label>
-                <input name = 'username' type='username' id='username' class='form-control' placeholder='Username' required autofocus>
+                <input aria-label = 'username' name = 'username' type='username' id='username' class='form-control' placeholder='Username' required autofocus>
             </div>
             <div class ='mb-3'>
                 <label for='inputPassword' class='sr-only'>Password</label>
-                <input name = 'password' type='password' id='password' class='form-control' placeholder='Password' required>
+                <input aria-label= 'password' name = 'password' type='password' id='password' class='form-control' placeholder='Password' required>
             </div>
-            <button id = 'js-signup-btn' class='btn btn-lg btn-primary btn-block well' type='submit'>Sign up</button>
+            <button id = 'js-signup-btn' class='btn btn-lg blueButton btn-block well' type='submit'>Sign up</button>
             <p class='mt-3 mb-3'>&copy; 2017-2018</p>
         </form>
-        <div id = 'js-response-message' class = 'bg-dark text-white'> Already have an account? <a href= '/login'> Log in here</a></div>
-    </div>
+        <div id = 'js-response-message' class = 'login-link'> Already have an account? <a class = 'login-link' href= '/login'> Log in here</a></div>
+    </main>
   </body>
 </html>

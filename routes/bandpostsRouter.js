@@ -35,7 +35,7 @@ router.get('/events', (req, res) => {
             select: 'username id' 
         })
         .then(populatedPosts =>{
-            res.json(populatedPosts)
+            res.status(200).json(populatedPosts)
         })
         .catch(err =>{
             console.error(err);
@@ -56,7 +56,7 @@ router.get('/training', (req, res) => {
             select: 'username id' 
         })
         .then(populatedPosts =>{
-            res.json(populatedPosts)
+            res.status(200).json(populatedPosts)
         })
         .catch(err =>{
         console.error(err);

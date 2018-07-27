@@ -16,7 +16,7 @@ function defineReplyDate(reply){
     newReplyDate = `replied on ${convertDate(reply.created)}`
     return newReplyDate;
 }
-
+//
 // --- Message Partials Generation ---
 function generateReply(reply){
     let newReplyDate = defineReplyDate(reply)
@@ -25,7 +25,7 @@ function generateReply(reply){
                         <h3> ${reply.topic}</h3>
                         <p>${reply.reply}</p>
                         <div class='btn-group d-flex flex-row-reverse mb-2' role='group' aria-label='Button Group'>
-                            <button type='button' data-replyid = '${reply._id}'  data-userId= '${reply.createdBy._id}' class='btn btn-outline-secondary deleteReplyButton dataIdButton'><i data-replyid = '${reply._id}' data-userId= '${reply.createdBy._id}' class='far fa-trash-alt'></i> 
+                            <button aria-label= 'delete reply' type='button' data-replyid = '${reply._id}'  data-userId= '${reply.createdBy._id}' class='btn btn-outline-secondary deleteReplyButton dataIdButton'><i data-replyid = '${reply._id}' data-userId= '${reply.createdBy._id}' class='far fa-trash-alt'></i> 
                         </div>
                     </div>`
     return newReply
@@ -36,14 +36,14 @@ function generateCollapsedReplies(post){
         return generateReply(reply)
     }).join('');
 
-    let collapse = `<div class='collapse bg-light ml-2' id='${post._id}replyCollapse'>  
+    let collapse = `<div class='collapse bg-light' id='${post._id}replyCollapse'>  
                         <div class = 'row mb-0'> 
                             <h3 class = 'jumbotron jumbotron-fluid replySection'>@Reply</h3>
                             ${repliesString}
                         </div>
                         <div id = 'js-reply-${post._id}' class = 'js-bandpost-reply replyAppend'></div>
                         <div class='btn-group d-flex flex-row-reverse bg-light ml-2' role='group' aria-label='Button Group'> 
-                            <button type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-warning mr-3 mt-4 replyButton dataIdButton' data-toggle='modal' data-target='#replyModal'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='fas fa-reply'></i></button>
+                            <button aria-label= 'reply button' type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-warning mr-3 mt-4 replyButton dataIdButton' data-toggle='modal' data-target='#replyModal'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='fas fa-reply'></i></button>
                         </div>
                     </div>`          
     return collapse;
@@ -53,7 +53,7 @@ function generateVideo(post){
     let video='';
     if (post.posttype === 'Training_Resource' && post.youtubeLink != ''){
         video = `<div class='borderless-card borderless-card-body video'>
-                    <button class = 'container-youtube btn btn-danger btn'><i  class='fab fa-youtube-square'></i></button>
+                    <button aria-label= 'play video' class = 'container-youtube btn btn-danger btn'><i  class='fab fa-youtube-square'></i></button>
                     <div id ='player-${post._id}' class= 'plyer borderless-card borderless-card-body' data-plyr-provider='youtube' data-plyr-embed-id='${post.youtubeLink}'></div>
                  </div>`
     }
@@ -71,17 +71,17 @@ function generateModifyButtons(post){
 
     if (post.replies.length === 0){
         modifyButtons = `<div class='btn-group d-flex flex-row-reverse' role='group' aria-label='Button Group'>
-                            <button type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-secondary mr-2 deleteBandpostButton dataIdButton'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-trash-alt'></i>
-                            <button type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-primary mr-2 editButton dataIdButton' data-toggle='modal' data-target='#${modalTarget}'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-edit'></i></button>
-                            <button type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-success mr-2 showRepliesButton' data-toggle='collapse' data-target='#${post._id}replyCollapse' aria-expanded='false' aria-controls='${post._id}replyCollapse'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-comments'></i></button>
+                            <button aria-label= 'delete bandpost button' type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-secondary mr-2 deleteBandpostButton dataIdButton'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-trash-alt'></i>
+                            <button aria-label= 'edit bandpost button' type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-primary mr-2 editButton dataIdButton' data-toggle='modal' data-target='#${modalTarget}'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-edit'></i></button>
+                            <button aria-label= 'reply collapse button' type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-success mr-2 showRepliesButton' data-toggle='collapse' data-target='#${post._id}replyCollapse' aria-expanded='false' aria-controls='${post._id}replyCollapse'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-comments'></i></button>
                         </div>`
     }
     else{
 // Conditional Disabling Edit if Post has replies
     modifyButtons = `<div class='btn-group d-flex flex-row-reverse' role='group' aria-label='Button Group'>
-                        <button type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-secondary mr-2 deleteBandpostButton dataIdButton'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-trash-alt'></i>
-                        <button hidden type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class=' btn btn-outline-primary mr-2 editButton dataIdButton' data-toggle='modal' data-target='#${modalTarget}'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-edit disabled'></i></button>
-                        <button type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-success mr-2 showRepliesButton' data-toggle='collapse' data-target='#${post._id}replyCollapse' aria-expanded='false' aria-controls='${post._id}replyCollapse'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-comments'></i></button>
+                        <button aria-label= 'delete bandpost button' type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-secondary mr-2 deleteBandpostButton dataIdButton'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-trash-alt'></i>
+                        <button aria-label= 'edit bandpost button'  hidden type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class=' btn btn-outline-primary mr-2 editButton dataIdButton' data-toggle='modal' data-target='#${modalTarget}'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-edit disabled'></i></button>
+                        <button aria-label= 'reply collapse button' type='button' data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='btn btn-outline-success mr-2 showRepliesButton' data-toggle='collapse' data-target='#${post._id}replyCollapse' aria-expanded='false' aria-controls='${post._id}replyCollapse'><i data-id = '${post._id}' data-userId= '${post.createdBy._id}' class='far fa-comments'></i></button>
                     </div>`
     }
     return modifyButtons
@@ -98,8 +98,8 @@ function generateAnnouncementPost(announcement){
                                     ${announcement.text}
                                     </p>
                                     <div class='btn-group d-flex flex-row-reverse' role='group' aria-label='Button Group'>
-                                        <button type='button' data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='btn btn-outline-secondary mr-2 deleteAnnouncementButton dataIdButton'><i data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='far fa-trash-alt'></i></button>
-                                        <button type='button' data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='btn btn-outline-primary mr-2 editButton dataIdButton' data-toggle='modal' data-target='#editAnnModal'><i data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='far fa-edit'></i></button>
+                                        <button aria-label= 'delete announcement button' type='button' data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='btn btn-outline-secondary mr-2 deleteAnnouncementButton dataIdButton'><i data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='far fa-trash-alt'></i></button>
+                                        <button aria-label= 'edit announcement button' type='button' data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='btn btn-outline-primary mr-2 editButton dataIdButton' data-toggle='modal' data-target='#editAnnModal'><i data-id = '${announcement._id}' data-userId= '${announcement.createdBy._id}' class='far fa-edit'></i></button>
                                     </div>
                                 </div>
                             </div>`
@@ -129,10 +129,6 @@ function generateBandpost(post){
                         </div>` 
     return newBandpost;
 };
-
-
-
-
 
 // --- Display Recent and Collapsed Posts ---
 function preparePosts(post){

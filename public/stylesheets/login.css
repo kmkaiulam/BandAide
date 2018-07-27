@@ -29,7 +29,15 @@ body {
     width:200px;
     height:auto;
 }
-
+.blueButton{
+  background-color: blue;
+  border-color: black;
+  color:white;
+}
+.signup-link{
+  background-color: black;
+  color: white;
+}
 .form-login {
   width: 100%;
   max-width: 330px;
@@ -58,4 +66,8 @@ body {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+#js-signup-link{
+  color: black;
 }

@@ -11,24 +11,23 @@
   </head>
 
   <body class='text-center'>
-    <div class ='container'>  
+    <main role = 'main' class ='container'>  
         <form class='form-login' id = 'js-login-form'>
             <img class='mt-3 mb-4 bandaideIcon' src='/images/bandaide_icon.png' alt='bandaide icon'>
             <h1 class='h3 mb-3 font-weight-normal'>BandAide - Log in</h1>
             <div class ='mb-3'>
                 <label for='inputUsername' class='sr-only mb-3'>Username</label>
-                <input name = 'username' type='username' id='inputUsername' class='form-control' placeholder='Username' required autofocus>
+                <input aria-label = 'username' name = 'username' type='username' id='inputUsername' class='form-control' placeholder='Username' required autofocus>
             </div>
             <div class ='mb-3'>
                 <label for='inputPassword' class='sr-only'>Password</label>
-                <input name = 'password' type='password' id='inputPassword' class='form-control' placeholder='Password' required>
+                <input aria-label='password' name = 'password' type='password' id='inputPassword' class='form-control' placeholder='Password' required>
             </div>
-            <button class='btn btn-lg btn-primary btn-block well' type='submit'>Log in</button>
+            <button class='btn btn-lg blueButton btn-block well' type='submit'>Log in</button>
             <p class='my-3'>&copy; 2017-2018</p>
         </form>
         <div id = 'js-signup-link'> Don't have an account? <a href = '/signup'> Sign up here</a></div>
-        <div class= 'mt-2' id = 'js-response-message'>  </div>
-        
-    </div>
+        <div class= 'mt-2' id = 'js-response-message'>  </div>       
+    </main>
   </body>
 </html>
