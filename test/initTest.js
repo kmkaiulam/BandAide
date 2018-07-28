@@ -8,7 +8,10 @@ chai.use(chaiHttp);
 
 const {app, runServer, closeServer} = require ('../server')
 const {TEST_DATABASE_URL} = require('../config');
-
+mongoose.Promise = global.Promise;
+// --- Global Variables
+let newUsers = [];
+let unhashedUsers;
 
 // --- Generate Data
 function generateUserData(){
@@ -22,96 +25,137 @@ function generateUserData(){
 
 // if i generate on the backend.... what should i do about username, userId? these posts will be missing them unless i populate beforehand
 //but with what user? they don't exist before I enter it - issue with nested schemas
-function generateAnnouncementPost(){
+function generateAnnouncementPost(newUsers){
     return {
         posttype: 'Announcement',
-        text: faker.lorem.paragraph()
+        text: faker.lorem.paragraph(),
+        createdBy: newUsers[0]._id,
+        created: Date.now()
     }
 }
 
-function generateEventBandpost(){
-   return { 
+function generateEventBandpost(newUsers){
+    return {
         posttype: 'Event_Eval',
         topic: faker.lorem.sentence(),
-        description: faker.lorem.paragraphs()
+        description: faker.lorem.paragraphs(),
+        createdBy: newUsers[0]._id,
+        created: Date.now()
     };
 }
 
-function generateTrainingBandpost(){
+function generateTrainingBandpost(newUsers){
     return {
         posttype: 'Training_Resource',
         topic: faker.lorem.sentence(),
         description: faker.lorem.paragraphs(),
-        youtubeLink: 'https://www.youtube.com/watch?v=hq8uXO4FelQ'
+        youtubeLink: 'https://www.youtube.com/watch?v=hq8uXO4FelQ',
+        createdBy: newUsers[0]._id,
+        created: Date.now()
     }
 };
 
-function generateReplyBandpost(){
+function generateReplyBandpost(newUsers){
     return { 
             posttype: 'Event_Eval',
             topic: faker.lorem.sentence(),
             description: faker.lorem.paragraphs(),
+            created: Date.now(),
+            createdBy: newUsers[0]._id,
             replies: {
                     topic: faker.lorem.words(),
                     reply: faker.lorem.paragraphs(),
-            }
+                    createdBy: newUsers[1]._id,
+                    created: Date.now()
+            }    
     }          
 };
 
 
 // --- Seeding Data
 function seedUserData(){
-    console.info('seeding User data');
-    const userData = [];
-    for (let i = 1; i<=2; i++){
-        userData.push(generateUserData());
-    return User.insertMany(seedData);
-    };
-};
+    console.info ('seeding User data')
+    let user = [];
+    let hashedPassword = [];
+    for (let i = 0; i<2; i++){
+        user.push(generateUserData());
+    }
+    unhashedUsers = user;
+    for (let i = 0; i<2; i++){
+        hashedPassword.push(User.hashPassword(user[i].password))
+    }
+    return Promise.all(hashedPassword)
+        .then (hashedPassword => {
+            user[0].password = hashedPassword[0]
+            user[1].password= hashedPassword[1]
+            return User.insertMany(user)
+        })
+        .then(newHashedUsers =>{ 
+            console.log(newHashedUsers);
+            newUsers.push(newHashedUsers[0])
+            newUsers.push(newHashedUsers[1])
+        })
+       
+    /*
+    user = generateUserData();
+    return  User.hashPassword(user.password)
+    .then (hash =>{
+        user.password = hash
+        return User.create(user)
+    })
+    .then (newUser => {
+        return Announcement.create(generateAnnouncementPost)
+    }
+    */
 
-function seedAnnouncementData(){
+};
+            
+function seedAnnouncementData(newUsers){
     console.info ('seeding Announcement data')
     const announcementData = [];
     for (let i = 1; i<=3; i++){
-        announcementData.push(generateAnnouncementPost());
-    return Announcement.insertMany(seedData);
+        announcementData.push(generateAnnouncementPost(newUsers));
+    return Announcement.insertMany(announcementData);
     };
 };
 
-function seedEventData(){
+function seedEventData(newUsers){
     console.info ('seeding Event data')
     const eventData = [];
     for (let i = 1; i<=3; i++){
-        eventData.push(generateEventBandpost());
-    return Bandpost.insertMany(seedData);
+        eventData.push(generateEventBandpost(newUsers));
+    return Bandpost.insertMany(eventData);
     };
 };
 
-function seedTrainingData(){
+function seedTrainingData(newUsers){
     console.info ('seeding Training data')
-    const trainingtData = [];
+    const trainingData = [];
     for (let i = 1; i<=3; i++){
-        trainingData.push(generateTrainingBandpost());
-    return Bandpost.insertMany(seedData);
+        trainingData.push(generateTrainingBandpost(newUsers));
+    return Bandpost.insertMany(trainingData);
     };
 };
 
-function seedReplyData(){
+function seedReplyData(newUsers){
     console.info('seeding Reply data');
     const replyData = [];
     for (let i = 1; i<=2; i++){
-        replyData.push(generateReplyBandpost());
-    return Bandpost.insertMany(seedData);
+        replyData.push(generateReplyBandpost(newUsers));
+    return Bandpost.insertMany(replyData);
     };
 }
 
 function seedData(){
-    seedUserData();
-    seedAnnouncementData();
-    seedEventData();
-    seedTrainingData();
-    seedReplyData();   
+    return seedUserData()
+    .then (data =>{
+    seedAnnouncementData(newUsers);
+    seedEventData(newUsers);
+    seedTrainingData(newUsers);
+    seedReplyData(newUsers);
+    })
 };
+
 
 
 
@@ -120,17 +164,19 @@ function dropDatabase(){
     return mongoose.connection.dropDatabase();
 }
 
-describe('Blog API resource', function(){
-    
+describe('BandAide API resource', function(){
+
     before(function(){
-        return runServer(TEST_DATABASE_URL);
+       return runServer(TEST_DATABASE_URL);
+        
     });
 
     beforeEach(function(){
-        return seedBlogData();
+        return seedData();
     });
+    
 
-   afterEach(function(){
+    afterEach(function(){
         return dropDatabase();
     });
 
@@ -163,41 +209,43 @@ return chai.request(app)
     })
 
 
-    // check that it was posted through my serve
+    // check that it was posted through my server
     // check that my database actually has the post    
 */
 
+// --- GET REQUESTS
+    /*
+    describe('GET request to Root', function(){
 
-describe('GET endpoint', function(){
-
-    it('should return status 200', function(){
-        let res;
-        return chai.request(app)
-            .get('/')
-            .then(_res => {
-            res = _res;
-            expect(res).to.have.status(200);
+        it('should return status 200', function(){
+            let res;
+            return chai.request(app)
+                .get('/')
+                .then(_res => {
+                res = _res;
+                expect(res).to.have.status(200);
+                });
             });
+        }); 
+        */
+
+   
+
+    describe('GET Announcements', function(){
+        
+        it('should return all Announcements', function(){
+            let res;
+            return chai.request(app)
+                .get('/api/announcements')
+                .then (_res => {
+                res = _res;
+                expect(res).to.have.status(200);
+                expect(res).to.be.json;
+                expect(res).to.be.an.object;
+                console.log(res.body);
+            })
         });
-    }); 
-    
+
+    }) 
+
 });
-
-
-
-
-
-
-describe('GET endpoint', function(){
-
-    it('should return  status 200', function(){
-        let res;
-        return chai.request(app)
-            .get('/')
-            .then (_res => {
-            res = _res;
-            expect(res).to.have.status(200);
-        })
-    });
-
-})
