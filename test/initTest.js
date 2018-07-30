@@ -91,50 +91,36 @@ function seedUserData(){
             return User.insertMany(user)
         })
         .then(newHashedUsers =>{ 
-            console.log(newHashedUsers);
             newUsers.push(newHashedUsers[0])
             newUsers.push(newHashedUsers[1])
         })
-       
-    /*
-    user = generateUserData();
-    return  User.hashPassword(user.password)
-    .then (hash =>{
-        user.password = hash
-        return User.create(user)
-    })
-    .then (newUser => {
-        return Announcement.create(generateAnnouncementPost)
-    }
-    */
-
 };
             
 function seedAnnouncementData(newUsers){
     console.info ('seeding Announcement data')
     const announcementData = [];
-    for (let i = 1; i<=3; i++){
+    for (let i = 1; i<=2; i++){
         announcementData.push(generateAnnouncementPost(newUsers));
-    return Announcement.insertMany(announcementData);
     };
+    return Announcement.insertMany(announcementData);
 };
 
 function seedEventData(newUsers){
     console.info ('seeding Event data')
     const eventData = [];
-    for (let i = 1; i<=3; i++){
+    for (let i = 1; i<=2; i++){
         eventData.push(generateEventBandpost(newUsers));
-    return Bandpost.insertMany(eventData);
     };
+    return Bandpost.insertMany(eventData);
 };
 
 function seedTrainingData(newUsers){
     console.info ('seeding Training data')
     const trainingData = [];
-    for (let i = 1; i<=3; i++){
+    for (let i = 1; i<=2; i++){
         trainingData.push(generateTrainingBandpost(newUsers));
-    return Bandpost.insertMany(trainingData);
     };
+    return Bandpost.insertMany(trainingData);
 };
 
 function seedReplyData(newUsers){
@@ -142,19 +128,20 @@ function seedReplyData(newUsers){
     const replyData = [];
     for (let i = 1; i<=2; i++){
         replyData.push(generateReplyBandpost(newUsers));
-    return Bandpost.insertMany(replyData);
     };
-}
+    return Bandpost.insertMany(replyData);
+};
 
 function seedData(){
     return seedUserData()
-    .then (data =>{
-    seedAnnouncementData(newUsers);
-    seedEventData(newUsers);
-    seedTrainingData(newUsers);
-    seedReplyData(newUsers);
-    })
+        .then (data =>{
+        return  Promise.all([seedAnnouncementData(newUsers), seedEventData(newUsers),  seedTrainingData(newUsers), seedReplyData(newUsers)])
+            .then (values => {
+                console.log('working')
+            });
+        });
 };
+
 
 
 
@@ -172,80 +159,149 @@ describe('BandAide API resource', function(){
     });
 
     beforeEach(function(){
-        return seedData();
+        return seedData()
     });
     
 
     afterEach(function(){
-        return dropDatabase();
+        return dropDatabase(); 
     });
 
     after(function(){
         return closeServer();
     });
 
-/*
-let resEvents;
-let newPost = {
-    asdkfjklsd: djfkjsdf,
-    message : ksdnfsdf
-}
-
-return chai.request(app)
-.get('/api/bandpost/events')
-.then(res => {
-    resEvents = res.body
-    expect(resEvents).to.be.a('array')
-    resEvents.forEach(event => {
-        expect(event).to.be.a('object')
-    })
-    return chai.request(app)
-    .post(`/api/bandpost/${resEvents[0]._id}`)
-    .send(newPost)
-    .then(res => {
-        console.log(res);
-        expect
-        return Bandpost.findById()
-    })
 
 
-    // check that it was posted through my server
-    // check that my database actually has the post    
-*/
-
-// --- GET REQUESTS
-    /*
-    describe('GET request to Root', function(){
-
-        it('should return status 200', function(){
-            let res;
-            return chai.request(app)
-                .get('/')
-                .then(_res => {
-                res = _res;
-                expect(res).to.have.status(200);
-                });
-            });
-        }); 
-        */
-
-   
-
-    describe('GET Announcements', function(){
+    describe('GET Announcements endpoint', function(){
         
         it('should return all Announcements', function(){
             let res;
             return chai.request(app)
                 .get('/api/announcements')
-                .then (_res => {
-                res = _res;
-                expect(res).to.have.status(200);
-                expect(res).to.be.json;
-                expect(res).to.be.an.object;
-                console.log(res.body);
-            })
+                .then(_res => {
+                    res = _res;
+                    console.log(res.body);
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.lengthOf.at.least(1);
+                    return Announcement.count();
+                })
+                    .then(count => {
+                    expect(res.body).to.have.lengthOf(count);
+                    });
+        });   
+    
+    
+   
+        it('should return all Announcements with the correct fields', function(){
+            return chai.request(app)
+                .get('/api/announcements')
+                .then(res => {   
+                    console.log(Announcement.find({}));
+                    console.log(res.body);
+                    expect(res).to.have.status(200);
+                    expect(res).to.be.json;
+                    expect(res).to.be.a('object');
+                    res.body.forEach(function(post){
+                        expect(post).to.include.keys('_id','posttype','text','createdBy', 'created');
+                        expect(post.posttype).to.equal('Announcement')
+                        expect(post._id).to.be.a('string');
+                        expect(post.posttype).to.be.a('string');
+                        expect(post.text).to.be.a('string');
+                        expect(post.created).to.be.a('string'); //technically a date... but Date.now() is a string?
+                        expect(post.createdBy).to.be.a('object');
+                        expect(post.createdBy).to.include.keys('_id', 'username');
+                        expect(post.createdBy._id).to.be.a('string');
+                        expect(post.createdBy.username).to.be.a('string');
+                    });   
+                });
+        });
+    });
+
+
+    describe('GET Bandposts', function(){
+
+        it('should return all Event_Eval Bandposts', function(){
+            let res;
+            return chai.request(app)
+                .get('/api/bandposts/events')
+                .then(_res => {
+                    res = _res;
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.lengthOf.at.least(1);
+                    return Bandpost.find({'posttype': 'Event_Eval'}).count();
+                })
+                    .then(count => {
+                        expect(res.body).to.have.lengthOf(count);
+                    });
         });
 
-    }) 
+        it('should return all Event_Eval Bandposts with correct fields', function(){
+            return chai.request(app)
+            .get('/api/bandposts/events')
+            .then(res => {
+                expect(res).to.have.status(200);
+                expect(res).to.be.json;
+                expect(res).to.be.a('object');
+                res.body.forEach(function(post){
+                    expect(post).to.include.keys('_id','posttype','topic', 'description', 'replies', 'created', 'createdBy');
+                    expect(post.posttype).to.equal('Event_Eval')
+                    expect(post._id).to.be.a('string');
+                    expect(post.posttype).to.be.a('string');
+                    expect(post.topic).to.be.a('string');
+                    expect(post.description).to.be.a('string');
+                    expect(post.replies).to.be.a('array');
+                    expect(post.created).to.be.a('string'); //technically a date... but Date.now() is a string?
+                    expect(post.createdBy).to.be.a('object');
+                    expect(post.createdBy).to.include.keys('_id', 'username');
+                    expect(post.createdBy._id).to.be.a('string');
+                    expect(post.createdBy.username).to.be.a('string');
+                });
+            });
+        });
 
+        it('should return all Training_Resource Bandposts', function(){
+            let res
+            return chai.request(app)
+                .get('/api/bandposts/training')
+                .then(_res => {
+                    res = _res;
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.lengthOf.at.least(1);
+                    return Bandpost.find({'posttype': 'Training_Resource'}).count();
+                })
+                    .then(count => {
+                        expect(res.body).to.have.lengthOf(count);
+                    });
+        });
+
+        it('should return all Training_Resource Bandposts with correct fields', function(){
+            return chai.request(app)
+            .get('/api/bandposts/training')
+            .then(res => {
+                expect(res).to.have.status(200);
+                expect(res).to.be.json;
+                expect(res).to.be.a('object');
+                console.log(res.body[0]);
+                res.body.forEach(function(post){
+                    expect(post).to.include.keys('_id','posttype','topic', 'description', 'youtubeLink', 'replies', 'created', 'createdBy');
+                    expect(post.posttype).to.equal('Training_Resource')
+                    expect(post._id).to.be.a('string');
+                    expect(post.posttype).to.be.a('string');
+                    expect(post.topic).to.be.a('string');
+                    expect(post.description).to.be.a('string');
+                    expect(post.youtubeLink).to.be.a('string');
+                    expect(post.replies).to.be.a('array');
+                    expect(post.created).to.be.a('string'); //technically a date... but Date.now() is a string?
+                    expect(post.createdBy).to.be.a('object');
+                    expect(post.createdBy).to.include.keys('_id', 'username');
+                    expect(post.createdBy._id).to.be.a('string');
+                    expect(post.createdBy.username).to.be.a('string');
+                });
+            });
+        });
+    });
 });
+
+
+

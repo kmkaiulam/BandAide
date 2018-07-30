@@ -35,7 +35,7 @@ router.get('/events', (req, res) => {
             select: 'username id' 
         })
         .then(populatedPosts =>{
-            res.status(200).json(populatedPosts)
+            res.json(populatedPosts)
         })
         .catch(err =>{
             console.error(err);
