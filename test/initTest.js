@@ -13,7 +13,42 @@ mongoose.Promise = global.Promise;
 let newUsers = [];
 let unhashedUsers;
 
-// --- Generate Data
+
+//--- Generate New Posts
+function generateNewAnnouncement(){
+    return {
+        posttype: 'Announcement',
+        text: faker.lorem.paragraph()
+    }
+}
+
+function generateNewEvent(){
+    return {
+        posttype: 'Event_Eval',
+        topic: faker.lorem.sentence(),
+        description: faker.lorem.paragraphs()
+    };
+}
+
+function generateNewTraining(){
+    return {
+        posttype: 'Training_Resource',
+        topic: faker.lorem.sentence(),
+        description: faker.lorem.paragraphs(),
+        youtubeLink: 'https://www.youtube.com/watch?v=hq8uXO4FelQ'
+    }  
+};
+
+
+function generateNewReply(newUsers){
+    return {  topic: faker.lorem.words(),
+              reply: faker.lorem.paragraphs(),
+              created: Date.now()
+    }    
+};          
+
+
+// --- Generate For Seed Data
 function generateUserData(){
     return {
         firstName: faker.name.firstName(),
@@ -63,6 +98,9 @@ function generateReply(newUsers){
               created: Date.now()
     }    
 };          
+
+
+
 
 
 //Not sure why but... i'm getting my supposedly unhashed user object, as hashed... so i needed to hardcode the password so i can access my database
@@ -340,34 +378,30 @@ describe('BandAide API resource', function(){
         //Login
         it('should allow a registered user to login and return a cookie', function(){ 
             let agent = chai.request.agent(app)
-            console.log(unhashedUsers[0]);
             return agent
-            .post('/api/auth/login')
-            .send({username: newUsers[0].username , password: '123123'})
-            .then(function(res){
-                expect(res).to.have.status(200);
-                expect(res).to.have.cookie('authToken');
+                .post('/api/auth/login')
+                .send({username: newUsers[0].username , password: '123123'})
+                .then(function(res){
+                    expect(res).to.have.status(200);
+                    expect(res).to.have.cookie('authToken');
             });
         });
     
         //Logout
         it('should allow a registered user to signout and clear the cookie', function(){
             let agent = chai.request.agent(app)
-            let authCookie;
             return agent
             .post('/api/auth/login')
             .send({username: newUsers[0].username , password: '123123'})
-            .then(function(cookie){
-                authCookie = cookie.body.authToken;
-                console.log(authCookie);
-            
-             return agent
+            .then(function(res){
+                expect(res).to.have.status(200);
+                expect(res).to.have.cookie('authToken')
+            return agent
             .get('/api/auth/logout')
             })
             .then(function (res){
                 expect(res).to.have.status(200);
-                expect(res.body.authToken).to.not.equal(authCookie);
-                expect(res.body.authToken).to.be.undefined;
+                expect(res).to.not.have.cookie('authToken');
             });
         });
     });
@@ -376,11 +410,46 @@ describe('BandAide API resource', function(){
 
     describe('Authenticated Announcement Routes', function(){
 
-        it('')
-
-    })
+        it('should POST a new announcement with the user credentials', function(){
+            let newAnnouncement = generateNewAnnouncement();
+            let agent = chai.request.agent(app)
+            return agent
+                .post('/api/auth/login')
+                .send({username: newUsers[0].username , password: '123123'})
+                .then(function(res){
+                    expect(res).to.have.status(200);
+                    expect(res).to.have.cookie('authToken')
+            return agent
+            .post('/api/announcements')
+            .send(newAnnouncement)
+            })
+            .then(res => {
+                resAnnounce = res.body
+                expect(res).to.have.status(201)
+                expect(res.body).to.include.keys('_id','posttype','text','createdBy', 'created');
+                expect(res.body.posttype).to.equal('Announcement')
+                expect(res.body._id).to.be.a('string');
+                expect(res.body.posttype).to.be.a('string');
+                expect(res.body.text).to.be.a('string');
+                expect(res.body.created).to.be.a('string'); //technically a date... but Date.now() is a string?
+                expect(res.body.createdBy).to.be.a('object');
+                expect(res.body.createdBy).to.include.keys('_id', 'username');
+                expect(res.body.createdBy._id).to.be.a('string');
+                expect(res.body.createdBy.username).to.be.a('string');
+                return Announcement.findById(res.body._id)
+            })
+                .then(post => {
+                    expect(String(post._id)).to.equal(resAnnounce._id);
+                    expect(post.posttype).to.equal(resAnnounce.posttype);
+                    expect(post.text).to.equal(resAnnounce.text);
+                    expect(String(post.createdBy._id)).to.equal(resAnnounce.createdBy._id);
+                    expect(new Date(post.created).toDateString()).to.equal((new Date(resAnnounce.created).toDateString()));
+                });
+        });
+    });
 });
-        
+
+
 
 
 
