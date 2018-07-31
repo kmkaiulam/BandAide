@@ -23,8 +23,6 @@ function generateUserData(){
     }
 };
 
-// if i generate on the backend.... what should i do about username, userId? these posts will be missing them unless i populate beforehand
-//but with what user? they don't exist before I enter it - issue with nested schemas
 function generateAnnouncementPost(newUsers){
     return {
         posttype: 'Announcement',
@@ -45,31 +43,26 @@ function generateEventBandpost(newUsers){
 }
 
 function generateTrainingBandpost(newUsers){
+    let newReply = generateReply(newUsers);
     return {
         posttype: 'Training_Resource',
         topic: faker.lorem.sentence(),
         description: faker.lorem.paragraphs(),
         youtubeLink: 'https://www.youtube.com/watch?v=hq8uXO4FelQ',
         createdBy: newUsers[0]._id,
-        created: Date.now()
-    }
+        created: Date.now(),
+        replies:  newReply
+    }  
 };
 
-function generateReplyBandpost(newUsers){
-    return { 
-            posttype: 'Event_Eval',
-            topic: faker.lorem.sentence(),
-            description: faker.lorem.paragraphs(),
-            created: Date.now(),
-            createdBy: newUsers[0]._id,
-            replies: {
-                    topic: faker.lorem.words(),
-                    reply: faker.lorem.paragraphs(),
-                    createdBy: newUsers[1]._id,
-                    created: Date.now()
-            }    
-    }          
-};
+
+function generateReply(newUsers){
+    return {  topic: faker.lorem.words(),
+              reply: faker.lorem.paragraphs(),
+              createdBy: newUsers[1]._id,
+              created: Date.now()
+    }    
+};          
 
 
 // --- Seeding Data
@@ -123,19 +116,21 @@ function seedTrainingData(newUsers){
     return Bandpost.insertMany(trainingData);
 };
 
+/*
 function seedReplyData(newUsers){
     console.info('seeding Reply data');
     const replyData = [];
     for (let i = 1; i<=2; i++){
-        replyData.push(generateReplyBandpost(newUsers));
+        replyData.push(generateReply(newUsers));
     };
     return Bandpost.insertMany(replyData);
 };
+*/
 
 function seedData(){
     return seedUserData()
         .then (data =>{
-        return  Promise.all([seedAnnouncementData(newUsers), seedEventData(newUsers),  seedTrainingData(newUsers), seedReplyData(newUsers)])
+        return  Promise.all([seedAnnouncementData(newUsers), seedEventData(newUsers),  seedTrainingData(newUsers)])
             .then (values => {
                 console.log('working')
             });
@@ -163,17 +158,17 @@ describe('BandAide API resource', function(){
     });
     
 
-    afterEach(function(){
-        return dropDatabase(); 
-    });
-
     after(function(){
+        return dropDatabase()
+        .then(data => {
         return closeServer();
+        });
     });
 
 
 
-    describe('GET Announcements endpoint', function(){
+
+    describe('GET Announcements', function(){
         
         it('should return all Announcements', function(){
             let res;
@@ -181,7 +176,6 @@ describe('BandAide API resource', function(){
                 .get('/api/announcements')
                 .then(_res => {
                     res = _res;
-                    console.log(res.body);
                     expect(res).to.have.status(200);
                     expect(res.body).to.have.lengthOf.at.least(1);
                     return Announcement.count();
@@ -197,8 +191,6 @@ describe('BandAide API resource', function(){
             return chai.request(app)
                 .get('/api/announcements')
                 .then(res => {   
-                    console.log(Announcement.find({}));
-                    console.log(res.body);
                     expect(res).to.have.status(200);
                     expect(res).to.be.json;
                     expect(res).to.be.a('object');
@@ -276,13 +268,13 @@ describe('BandAide API resource', function(){
         });
 
         it('should return all Training_Resource Bandposts with correct fields', function(){
+            let postReplies;
             return chai.request(app)
             .get('/api/bandposts/training')
             .then(res => {
                 expect(res).to.have.status(200);
                 expect(res).to.be.json;
                 expect(res).to.be.a('object');
-                console.log(res.body[0]);
                 res.body.forEach(function(post){
                     expect(post).to.include.keys('_id','posttype','topic', 'description', 'youtubeLink', 'replies', 'created', 'createdBy');
                     expect(post.posttype).to.equal('Training_Resource')
@@ -292,6 +284,14 @@ describe('BandAide API resource', function(){
                     expect(post.description).to.be.a('string');
                     expect(post.youtubeLink).to.be.a('string');
                     expect(post.replies).to.be.a('array');
+                    postReplies = post.replies[0];
+                    expect(postReplies.topic).to.be.a('string');
+                    expect(postReplies.reply).to.be.a('string');
+                    expect(postReplies.created).to.be.a('string');
+                    expect(postReplies.createdBy).to.be.a('object');
+                    expect(postReplies.createdBy).to.include.keys('_id', 'username');
+                    expect(postReplies.createdBy._id).to.be.a('string');
+                    expect(postReplies.createdBy.username).to.be.a('string');
                     expect(post.created).to.be.a('string'); //technically a date... but Date.now() is a string?
                     expect(post.createdBy).to.be.a('object');
                     expect(post.createdBy).to.include.keys('_id', 'username');
@@ -299,9 +299,41 @@ describe('BandAide API resource', function(){
                     expect(post.createdBy.username).to.be.a('string');
                 });
             });
+        });  
+    });
+
+
+    describe('POST User', function(){
+
+        it.only('should Post a new User', function(){
+            let newUser = generateUserData()
+            let user;
+                return chai.request(app)
+                .post('/api/users')
+                .send(newUser)
+                .then(res => {
+                    expect(res).to.have.status(201) 
+                    expect(res).to.be.json;
+                    expect(res).to.be.a('object');
+                    user = res.body;
+                    console.log(user);
+                    expect(user).to.include.keys('firstName', 'lastName', 'username', 'id');
+                    expect(user.firstName).to.be.a('string');
+                    expect(user.lastName).to.be.a('string');
+                    expect(user.username).to.be.a('string');
+                    expect(user.firstName).to.equal(newUser.firstName)
+                    expect(user.lastName).to.equal(newUser.lastName)
+                    expect(user.username).to.equal(newUser.username)
+                    expect(user.id).to.be.a('string');
+                 return User.findById(user.id)
+                })
+                .then(dbUser => {
+                    expect(String(dbUser._id)).to.equal(user.id)
+                    expect(dbUser.firstName).to.equal(newUser.firstName)
+                    expect(dbUser.lastName).to.equal(newUser.lastName)
+                    expect(dbUser.username).to.equal(newUser.username)
+                });            
         });
     });
 });
-
-
 
