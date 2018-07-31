@@ -19,7 +19,7 @@ function generateUserData(){
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         username: faker.internet.userName(),
-        password: faker.internet.password(),
+        password: '123123',
     }
 };
 
@@ -65,6 +65,7 @@ function generateReply(newUsers){
 };          
 
 
+//Not sure why but... i'm getting my supposedly unhashed user object, as hashed... so i needed to hardcode the password so i can access my database
 // --- Seeding Data
 function seedUserData(){
     console.info ('seeding User data')
@@ -74,14 +75,15 @@ function seedUserData(){
         user.push(generateUserData());
     }
     unhashedUsers = user;
+    let newHashedUsers = user;
     for (let i = 0; i<2; i++){
         hashedPassword.push(User.hashPassword(user[i].password))
     }
     return Promise.all(hashedPassword)
         .then (hashedPassword => {
-            user[0].password = hashedPassword[0]
-            user[1].password= hashedPassword[1]
-            return User.insertMany(user)
+            newHashedUsers[0].password = hashedPassword[0]
+            newHashedUsers[1].password= hashedPassword[1]
+            return User.insertMany(newHashedUsers)
         })
         .then(newHashedUsers =>{ 
             newUsers.push(newHashedUsers[0])
@@ -149,12 +151,10 @@ function dropDatabase(){
 describe('BandAide API resource', function(){
 
     before(function(){
-       return runServer(TEST_DATABASE_URL);
-        
-    });
-
-    beforeEach(function(){
-        return seedData()
+       return runServer(TEST_DATABASE_URL)
+       .then (data => {
+           return seedData();
+       });
     });
     
 
@@ -305,7 +305,7 @@ describe('BandAide API resource', function(){
 
     describe('POST User', function(){
 
-        it.only('should Post a new User', function(){
+        it('should create a new User', function(){
             let newUser = generateUserData()
             let user;
                 return chai.request(app)
@@ -328,12 +328,61 @@ describe('BandAide API resource', function(){
                  return User.findById(user.id)
                 })
                 .then(dbUser => {
-                    expect(String(dbUser._id)).to.equal(user.id)
-                    expect(dbUser.firstName).to.equal(newUser.firstName)
-                    expect(dbUser.lastName).to.equal(newUser.lastName)
-                    expect(dbUser.username).to.equal(newUser.username)
+                    expect(String(dbUser._id)).to.equal(user.id);
+                    expect(dbUser.firstName).to.equal(newUser.firstName);
+                    expect(dbUser.lastName).to.equal(newUser.lastName);
+                    expect(dbUser.username).to.equal(newUser.username);
                 });            
         });
     });
+
+    describe('Auth Route Login Process', function(){
+        //Login
+        it('should allow a registered user to login and return a cookie', function(){ 
+            let agent = chai.request.agent(app)
+            console.log(unhashedUsers[0]);
+            return agent
+            .post('/api/auth/login')
+            .send({username: newUsers[0].username , password: '123123'})
+            .then(function(res){
+                expect(res).to.have.status(200);
+                expect(res).to.have.cookie('authToken');
+            });
+        });
+    
+        //Logout
+        it('should allow a registered user to signout and clear the cookie', function(){
+            let agent = chai.request.agent(app)
+            let authCookie;
+            return agent
+            .post('/api/auth/login')
+            .send({username: newUsers[0].username , password: '123123'})
+            .then(function(cookie){
+                authCookie = cookie.body.authToken;
+                console.log(authCookie);
+            
+             return agent
+            .get('/api/auth/logout')
+            })
+            .then(function (res){
+                expect(res).to.have.status(200);
+                expect(res.body.authToken).to.not.equal(authCookie);
+                expect(res.body.authToken).to.be.undefined;
+            });
+        });
+    });
+
+
+
+    describe('Authenticated Announcement Routes', function(){
+
+        it('')
+
+    })
 });
+        
+
+
+
+    
 

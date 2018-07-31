@@ -23,6 +23,7 @@ router.post('/login', localAuth, (req, res) => {
 
 router.get('/logout', (req, res) => {
   res.clearCookie('authToken')
+  res.status(200);
   res.redirect('/login');
 });
 
