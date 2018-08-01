@@ -345,5 +345,4 @@ function handleApp(){
     handleListenBandpostButtons();
 }            
     
-
 $(handleApp);

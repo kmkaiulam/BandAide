@@ -46,23 +46,4 @@ router.post('/', checkUserRequiredFields, checkUserStringFields, checkUserTrimme
     });
 });
 
-/*
-router.get('/', (req ,res) => {
-  return User.find()
-    .then (user => {
-      console.log(user);
-      return res.json(user);
-    })
-    .catch(err => {
-      console.log(err);
-      if (err.reason === 'ValidationError') {
-        return res.status(err.code).json(err);
-      }
-      res.status(500).json({code: 500, message: 'Internal server error'});
-    });
-});
-*/
-
 module.exports = {router};
-
-    

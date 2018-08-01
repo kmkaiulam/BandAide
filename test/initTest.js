@@ -5,13 +5,12 @@ const mongoose = require('mongoose');
 const faker = require('faker');
 const {User, Announcement, Bandpost} = require('../models');
 chai.use(chaiHttp);
-
 const {app, runServer, closeServer} = require ('../server')
 const {TEST_DATABASE_URL} = require('../config');
 mongoose.Promise = global.Promise;
 // --- Global Variables
 let newUsers = [];
-let unhashedUsers;
+
 
 
 //--- Generate New Posts
@@ -95,7 +94,7 @@ function generateReply(newUsers){
 
 
 
-//Not sure why but... i'm getting my supposedly unhashed user object, as hashed... so i needed to hardcode the password so i can access my database
+
 // --- Seeding Data
 function seedUserData(){
     console.info ('seeding User data')
@@ -312,7 +311,7 @@ describe('BandAide API resource', function(){
                     expect(postReplies.createdBy).to.include.keys('_id', 'username');
                     expect(postReplies.createdBy._id).to.be.a('string');
                     expect(postReplies.createdBy.username).to.be.a('string');
-                    expect(post.created).to.be.a('string'); //technically a date... but Date.now() is a string?
+                    expect(post.created).to.be.a('string'); 
                     expect(post.createdBy).to.be.a('object');
                     expect(post.createdBy).to.include.keys('_id', 'username');
                     expect(post.createdBy._id).to.be.a('string');
@@ -336,7 +335,6 @@ describe('BandAide API resource', function(){
                     expect(res).to.be.json;
                     expect(res).to.be.a('object');
                     user = res.body;
-                    console.log(user);
                     expect(user).to.include.keys('firstName', 'lastName', 'username', 'id');
                     expect(user.firstName).to.be.a('string');
                     expect(user.lastName).to.be.a('string');
@@ -411,7 +409,7 @@ describe('BandAide API resource', function(){
                 expect(res.body._id).to.be.a('string');
                 expect(res.body.posttype).to.be.a('string');
                 expect(res.body.text).to.be.a('string');
-                expect(res.body.created).to.be.a('string'); //technically a date... but Date.now() is a string?
+                expect(res.body.created).to.be.a('string'); 
                 expect(res.body.createdBy).to.be.a('object');
                 expect(res.body.createdBy).to.include.keys('_id', 'username');
                 expect(res.body.createdBy._id).to.be.a('string');

@@ -7,19 +7,18 @@ const {jwtAuth} = require('../auth')
 const {checkValidUser, checkRequiredFields} = require('../middleware/validation')
 mongoose.Promise = global.Promise;
 
-
 // --- Common Functions ---
 function populateAnnouncements(){
    return  Announcement.find().populate({
         path: 'createdBy', 
-        select: 'username _id' //can name any field and populate
+        select: 'username _id' 
     })  
 };
 
 function populateNewAnnouncement(post){
     return  Announcement.findById(post._id).populate({
          path: 'createdBy', 
-         select: 'username _id' //can name any field and populate
+         select: 'username _id' 
      }) 
 }; 
 
@@ -106,10 +105,4 @@ router.delete('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,res) =>
         });
 });
            
-
-
-
 module.exports = {router};
-
-
-

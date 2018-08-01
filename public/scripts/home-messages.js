@@ -3,6 +3,7 @@
 function convertDate(date){
     return new Date(date).toDateString();
 }
+
 function defineDate(post){
     let newDate;
     newDate =`posted on ${convertDate(post.created)}`
@@ -11,12 +12,13 @@ function defineDate(post){
     }
     return newDate;
 }
+
 function defineReplyDate(reply){
     let newReplyDate;
     newReplyDate = `replied on ${convertDate(reply.created)}`
     return newReplyDate;
 }
-//
+
 // --- Message Partials Generation ---
 function generateReply(reply){
     let newReplyDate = defineReplyDate(reply)

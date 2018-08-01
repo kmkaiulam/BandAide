@@ -19,7 +19,6 @@ function populateBandpost(post){
     })
 };
       
-
 // --- Bandposts ---
     // --- GET ---  
         //Display Events    
@@ -28,7 +27,7 @@ router.get('/events', (req, res) => {
         .find({'posttype': 'Event_Eval'})
         .populate({
             path: 'createdBy', 
-            select: 'username _id' //can name any field and populate
+            select: 'username _id' 
         })
         .populate({
             path: 'replies.createdBy', 
@@ -43,13 +42,13 @@ router.get('/events', (req, res) => {
         });
 });
 
-            //Display Training 
+        //Display Training 
 router.get('/training', (req, res) => { 
     Bandpost
         .find({'posttype': 'Training_Resource'})
         .populate({
             path: 'createdBy', 
-            select: 'username _id' //can name any field and populate
+            select: 'username _id' 
         })
         .populate({
             path: 'replies.createdBy', 
@@ -138,7 +137,7 @@ console.log(`Deleting bandpost entry \`${req.params.id}\``);
 });
 
 // --- Reply ---
-    // --- POST ---
+        //POST
 router.post('/reply/:id', jwtAuth, checkRequiredFields, (req, res) => {
     console.log(`Adding reply to bandpost \`${req.params.id}\``);
     Bandpost

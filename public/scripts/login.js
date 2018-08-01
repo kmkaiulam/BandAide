@@ -1,5 +1,4 @@
 'use strict'
-
 function clearForm(){ 
     $(':input').val('');
 }
