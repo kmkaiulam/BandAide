@@ -22,14 +22,6 @@ function generateNewAnnouncement(){
     }
 }
 
-function generateNewEvent(){
-    return {
-        posttype: 'Event_Eval',
-        topic: faker.lorem.sentence(),
-        description: faker.lorem.paragraphs()
-    };
-}
-
 function generateNewTraining(){
     return {
         posttype: 'Training_Resource',
@@ -396,11 +388,9 @@ describe('BandAide API resource', function(){
         });
     });
 
+    describe('Authenticated Announcement Endpoints', function(){
 
-
-    describe('Authenticated Announcement Routes', function(){
-
-        it('should POST a new announcement with the user credentials', function(){
+        it('should POST a new announcement for an authenticated user', function(){
             let newAnnouncement = generateNewAnnouncement();
             let agent = chai.request.agent(app)
             return agent
@@ -456,7 +446,7 @@ describe('BandAide API resource', function(){
                 update.createdById= original.createdBy._id
             return agent
             .put(`/api/announcements/${original._id}`)
-            .send(update)   
+            .send(update)  
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -465,17 +455,16 @@ describe('BandAide API resource', function(){
             return Announcement.findById(res.body._id)
             })
             .then(newPost => {
-                expect(newPost.posttype).to.equal(update.posttype);
-                expect(newPost.text).to.equal(update.text);
-                expect(newPost.text).to.not.equal(original.text);
                 expect(String(newPost._id)).to.equal(original._id);
                 expect(Date(newPost.created)).to.equal(Date(original.created));
                 expect(String(newPost.createdBy)).to.equal(original.createdBy._id);
+                expect(newPost.posttype).to.equal(update.posttype);
+                expect(newPost.text).to.equal(update.text);              
                 expect(newPost.modified).to.be.a('Date');
             })
         });
 
-        it.only('should DELETE an Announcement', function(){
+        it('should DELETE an Announcement', function(){
             let newAnnouncement = generateNewAnnouncement();
             let deleteRequest = {};
             let agent = chai.request.agent(app)
@@ -504,10 +493,117 @@ describe('BandAide API resource', function(){
         });
     });
 
+    describe('Authenticated BandPost Endpoints', function(){
 
+        it('should POST a New BandPost with all the proper fields', function(){ 
+            let newBandpost = generateNewTraining();
+            let bandpost;
+            let agent = chai.request.agent(app)
+            return agent
+                .post('/api/auth/login')
+                .send({username: newUsers[0].username , password: '123123'})
+                .then(function(res){
+            return agent
+            .post('/api/bandposts')
+            .send(newBandpost)
+            })
+            .then(res => {
+                expect(res).to.be.status(201);
+                expect(res).to.be.json;
+                 bandpost = res.body;
+                expect(bandpost).to.include.keys('_id','posttype','topic', 'description', 'replies', 'createdBy', 'created');
+                expect(bandpost.posttype).to.equal('Training_Resource')
+                expect(bandpost._id).to.be.a('string');
+                expect(bandpost.posttype).to.be.a('string');
+                expect(bandpost.topic).to.be.a('string');
+                expect(bandpost.description).to.be.a('string');
+                expect(bandpost.replies).to.be.a('array');
+                expect(bandpost.created).to.be.a('string'); 
+                expect(bandpost.createdBy).to.be.a('object');
+                expect(bandpost.createdBy).to.include.keys('_id', 'username');
+                expect(bandpost.createdBy._id).to.be.a('string');
+                expect(bandpost.createdBy.username).to.be.a('string');
+            return Bandpost.findById(bandpost._id)
+            })
+            .then(newPost =>{
+                expect(String(newPost._id)).to.equal(bandpost._id);
+                expect(newPost.posttype).to.equal(bandpost.posttype);
+                expect(newPost.topic).to.equal(bandpost.topic);
+                expect(newPost.description).to.equal(bandpost.description);
+                expect(newPost.replies).to.deep.equal(bandpost.replies);
+                expect(String(newPost.createdBy)).to.equal(bandpost.createdBy._id);
+                expect(Date(newPost.created)).to.equal(Date(bandpost.created));
+            })
+        });
 
+        it('should PUT a Bandpost', function(){
+            let newBandpost = generateNewTraining();
+            let update = generateNewTraining();
+            let original;
+            let agent = chai.request.agent(app)
+            return agent
+                .post('/api/auth/login')
+                .send({username: newUsers[0].username , password: '123123'})
+                .then(function(res){
+            return agent
+            .post('/api/bandposts')
+            .send(newBandpost)
+        })
+            .then(res =>{
+                original = res.body
+                update.bandpostsId= original._id
+                update.createdById= original.createdBy._id
+            return agent
+            .put(`/api/bandposts/${original._id}`)
+            .send(update)   
+            })
+            .then(res => {
+                expect(res).to.have.status(200);
+                expect(res).to.be.json;
+                expect(res).to.be.a('object');
+            return Bandpost.findById(res.body._id)
+            })
+            .then(newBandpost => {
+                expect(newBandpost.posttype).to.equal(original.posttype);
+                expect(Date(newBandpost.created)).to.equal(Date(original.created));
+                expect(String(newBandpost.createdBy)).to.equal(original.createdBy._id);
+                expect(String(newBandpost._id)).to.equal(original._id);
+                expect(newBandpost.topic).to.equal(update.topic);
+                expect(newBandpost.description).to.equal(update.description);
+                expect(newBandpost.modified).to.be.a('Date');
+            });
+        });
 
+        it('should DELETE a Bandpost', function(){
+            let newBandpost = generateNewTraining();
+            let deleteRequest = {};
+            let agent = chai.request.agent(app)
+            return agent
+                .post('/api/auth/login')
+                .send({username: newUsers[0].username , password: '123123'})
+                .then(function(res){
+            return agent
+            .post('/api/bandposts')
+            .send(newBandpost)
+            })
+            .then(res =>{
+                deleteRequest.bandpostsId = res.body._id
+                deleteRequest.createdById= res.body.createdBy._id
+            return agent
+            .delete(`/api/bandposts/${res.body._id}`)
+            .send(deleteRequest)   
+            })
+            .then(res => {
+                expect(res).to.be.status(204);
+            return Bandpost.findById(deleteRequest.bandpostsId)
+            })
+            .then(res =>{
+                expect(res).to.be.null;
+            }); 
+        });
+    });
 });
+
 
 
 
