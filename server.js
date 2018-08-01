@@ -16,7 +16,12 @@ app.set('views', './views')
 app.set('view engine', 'ejs');
 
 // --- VIEWS
+
 app.get('/', (req,res) => {
+  res.render('pages/landing')
+})
+
+app.get('/home', (req,res) => {
   res.render('pages/home')
 })
 
