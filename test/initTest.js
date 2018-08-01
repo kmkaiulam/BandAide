@@ -602,7 +602,96 @@ describe('BandAide API resource', function(){
             }); 
         });
     });
+
+
+    describe('Authenticated Reply Routes', function(){
+
+        it('POST a new Reply', function(){
+            let replies;
+            let newBandpost = generateNewTraining();
+            let creator;
+            let replyRequest = generateNewReply();
+            let agent = chai.request.agent(app)
+            return agent
+                .post('/api/auth/login')
+                .send({username: newUsers[0].username , password: '123123'})
+                .then(function(res){
+            return agent
+            .post('/api/bandposts')
+            .send(newBandpost)
+            })
+            .then(res =>{
+                replyRequest.bandpostsId = res.body._id
+                creator = res.body.createdBy._id;
+            return agent
+            .post(`/api/bandposts/reply/${replyRequest.bandpostsId}`)
+            .send(replyRequest)
+            })
+            .then(res => {
+                expect(res).to.have.status(201);
+                expect(res).to.be.json;
+                replies = res.body;
+                postReply = replies[0]
+                expect(replies).to.be.a('array')
+                expect(postReply).to.be.a('object');
+                expect(postReply).to.include.keys('_id', 'topic', 'reply', 'created', 'createdBy')
+                expect(postReply.createdBy).to.include.keys('_id', 'username');
+                expect(postReply.topic).to.be.a('string');
+                expect(postReply.reply).to.be.a('string');
+                expect(postReply.created).to.be.a('string');
+                expect(postReply.createdBy).to.be.a('object');
+                expect(postReply._id).to.exist;
+            return Bandpost.findById(replyRequest.bandpostsId)
+            })
+            .then(post => {
+                newReply = post.replies[0];
+                console.log(newReply);
+                expect(newReply.topic).to.equal(postReply.topic);
+                expect(newReply.reply).to.equal(postReply.reply);
+                expect(Date(newReply.created)).to.equal(Date(postReply.topic));
+                expect(String(newReply.createdBy)).to.equal(creator);
+            });
+        });
+        
+        it('DELETE a Reply', function(){
+            let replyRequest = generateNewReply();
+            let deleteRequest = {};
+            let newBandpost = generateNewTraining();
+            let agent = chai.request.agent(app)
+            return agent
+                .post('/api/auth/login')
+                .send({username: newUsers[0].username , password: '123123'})
+                .then(function(res){
+            return agent
+            .post('/api/bandposts')
+            .send(newBandpost)
+            })
+            .then(res =>{
+                replyRequest.bandpostsId = res.body._id;
+                deleteRequest.bandpostsId = res.body._id;
+                deleteRequest.createdById = res.body.createdBy._id;
+            return agent
+            .post(`/api/bandposts/reply/${replyRequest.bandpostsId}`)
+            .send(replyRequest)
+            })
+            .then(res => {
+                deleteRequest.replyId = res.body[0]._id
+            return agent
+            .delete(`/api/bandposts/reply/${deleteRequest.bandpostsId}`)
+            .send(deleteRequest);
+            })
+            .then(res =>{
+                expect(res).to.have.status(204);
+            return Bandpost.findById(deleteRequest.bandpostsId)
+            })
+            .then(res =>{
+                let response = res.replies;
+                expect(response).to.be.empty;
+            })
+        });
+    });
 });
+
 
 
 
