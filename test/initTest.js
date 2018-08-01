@@ -180,7 +180,7 @@ describe('BandAide API resource', function(){
     after(function(){
         return dropDatabase()
         .then (data => {
-            closeServer()
+            return closeServer()
         }); 
     });
       
