@@ -177,16 +177,14 @@ describe('BandAide API resource', function(){
     });
     
 
-    after(function(done){
+    after(function(){
         return dropDatabase()
-        .then(data => {
-        return closeServer()
-        .then(data => {
-            done()
-        })
-        });
+        .then (data => {
+            closeServer()
+        }); 
     });
-
+      
+       
 
 
 
