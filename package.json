@@ -29,7 +29,7 @@
     "mocha": "^5.2.0"
   },
   "scripts": {
-    "test": "mocha --exit",
+    "test": "mocha --exit --timeout 5000",
     "start": "node server.js"
   },
   "repository": {
