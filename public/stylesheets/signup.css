@@ -1,3 +1,9 @@
+button:hover{
+  color:red;
+  background-color:white;
+}
+
+
 html,
 body {
   height: 100%;
@@ -21,12 +27,12 @@ body {
   color:white;
 }
 .login-link{
-  background-color: black;
-  color: white;
+  background-color: rgba(255,255,255,.8);
+  color: black;
 }
 
 .container{
-  background-color:rgba(255,255,255,.5);
+  background-color:rgba(255,255,255,.8);
   width:320px;
   height:500px;
 }
