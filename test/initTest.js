@@ -156,21 +156,11 @@ function seedTrainingData(newUsers){
     return Bandpost.insertMany(trainingData);
 };
 
-/*
-function seedReplyData(newUsers){
-    console.info('seeding Reply data');
-    const replyData = [];
-    for (let i = 1; i<=2; i++){
-        replyData.push(generateReply(newUsers));
-    };
-    return Bandpost.insertMany(replyData);
-};
-*/
 
 function seedData(){
     return seedUserData()
         .then (data =>{
-        return  Promise.all([seedAnnouncementData(newUsers), seedEventData(newUsers),  seedTrainingData(newUsers)])
+        return  Promise.all([seedAnnouncementData(newUsers), seedEventData(newUsers), seedTrainingData(newUsers)])
             .then (values => {
                 console.log('working')
             });
@@ -238,7 +228,7 @@ describe('BandAide API resource', function(){
                         expect(post._id).to.be.a('string');
                         expect(post.posttype).to.be.a('string');
                         expect(post.text).to.be.a('string');
-                        expect(post.created).to.be.a('string'); //technically a date... but Date.now() is a string?
+                        expect(post.created).to.be.a('string');
                         expect(post.createdBy).to.be.a('object');
                         expect(post.createdBy).to.include.keys('_id', 'username');
                         expect(post.createdBy._id).to.be.a('string');
@@ -281,7 +271,7 @@ describe('BandAide API resource', function(){
                     expect(post.topic).to.be.a('string');
                     expect(post.description).to.be.a('string');
                     expect(post.replies).to.be.a('array');
-                    expect(post.created).to.be.a('string'); //technically a date... but Date.now() is a string?
+                    expect(post.created).to.be.a('string'); 
                     expect(post.createdBy).to.be.a('object');
                     expect(post.createdBy).to.include.keys('_id', 'username');
                     expect(post.createdBy._id).to.be.a('string');
@@ -443,11 +433,82 @@ describe('BandAide API resource', function(){
                     expect(post.posttype).to.equal(resAnnounce.posttype);
                     expect(post.text).to.equal(resAnnounce.text);
                     expect(String(post.createdBy._id)).to.equal(resAnnounce.createdBy._id);
-                    expect(new Date(post.created).toDateString()).to.equal((new Date(resAnnounce.created).toDateString()));
+                    expect(Date(post.created)).to.equal((Date(resAnnounce.created)));
                 });
         });
+        
+        it('should Update (PUT) an announcement with all the correct fields and proper fields changed', function(){
+            let newAnnouncement = generateNewAnnouncement();
+            let update = generateNewAnnouncement();
+            let agent = chai.request.agent(app)
+            let original;
+            return agent
+                .post('/api/auth/login')
+                .send({username: newUsers[0].username , password: '123123'})
+                .then(function(res){
+            return agent
+            .post('/api/announcements')
+            .send(newAnnouncement)
+            })
+            .then(res =>{
+                original = res.body
+                update.announcementsId= original._id
+                update.createdById= original.createdBy._id
+            return agent
+            .put(`/api/announcements/${original._id}`)
+            .send(update)   
+            })
+            .then(res => {
+                expect(res).to.have.status(200);
+                expect(res).to.be.json;
+                expect(res).to.be.a('object');
+            return Announcement.findById(res.body._id)
+            })
+            .then(newPost => {
+                expect(newPost.posttype).to.equal(update.posttype);
+                expect(newPost.text).to.equal(update.text);
+                expect(newPost.text).to.not.equal(original.text);
+                expect(String(newPost._id)).to.equal(original._id);
+                expect(Date(newPost.created)).to.equal(Date(original.created));
+                expect(String(newPost.createdBy)).to.equal(original.createdBy._id);
+                expect(newPost.modified).to.be.a('Date');
+            })
+        });
+
+        it.only('should DELETE an Announcement', function(){
+            let newAnnouncement = generateNewAnnouncement();
+            let deleteRequest = {};
+            let agent = chai.request.agent(app)
+            return agent
+                .post('/api/auth/login')
+                .send({username: newUsers[0].username , password: '123123'})
+                .then(function(res){
+            return agent
+            .post('/api/announcements')
+            .send(newAnnouncement)
+            })
+            .then(res =>{
+                deleteRequest.announcementsId = res.body._id
+                deleteRequest.createdById= res.body.createdBy._id
+            return agent
+            .delete(`/api/announcements/${res.body._id}`)
+            .send(deleteRequest)   
+            })
+            .then(res => {
+                expect(res).to.be.status(204);
+            return Announcement.findById(deleteRequest.announcementsId)
+            })
+            .then(res =>{
+                expect(res).to.be.null;
+            }); 
+        });
     });
+
+
+
+
 });
+
 
 
 
