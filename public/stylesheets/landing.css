@@ -19,7 +19,12 @@ body{
   height:100%;
 }
  
-
+.title{
+  font-size:4rem;
+}
+.subtitle{
+  font-size:2rem;
+}
 
 body {
   display: -ms-flexbox;

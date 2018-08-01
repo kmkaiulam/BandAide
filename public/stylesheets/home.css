@@ -10,6 +10,16 @@ button:hover{
   max-height:200px;
   min-width:440px;
 }  
+
+.footerImage{
+  background-image: url('/images/bandaide_home.jpg'); 
+  background-repeat: no-repeat;
+  background-size:cover;
+  height:400px;
+  min-width:440px;
+}  
+
+
 body {
     padding-top: 5rem;
    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&0.65+0,0+100;Neutral+Density */
