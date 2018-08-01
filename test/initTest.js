@@ -154,7 +154,7 @@ function seedData(){
         .then (data =>{
         return  Promise.all([seedAnnouncementData(newUsers), seedEventData(newUsers), seedTrainingData(newUsers)])
             .then (values => {
-                console.log('working')
+                console.log('Seeding All Data')
             });
         });
 };
@@ -645,7 +645,6 @@ describe('BandAide API resource', function(){
             })
             .then(post => {
                 newReply = post.replies[0];
-                console.log(newReply);
                 expect(newReply.topic).to.equal(postReply.topic);
                 expect(newReply.reply).to.equal(postReply.reply);
                 expect(Date(newReply.created)).to.equal(Date(postReply.topic));
