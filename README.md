@@ -1,7 +1,7 @@
 # BandAide
 
 LINK TO LIVE APP:
-https://bandaide-fullstack.herokuapp.com/
+https://bandaide-fullstack.herokuapp.com/<br>
 <br>
 GUEST LOGIN:<br>
 Username: Guest <br>
@@ -32,6 +32,6 @@ SCREENSHOTS:<br>
 -Home Training Resources-
 ![Screenshot](https://github.com/kmlamthinkful/BandAide/blob/master/screenshots/BandAide%20Home%20-%20Training%20Resource%20Videos.png)
 
-TECHNOLOGY: 
+TECHNOLOGY: <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTML Bootstrap CSS Javascript jQuery <br>
 Node Express Mongoose MongoDb Player.js
