@@ -8,7 +8,7 @@ Username: Guest <br>
 Password: Password<br>
 
 MOTIVATION:<br>
-Let's be honest, it's hard to get your tech team to sit down at a meeting that doesn't involve a board, <br>
+&nbsp;&nbsp;&nbsp;&nbsp; Let's be honest, it's hard to get your tech team to sit down at a meeting that doesn't involve a board, <br>
 instrument or new wireless set to try out. <br>
 But we all need to get better and that requires what every tech person dreads... feedback. <br>
 In this case feedback is good, so go ahead share video resources, discuss how we can improve and let's get on the same page.<br>
@@ -33,4 +33,4 @@ SCREENSHOTS:<br>
 
 TECHNOLOGY: 
 HTML Bootstrap CSS Javascript jQuery <br>
-Node Eexpress Mongoose MongoDb Player.js
+Node Express Mongoose MongoDb Player.js
