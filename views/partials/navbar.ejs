@@ -1,21 +1,21 @@
 <nav class='navbar navbar-expand-md navbar-light bg-light fixed-top'>
-  <a href= '/'><img class='bandaideIcon navbar-brand' src='/images/bandaide_icon.png' alt='bandaide icon'></a>
-  <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarsExampleDefault' aria-controls='navbarsExampleDefault' aria-expanded='false' aria-label='Toggle navigation'>
+  <a href= '/'><img class='bandaideIcon navbar-brand' data-toggle='tooltip' title='To Landing' src='/images/bandaide_icon.png' alt='bandaide icon'></a>
+  <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbars' aria-controls='navbars' aria-expanded='false' aria-label='Toggle navigation'>
     <span class='navbar-toggler-icon'></span>
   </button>
 
-  <div class='collapse navbar-collapse' id='navbarsExampleDefault'>
+  <div class='collapse navbar-collapse' id='navbars'>
     <ul class='navbar-nav mr-auto'>
       <li class='nav-item active'>
-        <a class='nav-link ml-2' href='/login'>Login <span class='sr-only'>(current)</span></a>
+        <a class='nav-link ml-2 loginButton' href='/login'><button class= 'btn btn-outline btn-outline-danger'>Login</button></a>
       </li>
       <li class='nav-item active ml-2'>
-        <a class='nav-link ' href='/signup'>Sign up</a>
+        <a class='nav-link ' href='/signup'><button class= 'btn btn-outline btn-outline-danger'>Sign up</button></a>
       </li>
     </ul>
     
     <div class='btn-group' role='group' aria-label='Basic example'>
-       <a href= '/api/auth/logout'><button class='btn btn-ouline-dark my-2 my-sm-0 text-dark' >Log Out</button></a>
+       <a href= '/api/auth/logout'><button class=' logout btn btn-outline btn-outline-danger my-2 my-sm-0'>Log Out</button></a>
     </div>                
   </div>
 </nav>

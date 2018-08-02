@@ -2,7 +2,6 @@
 <html lang='en'>
   <head>
     <% include ../partials/head %>
-   
     <title>BandAide Home</title>
     <!-- Javascript-->
     <script src = '/scripts/home-messages.js'></script>
@@ -14,57 +13,53 @@
   <body>
      <!-- Navigation Bar -->
     <% include ../partials/navbar %>
-    
-    <header role = 'banner' class = 'container-noPad'>
-        <div class ='jumbotron bannerImage text-light border-bottom border-top'>
-            <div class='container pt-3'></div>
-            <h1 class='display-4'><em>Band-Aide</em></h1>
-            <h2><em>Be Heard</em></h2>
-        </div>
-    </header>
-
-
     <main role='main'>
        <div class ='big-container'> 
-    
-        <div class='my-3 p-3 bg-white rounded box-shadow border'>
-            <div class='accordion' id='accordion'>
-            <div class='card'>
+        
+        <div class='my-0 p-3 bg-white rounded box-shadow border'>
+            
+          <div class='accordion' id='accordion'>
+            
+              <div class='card'>
 
-              <div class='card-header' id='headingOne'>
-                <div class='mb-0'> 
-                  <button class='btn btn-link' type='button' data-toggle='collapse' data-target='#collapseOne' aria-expanded='false' aria-controls='collapseOne'> 
-                    <h2>Announcements</h2> 
-                  </button>
+                <header role = 'banner' class = 'container-noPad'>
+                  <div class ='jumbotron bannerImage text-light border-bottom border-top'>
+                      <div class='container pt-3'></div>
+                      <h1 class='display-4'><em>Band-Aide</em></h1>
+                      <h2><em>Be Heard</em></h2>
+                  </div>
+                </header>
+                <div class='card-header' id='headingOne'>
+                  <div class='mb-0'> 
+                    <button class='btn btn-link' type='button' data-toggle='collapse' data-target='#collapseOne' aria-expanded='false' aria-controls='collapseOne'> 
+                      <h2>Announcements</h2> 
+                    </button>
+                  </div>
                 </div>
-              </div>
-          
-              <div id='collapseOne' class='collapse show' aria-labelledby='headingOne' data-parent='#accordion'>
-                <div class='card-body'>
+            
+                <div id='collapseOne' class='collapse show' aria-labelledby='headingOne' data-parent='#accordion'>
+                  <div class='card-body'>
                     <p><em>What's Happening Now</em></p>  
                     <div class='btn-group d-flex flex-row-reverse' role='group' aria-label='Button Group'>
-                    <button aria-label= 'add new announcement' type='button' class='btn btn-outline-dark mr-2' data-toggle='modal' data-target='#postAnnModal'>+</button>
+                    <button aria-label= 'add new announcement' type='button' class='btn btn-outline btn-outline-danger mr-2' data-toggle='modal' data-toggle= 'tooltip' title= 'Add New Announcement' data-target='#postAnnModal'>+</button>
                     </div>
-                    
                     <div id = 'js-recent-announcement'></div>
                     <div class='collapse' id='collapseAllAnnouncement'>
                       <div id = 'js-all-announcement'></div>
                     </div>
-          
                     <div>
                       <small class='d-block text-right mt-3'>
                         <p>
-                          <button id = 'collapseAnnouncementButton' aria-labelledby = 'collapseAnnouncementButton' class='btn btn-secondary border' type='button' data-toggle='collapse' data-target='#collapseAllAnnouncement' aria-expanded='false' aria-controls='collapseAnnouncementButton'>
+                          <button id = 'collapseAnnouncementButton' aria-labelledby = 'collapseAnnouncementButton' class='btn btn-secondary border' type='button' data-toggle='collapse' data-target='#collapseAllAnnouncement' data-toggle='tooltip' title='Expand/Collapse' aria-expanded='false' aria-controls='collapseAnnouncementButton'>
                           All Announcements
                           </button>
                         </p>
                       </small>
                     </div>
-
+                  </div>
                 </div>
-              </div>
 
-            </div>
+              </div>
             
             <div class='card'>
 
@@ -79,32 +74,29 @@
               <div id='collapseTwo' class='collapse' aria-labelledby='headingTwo' data-parent='#accordion'>
                 <div class='card-body'>
                     <p><em>Here's a space that we can discuss tech issues by event. Notice it. Own it. Work on it.</em></p>
-                    
                     <div class='btn-group d-flex flex-row-reverse' role='group' aria-label='Button Group'>
-                        <button aria-label= 'add new event eval' type='button' class='btn btn-outline-dark mr-2'  data-toggle='modal' data-target='#eventsModal'>+</button>
+                        <button aria-label= 'add new event eval' type='button' class='btn btn-outline btn-outline-danger mr-2'  data-toggle='modal' data-toggle='tooltip' title ='Add New Event Eval' data-target='#eventsModal'>+</button>
                     </div>
                     <div id = 'js-recent-event'></div>
-                    
                     <div class='collapse' id='collapseAllEvents'>
                       <div id = 'js-all-event'></div>
                     </div>
-          
                     <div>
                       <small class='d-block text-right mt-3'>
                         <p>
-                          <button class= 'btn btn-secondary border' type='button' data-toggle='collapse' data-target='#collapseAllEvents' aria-expanded='false' aria-controls='collapseAllEvents'>
+                          <button class= 'btn btn-secondary border' type='button' data-toggle='collapse' data-target='#collapseAllEvents' data-toggle='tooltip' title='Expand/Collapse'  aria-expanded='false' aria-controls='collapseAllEvents'>
                           All Events
                           </button>
                         </p>
                       </small>
                     </div>
-                  
                   </div>   
                 </div>
+
               </div>
-          
-            
+        
             <div class='card'>
+
               <div class='card-header' id='headingThree'>
                 <div class='mb-0'>
                   <button class= 'btn btn-link collapsed' type='button' data-toggle='collapse' data-target='#collapseThree' aria-expanded='false' aria-controls='collapseThree'>
@@ -112,22 +104,21 @@
                   </button>
                 </div>
               </div>
+
               <div id='collapseThree' class='collapse' aria-labelledby='headingThree' data-parent='#accordion'>
                 <div class='card-body'>
                   <p><em>We need all the help we can get. Here's where you can share training videos, articles or anything else you think would help.</em></p>
-                        
                   <div class='btn-group d-flex flex-row-reverse' role='group' aria-label='Button Group'>
-                    <button aria-label= 'add new training resource' type='button' class='btn btn-outline-dark mr-2'  data-toggle='modal' data-target='#trainingModal'>+</button>
+                    <button aria-label= 'add new training resource' type='button' class='btn btn-outline btn-outline-danger mr-2'  data-toggle='modal' data-toggle='tooltip' title='Add New Training Resource' data-target='#trainingModal'>+</button>
                   </div>
                   <div id = 'js-recent-training'></div>
                   <div class='collapse' id='collapseAllTraining'>
                     <div id = 'js-all-training'></div>
                   </div>
-                
                   <div>
                     <small class='d-block text-right mt-3'>
                       <p>
-                        <button id ='collapseTraining'  class= 'btn btn-secondary border' type='button' aria-labelledby= 'collapseTraining' data-toggle='collapse' data-target='#collapseAllTraining' aria-expanded='false' aria-controls='collapseTraining'>
+                        <button id ='collapseTraining'  class= 'btn btn-secondary border' type='button' aria-labelledby= 'collapseTraining' data-toggle='collapse' data-target='#collapseAllTraining' data-toggle='tooltip' title='Expand/Collapse' aria-expanded='false' aria-controls='collapseTraining'>
                           All Resources
                         </button>              
                       </p>
@@ -135,24 +126,24 @@
                   </div>
                 </div>  
               </div>
+
             </div>
           
           </div>
+
           <div class ='jumbotron footerImage text-light border-bottom border-top'>
             <div class='container pt-3'></div>
-        </div>
-        </div>
+          </div>
 
+        </div>
         <% include ../partials/modal %>
-    
 
-       
-      </div>
-      
-    </main>
-    
+      </div> 
+   </main>
   </body>
+
   <footer class = 'my-3 p-3 bg-white rounded box-shadow border text-center'>
     &copy; 2018
   </footer>
+
 </html>

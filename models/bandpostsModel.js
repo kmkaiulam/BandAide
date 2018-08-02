@@ -4,7 +4,6 @@ mongoose.Promise = global.Promise;
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
-
 const ReplySchema = new Schema({  
   topic: {
     type: String
@@ -23,8 +22,6 @@ const ReplySchema = new Schema({
     ref: 'User'
   }
 });
-
-
 
 const BandpostSchema = new Schema({
   posttype: {
@@ -54,7 +51,7 @@ const BandpostSchema = new Schema({
   replies: [ReplySchema]
 }); 
 
-BandpostSchema.methods.serialize = function() {
+BandpostSchema.methods.serialize = function(){
   return  this.replies;
 };
 

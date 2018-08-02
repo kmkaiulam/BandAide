@@ -4,7 +4,7 @@ function clearForm(){
 }
 
 function listenLogin(){
-    $('#js-login-form').submit(event =>{
+    $('#js-login-form').submit(event => {
         event.preventDefault();
         const settings = {
             url: '/api/auth/login/',
@@ -16,7 +16,7 @@ function listenLogin(){
             type: 'POST',
             success: function(){
                 console.log('success');
-                window.location.replace('/');
+                window.location.replace('/home');
             }
         }
         return $.ajax(settings)

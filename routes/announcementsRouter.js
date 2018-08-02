@@ -25,12 +25,12 @@ function populateNewAnnouncement(post){
 
 // --- GET ---
 //GET request
-router.get('/', (req, res) =>{
+router.get('/', (req, res) => {
     populateAnnouncements()
     .then(populatedPosts =>{
     res.json(populatedPosts)
     })
-    .catch(err =>{
+    .catch(err => {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
     }); 
@@ -46,13 +46,13 @@ router.post('/', jwtAuth, checkRequiredFields, (req, res) =>{
              created: req.body.created,
              createdBy: req.user.id 
         })
-        .then(post =>{
+        .then(post => {
            return populateNewAnnouncement(post)
             })
         .then(populatedAnnouncement => {
             res.status(201).json(populatedAnnouncement);
         })
-        .catch(err =>{
+        .catch(err => {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
         }); 
@@ -66,7 +66,7 @@ router.put('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res) =>{
     const toUpdate = {};
     const updateableFields = ['text']; 
 
-    updateableFields.forEach(field =>{
+    updateableFields.forEach(field => {
         if (field in req.body){
             toUpdate[field] = req.body[field];
         }
@@ -76,13 +76,13 @@ router.put('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req, res) =>{
 
     Announcement
             .findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
-            .then(announcement =>{
+            .then(announcement => {
             return populateNewAnnouncement(announcement);
             })
-            .then(populatedAnnouncement =>{
+            .then(populatedAnnouncement => {
                 res.status(200).send(populatedAnnouncement)
             })
-            .catch(err =>{
+            .catch(err => {
                 console.error(err);
                 res.status(500).json({ message: 'Internal server error' });
             })
@@ -96,10 +96,10 @@ router.delete('/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,res) =>
    
     Announcement
         .findByIdAndRemove(req.params.id)
-        .then(Announcement =>{
+        .then(Announcement => {
             res.status(204).end();
         })
-        .catch(err =>{
+        .catch(err => {
             console.error(err);
             res.status(500).json({ message: 'Internal server error' });
         });

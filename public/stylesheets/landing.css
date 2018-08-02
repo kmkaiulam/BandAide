@@ -11,9 +11,7 @@
 }
 
 
-/*
- * Base structure
- */
+/* Base structure */
 html,
 body{
   height:100%;
@@ -46,9 +44,7 @@ img {
   text-align: center;
 }
 
-/*
- * Header
- */
+/* Header */
 .masthead {
   margin-bottom: 2rem;
 }
@@ -69,9 +65,7 @@ img {
 }
 
 
-/*
- * Cover
- */
+/* Cover */
 .cover {
   padding: 0 1.5rem;
 }
@@ -84,9 +78,7 @@ p{
 }
 
 
-/*
- * Footer
- */
+/* Footer */
 .mastfoot {
   color: rgba(255, 255, 255, .5);
 }

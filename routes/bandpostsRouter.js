@@ -174,7 +174,7 @@ router.delete('/reply/:id', jwtAuth, checkValidUser, checkRequiredFields, (req,r
         .then(bandpost => {
             let subDoc = bandpost.replies.id(req.body.replyId);
             subDoc.remove();
-            bandpost.save(function (err) {
+            bandpost.save(function(err){
                 if (err) {
                     console.log(err)
                 } 

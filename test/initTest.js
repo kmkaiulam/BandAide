@@ -11,8 +11,6 @@ mongoose.Promise = global.Promise;
 // --- Global Variables
 let newUsers = [];
 
-
-
 //--- Generate New Posts
 function generateNewAnnouncement(){
     return {
@@ -30,14 +28,12 @@ function generateNewTraining(){
     }  
 };
 
-
 function generateNewReply(newUsers){
     return {  topic: faker.lorem.words(),
               reply: faker.lorem.paragraphs(),
               created: Date.now()
     }    
 };          
-
 
 // --- Generate For Seed Data
 function generateUserData(){
@@ -81,7 +77,6 @@ function generateTrainingBandpost(newUsers){
     }  
 };
 
-
 function generateReply(newUsers){
     return {  topic: faker.lorem.words(),
               reply: faker.lorem.paragraphs(),
@@ -89,11 +84,6 @@ function generateReply(newUsers){
               created: Date.now()
     }    
 };          
-
-
-
-
-
 
 // --- Seeding Data
 function seedUserData(){
@@ -150,17 +140,13 @@ function seedTrainingData(newUsers){
 
 function seedData(){
     return seedUserData()
-        .then (data =>{
+        .then (data => {
         return  Promise.all([seedAnnouncementData(newUsers), seedEventData(newUsers), seedTrainingData(newUsers)])
             .then (values => {
                 console.log('Seeding All Data')
             });
         });
 };
-
-
-
-
 
 function dropDatabase(){
     console.warn('Deleting Database');
@@ -183,10 +169,6 @@ describe('BandAide API resource', function(){
             return closeServer()
         }); 
     });
-      
-       
-
-
 
     describe('GET Announcements', function(){
         
@@ -205,8 +187,6 @@ describe('BandAide API resource', function(){
                     });
         });   
     
-    
-   
         it('should return all Announcements with the correct fields', function(){
             return chai.request(app)
                 .get('/api/announcements')
@@ -229,7 +209,6 @@ describe('BandAide API resource', function(){
                 });
         });
     });
-
 
     describe('GET Bandposts', function(){
 
@@ -524,7 +503,7 @@ describe('BandAide API resource', function(){
                 expect(bandpost.createdBy.username).to.be.a('string');
             return Bandpost.findById(bandpost._id)
             })
-            .then(newPost =>{
+            .then(newPost => {
                 expect(String(newPost._id)).to.equal(bandpost._id);
                 expect(newPost.posttype).to.equal(bandpost.posttype);
                 expect(newPost.topic).to.equal(bandpost.topic);
@@ -543,12 +522,12 @@ describe('BandAide API resource', function(){
             return agent
                 .post('/api/auth/login')
                 .send({username: newUsers[0].username , password: '123123'})
-                .then(function(res){
+                .then(function(res) {
             return agent
             .post('/api/bandposts')
             .send(newBandpost)
         })
-            .then(res =>{
+            .then(res => {
                 original = res.body
                 update.bandpostsId= original._id
                 update.createdById= original.createdBy._id
@@ -585,7 +564,7 @@ describe('BandAide API resource', function(){
             .post('/api/bandposts')
             .send(newBandpost)
             })
-            .then(res =>{
+            .then(res => {
                 deleteRequest.bandpostsId = res.body._id
                 deleteRequest.createdById= res.body.createdBy._id
             return agent
@@ -596,7 +575,7 @@ describe('BandAide API resource', function(){
                 expect(res).to.be.status(204);
             return Bandpost.findById(deleteRequest.bandpostsId)
             })
-            .then(res =>{
+            .then(res => { 
                 expect(res).to.be.null;
             }); 
         });
@@ -619,7 +598,7 @@ describe('BandAide API resource', function(){
             .post('/api/bandposts')
             .send(newBandpost)
             })
-            .then(res =>{
+            .then(res => {
                 replyRequest.bandpostsId = res.body._id
                 creator = res.body.createdBy._id;
             return agent
@@ -664,7 +643,7 @@ describe('BandAide API resource', function(){
             .post('/api/bandposts')
             .send(newBandpost)
             })
-            .then(res =>{
+            .then(res => {
                 replyRequest.bandpostsId = res.body._id;
                 deleteRequest.bandpostsId = res.body._id;
                 deleteRequest.createdById = res.body.createdBy._id;
@@ -678,11 +657,11 @@ describe('BandAide API resource', function(){
             .delete(`/api/bandposts/reply/${deleteRequest.bandpostsId}`)
             .send(deleteRequest);
             })
-            .then(res =>{
+            .then(res => {
                 expect(res).to.have.status(204);
             return Bandpost.findById(deleteRequest.bandpostsId)
             })
-            .then(res =>{
+            .then(res => {
                 let response = res.replies;
                 expect(response).to.be.empty;
             })

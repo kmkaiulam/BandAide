@@ -1,9 +1,9 @@
 'use strict';
 // User Router Middleware
-function checkUserRequiredFields(req, res, next) {
+function checkUserRequiredFields(req, res, next){
 const requiredFields = ['username', 'password'];
 const missingField = requiredFields.find(field => !(field in req.body));
-  if (missingField) {
+  if (missingField){
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
@@ -20,7 +20,7 @@ function checkUserStringFields(req, res, next){
       field => field in req.body && typeof req.body[field] !== 'string'
       );
 
-  if (nonStringField) {
+  if (nonStringField){
   return res.status(422).json({
       code:422,
       reason: 'ValidationError',
@@ -37,7 +37,7 @@ const nonTrimmedField = explicityTrimmedFields.find(
   field => req.body[field].trim() !== req.body[field]
 );
 
-  if (nonTrimmedField) {
+  if (nonTrimmedField){
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
@@ -70,7 +70,7 @@ function checkUserSizedFields(req, res, next){
   );
 
 
-  if (tooSmallField || tooLargeField) {
+  if (tooSmallField || tooLargeField){
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',

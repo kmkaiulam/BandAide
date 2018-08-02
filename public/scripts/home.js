@@ -32,9 +32,6 @@ function findDataIds(event){
     postId= eventButton.closest('div.data').getAttribute('data-id');
     userId = eventButton.getAttribute('data-userId');
     replyId = eventButton.getAttribute('data-replyId');
-    console.log(`userId = ${userId}`);
-    console.log(`postId = ${postId}`);
-    console.log(`replyId = ${replyId}`)
 };
 
 function handleFail(err){
@@ -43,7 +40,7 @@ function handleFail(err){
 };
 // --- Announcements --- 
 function listenAnnouncementPost(){
-    $('#js-post-announcement').submit(event =>{
+    $('#js-post-announcement').submit(event => {
         event.preventDefault();
         const settings = {
             url: url.announcements,
@@ -94,7 +91,7 @@ function listenAnnouncementDelete(){
 }
 
 function listenAnnouncementEdit(){
-    $('#js-edit-announcement').submit(event =>{
+    $('#js-edit-announcement').submit(event => {
         event.preventDefault();
         const settings = {
         url: `${url.announcements}${postId}`,
@@ -151,7 +148,7 @@ function listenBandpostDelete(){
 
 // --- Event Eval ---
 function listenEventEvalPost(){
-    $('#js-events').submit(event =>{
+    $('#js-events').submit(event => {
         event.preventDefault();
         const settings = {
             url: url.bandposts,
@@ -177,7 +174,7 @@ function listenEventEvalPost(){
 };
 
 function listenEventEdit(){
-    $('#js-edit-events').submit(event =>{
+    $('#js-edit-events').submit(event => {
         event.preventDefault();
         const settings = {
             url: `${url.bandposts}${postId}`,
@@ -206,7 +203,7 @@ function listenEventEdit(){
 
 // --- Training Resources ---
 function listenTrainingPost(){
-    $('#js-training').submit(event =>{
+    $('#js-training').submit(event => {
         event.preventDefault();
         const settings = {
             url: url.bandposts,
@@ -233,7 +230,7 @@ function listenTrainingPost(){
 };
 
 function listenTrainingEdit(){
-    $('#js-edit-training').submit(event =>{
+    $('#js-edit-training').submit(event => {
         event.preventDefault();
         const settings = {
             url: `${url.bandposts}${postId}`,
@@ -271,7 +268,7 @@ function listenYoutubeClick(){
 
 // --- Reply ---
 function listenReplyPost(){
-    $('#js-reply').submit(event =>{
+    $('#js-reply').submit(event => {
         event.preventDefault();
         const settings = {
             url: `${url.reply}${postId}`,
@@ -323,6 +320,17 @@ function listenReplyDelete(){
     });    
 };
 
+// --- ToolTips ---
+
+
+function listenTooltips(){
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();   
+    });
+};
+
+      
+
 function handleListenAnnouncementButtons(){
     listenAnnouncementEdit();
     listenAnnouncementPost();
@@ -340,6 +348,7 @@ function handleListenBandpostButtons(){
 }
 
 function handleApp(){
+    listenTooltips();
     listenDataIdButton();
     handleListenAnnouncementButtons();
     handleListenBandpostButtons();

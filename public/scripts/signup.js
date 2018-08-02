@@ -35,5 +35,4 @@ function listenSignupSubmit(){
         $.ajax(settings);
     });
 }
-
 $(listenSignupSubmit);

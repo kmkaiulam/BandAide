@@ -1,47 +1,54 @@
-button:hover{
-  background-color:red;
+/* NavBar, Icon, Button Styling */
+.bandaideIcon {
+  height:65px;
+  width:auto;
 }
 
+.navbar-toggler{
+  margin-right: 5rem;
+}
 
-.bannerImage {
+.loginButton{
+  margin-bottom:-.5rem;
+}
+
+.logout{
+  margin-left:.5rem;
+}
+
+.blueButton{
+  background-color: blue;
+  border-color: black;
+  color:white;
+}
+
+/* Bandposts Styling */
+.bannerImage{
   background-image: url('/images/bandaide_banner.jpg'); 
   background-repeat: no-repeat;
   background-size:cover;
   max-height:200px;
-  min-width:440px;
+  min-width:340px
 }  
 
-.footerImage{
-  background-image: url('/images/bandaide_home.jpg'); 
-  background-repeat: no-repeat;
-  background-size:cover;
-  height:400px;
-  min-width:440px;
-}  
-
-
-body {
-    padding-top: 5rem;
-   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&0.65+0,0+100;Neutral+Density */
+body{
+padding-top: 5rem;
 background: -moz-linear-gradient(top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%); /* FF3.6-15 */
 background: -webkit-linear-gradient(top, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
 background: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
 }
 
-.bandaideIcon {
-      height:65px;
-      width:auto;
+.big-container{
+  min-width: 500px;
+  max-width:900px;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
-.replySection{
-  margin-left: .9rem;
-  padding: 4rem 7.5rem;
-}
-
-.replyAppend{
-  margin: 0 -1rem;
-}
 
 .borderless-card{
   position: relative;
@@ -54,34 +61,37 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', e
   background-color: #fff;
   background-clip: border-box;
 }
-.blueButton{
-  background-color: blue;
-  border-color: black;
-  color:white;
-}
+
 .borderless-card-body{
   flex: 1 1 auto;
   padding: 1.25rem;
-}
-
-.big-container{
-  min-width: 440px;
-  max-width:900px;
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.navbar-toggler{
-  margin-right: 5rem;
 }
 
 .container-noPad{
   width: 100%;
   margin-right: auto;
   margin-left: auto;
+  margin-bottom: -2rem;
 }
 
+.replySection{
+  margin-left: .9rem;
+  padding: 4rem 7.5rem;
+}
 
+.replyAppend{
+  margin: 0 -1rem;
+}
+
+/* Footer Styling */
+.footerImage{
+  background-image: url('/images/bandaide_home.jpg'); 
+  background-repeat: no-repeat;
+  background-size:cover;
+  height:200px;
+  min-width:340px;
+}
+
+footer{
+  min-width:500px;
+}
