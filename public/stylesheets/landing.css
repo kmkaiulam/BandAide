@@ -35,9 +35,10 @@ body {
   background-size:cover;
 }
 
-.bandaide-icon{
-  max-width:300px;
+.landing-icon{
+max-height: 100px;
 }
+
 .cover-container {
   max-width: 42em;
 }

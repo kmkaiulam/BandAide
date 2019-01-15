@@ -1,17 +1,15 @@
 'use strict'
-function clearForm(){ 
-    $(':input').val('');
-}
 
-function listenLogin(){
-    $('#js-login-form').submit(event => {
+
+function listenDemoClick(){
+    $('#demo-btn').click(event => {
         event.preventDefault();
         const settings = {
             url: '/api/auth/login/',
             data:{
-                'username': $('#inputUsername').val(),
-                'password': $('#inputPassword').val(),
-                },
+                'username': 'Guest',
+                'password': 'Password'
+            },
             dataType: 'json',
             type: 'POST',
             success: function(){
@@ -22,9 +20,7 @@ function listenLogin(){
         return $.ajax(settings)
             .fail(function (err){
                 console.log(err);
-                $('#js-response-message').html(`<div class = 'text-danger bg-dark'> Incorrect Credentials</div>`);
-                clearForm();
             });
     });
 }
-$(listenLogin);
+$(listenDemoClick);

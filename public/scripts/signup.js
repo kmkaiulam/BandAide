@@ -35,8 +35,6 @@ function login(username, password){
 function listenSignupSubmit(){
     $('#js-signup-form').submit(event =>{
         event.preventDefault();
-         username= $('#username').val()
-         password= $('#password').val()
         const settings = {
             url: '/api/users/',
             data:{
@@ -57,11 +55,13 @@ function listenSignupSubmit(){
                 clearForm();
             }
         }
-        $.ajax(settings);
+        let registerPromise = new Promise(function(resolve, reject) {
+            resolve($.ajax(settings));
+        });
+        registerPromise.then(function (res){
+          login(settings.data.username, settings.data.password)  
+        });
     })
-    console.log(username)
-    console.log(password)
-    login(username, password)    
 }
 
 
