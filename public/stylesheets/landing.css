@@ -35,12 +35,15 @@ body {
   background-size:cover;
 }
 
+.bandaide-icon{
+  max-width:300px;
+}
 .cover-container {
   max-width: 42em;
 }
 img {
   min-width: 300px;
-  max-width: 400px;
+  max-height: 400px;
   text-align: center;
 }
 

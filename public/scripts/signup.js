@@ -1,5 +1,6 @@
 'use strict'
-
+let username;
+let password;
 function disableNewInput(){
     $('#js-signup-form :input').prop('readonly',true);
     $('#js-signup-btn').prop('disabled',true);
@@ -9,9 +10,33 @@ function clearForm(){
     $(':input').val('');
 }
 
+function login(username, password){
+        const settings = {
+            url: '/api/auth/login/',
+            data:{
+                'username': username,
+                'password': password
+                },
+            dataType: 'json',
+            type: 'POST',
+            success: function(){
+                console.log('success');
+                window.location.replace('/home');
+            }
+        }
+        return $.ajax(settings)
+            .fail(function (err){
+                console.log(err);
+                $('#js-response-message').html(`<div class = 'text-danger bg-dark'> Incorrect Credentials</div>`);
+                clearForm();
+            });
+        };
+
 function listenSignupSubmit(){
     $('#js-signup-form').submit(event =>{
         event.preventDefault();
+         username= $('#username').val()
+         password= $('#password').val()
         const settings = {
             url: '/api/users/',
             data:{
@@ -33,6 +58,11 @@ function listenSignupSubmit(){
             }
         }
         $.ajax(settings);
-    });
+    })
+    .then (res =>
+        login(username, password)
+    )
 }
+
+
 $(listenSignupSubmit);
