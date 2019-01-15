@@ -59,6 +59,8 @@ function listenSignupSubmit(){
         }
         $.ajax(settings);
     })
+    console.log(username)
+    console.log(password)
     login(username, password)    
 }
 
