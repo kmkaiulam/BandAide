@@ -22,7 +22,7 @@ https://bandaide-fullstack.herokuapp.com/
 - Express
 - Node JS
 - Heroku
-
+- mLab
 
 ## Note on Usage
 BandAide has three different post types: Announcements, Event Evals and Training Resources
