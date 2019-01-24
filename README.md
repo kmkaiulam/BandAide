@@ -21,7 +21,7 @@ https://bandaide-fullstack.herokuapp.com/
 - Mongo DB
 - Express
 - Node JS
-- Player.js
+- Heroku
 
 
 ## Note on Usage
